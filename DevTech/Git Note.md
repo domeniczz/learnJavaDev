@@ -1,7 +1,15 @@
 ## 配置
 
 ```bash
-git config --global color.ui true # 为 Git 启用一些额外的颜色，更易阅读
+git config --list  # 列出所有配置（按 q 退出）
+```
+
+```bash
+git config --global user.name "..."
+git config --global user.email "..."
+
+git config --global color.ui true  # 为 Git 启用一些额外的颜色，更易阅读
+git config --global --add --bool push.autoSetupRemote true  # 自动 --set-upstream
 ```
 
 ## 命令
@@ -9,16 +17,17 @@ git config --global color.ui true # 为 Git 启用一些额外的颜色，更易
 ### remote
 
 ```bash
-git remote                        # 查看连接的所有远程仓库
+git remote                        # 查看连接的所有仓库
 git remote add <name> <path>      # 添加仓库
-git remote remove <name>          # 移除连接的远程仓库
+git remote remove <name>          # 移除连接的仓库
+git remote set-url <name> <path>  # 设置仓库的链接
 ```
 
 ### commit
 
 ```bash
 git commit -m 'commit one'        # 加上 -m 可以直接写提交历史 'comit one'
-git commit --amend                # 重新写提交历史
+git commit --amend                # 重写提交历史
 ```
 
 ### reset
@@ -35,7 +44,7 @@ git log --oneline --decorate      # 查看各个分支当前所指的对象
 git log --graph --oneline --abbrev-commit  # 以图像的形式显示 commit 记录，简化提交哈希值到 7 位
 ```
 
-如果 git log 太多，可以按 q 来退出界面
+按 q 来退出 log 界面
 
 ### reflog
 
@@ -118,7 +127,7 @@ git stash pop                      # pop 出暂存的代码，会追加到最新
 7. git push \<remote-name\> 把提交推送到远程仓库
 8. git log 查看提交记录
 
-**若本地已经有仓库，但是未初始化 git：**
+**若本地已经有仓库，但未初始化 git：**
 
 1. git init 初始化本地仓库为 git
 
@@ -129,10 +138,12 @@ git stash pop                      # pop 出暂存的代码，会追加到最新
    1. 如果本地冲突的文件可以不要，就执行 [git clean -d -fx](#error: The following untracked working tree files would be overwritten by merge)，然后再 pull
    2. 如果本地冲突文件需要：
       1. 先执行 git add . 和 git commit 把文件都提交
-      2. 再执行 git pull \<path\> --allow-unrelated-histories，把仓库文件拉下来
+      2. 再执行 git pull \<path\> \-\-allow-unrelated-histories，把仓库文件拉下来
       3. 最后再自己处理冲突的文件，[冲突解说](https://phoenixnap.com/kb/how-to-resolve-merge-conflicts-in-git#ftoc-heading-4)
 
 3. git remote add \<name\> \<path\> 连接到远程仓库
+
+   \<path\> 推荐使用 ssh
 
 4. 向本地仓库中添加文件
 
@@ -140,9 +151,24 @@ git stash pop                      # pop 出暂存的代码，会追加到最新
 
 6. git add . 把所有新增文件添加到 git
 
-7. git commit (-m ‘...’) 把所有文件提交到 git
+7. git commit \[-m ‘...’] 把所有文件提交到 git
 
 8. git push \<remote-name\> 把提交推送到远程仓库
+
+   - 若出现以下提示
+
+     ```bash
+     fatal: The current branch master has no upstream branch.
+     To push the current branch and set the remote as upstream, use
+     
+         git push --set-upstream origin master
+     ```
+
+     可以将 `--set-upstream` 设置为自动：
+
+     ```bash
+     git config --global --add --bool push.autoSetupRemote true
+     ```
 
 9. git log 查看提交记录
 
@@ -297,25 +323,64 @@ git checkout master
 git reset HEAD~ —-hard
 ```
 
-## 问题解决
+## Solutions
 
-Updates were rejected because the tip of your current branch is behind
+Press Ctrl + F to search for errors
 
-```bash
-git pull --rebase
-# BE VERY CAREFUL WITH THIS: this will probably overwrite all your present files with the files as they are at the head of the branch in the remote repository! If this happens and you didn't want it to, you can UNDO THIS CHANGE with:
-git rebase --abort
-```
+If your errors are not exist, go search on [Stack Overflow ](https://stackoverflow.com/)!
 
-error: The following untracked working tree files would be overwritten by merge
+- Updates were rejected because the tip of your current branch is behind
 
-```bash
-git clean -d -fx                   # 删除没有git add 的文件，执行后可解决错误
-```
+  ```bash
+  git pull --rebase
+  # BE VERY CAREFUL WITH THIS: this will probably overwrite all your present files with the files as they are at the head of the branch in the remote repository! If this happens and you didn't want it to, you can UNDO THIS CHANGE with:
+  git rebase --abort
+  ```
 
-fatal: refusing to merge unrelated histories
+- kex_exchange_identification: Connection closed by remote host
 
-```bash
-在操作命令后面加 --allow-unrelated-histories
-```
+  solution: Re-acquire local ssh, copy ssh to Github
 
+  1. Set username and email
+
+     ```bash
+     git config --global user.name "..."
+     git config --global user.email "..."
+     ```
+
+  2. Generate SSH key
+
+     ```bash
+     cd ~/.ssh
+     ssh-keygen -t rsa -C "<your-email>"  # generate
+     # Press Enter all the way down to get default config
+     # SSH key will be stored in user folder by default
+     
+     cat id_rsa.pub  # get SSH key
+     ```
+
+  3. Add key to Github
+
+     Github settings --> SSH and GPG keys --> New SSH key
+
+- error: The following untracked working tree files would be overwritten by merge
+
+  ```bash
+  git clean -d -fx  # Delete the files without git add, the error can be solved after execution
+  ```
+
+- fatal: refusing to merge unrelated histories
+
+  ```bash
+  add after command: --allow-unrelated-histories
+  ```
+
+- fatal: Could not read from remote repository.
+
+  Please make sure you have the correct access rights
+  and the repository exists.
+
+  ```bash
+  # The git url may have changed
+  git remote set-url <name> <path>  # Reset the repo url
+  ```
