@@ -363,6 +363,14 @@ If your errors are not exist, go search on [Stack Overflow ](https://stackoverfl
 
      Github settings --> SSH and GPG keys --> New SSH key
 
+  4. Test connection
+
+     ```bash
+     ssh -T git@github.com
+     ```
+
+  5. If still don't work, try change your network
+
 - error: The following untracked working tree files would be overwritten by merge
 
   ```bash

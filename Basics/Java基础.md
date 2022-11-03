@@ -33,7 +33,7 @@
 4. 使用 javac xxx.java 进行编译，生成 xxx.class 的字节码文件
 5. 使用 java xxx 进行解释执行，打印运行结果
 
-- Java11 中可以使用 java xxx.java 直接进行编译并且运行，打印出运行结果（[<font color="#ff5050">慎用 - online</font>](https://www.infoq.cn/article/58f2ugX4d2FBF1gA9URI)）
+- Java11 中可以使用 java xxx.java 直接进行编译并且运行，打印出运行结果（[<span style="color:#ff5050">慎用 - online</span>](https://www.infoq.cn/article/58f2ugX4d2FBF1gA9URI)）
 
   该特性仅限于保存在单个源文件中的代码，不能在同一个运行编译中添加其他源文件
 
@@ -1359,7 +1359,7 @@ public class Singleton {
 
 5. 对于父子类都有的**非静态方法**
 
-   编译阶段调用的是父类 Person 的 show()，运行阶段调用的是子类 Teacher 的 show()（<font color=#d26b62>动态绑定</font>）
+   编译阶段调用的是父类 Person 的 show()，运行阶段调用的是子类 Teacher 的 show()（<span style="color:#d26b62">动态绑定</span>）
 
    动态绑定测试：把父类中的 show() 方法注释掉，调用的地方会标红报错，显示无法解析父类中的 show() 方法
 
@@ -1730,7 +1730,7 @@ at.show();                                      // 编译阶段调用父类版�
 
 #### 回调模式（重点）
 
-<font color="red"><b>重点</b></font>
+<span style="color:red"><b>重点</b></span>
 
 **回调模式**：接口类型引用作为实参传递给方法，方法内部通过该引用，调用接口实现类中重写的方法
 
@@ -2549,7 +2549,7 @@ Object o = lt3.get(1);     // 取元素时当成 Object 类型
 
 ### [Object 类（重点）](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Object.html)
 
-<font color="red">**重点**</font>
+<span style="color:red"><b>重点</b></span>
 
 java.lang.Object 类是 Java 语言中类层次结构的根类，定义了 “对象” 的基本行为，任何一个类都是该类的直接或间接子类
 
@@ -2700,16 +2700,44 @@ public static String getProperty(String key) // key 为指定属性名
 
 系统常见属性：
 
-| 属性名       | 属性说明            |
-| ------------ | ------------------- |
-| java.version | Java 运行时环境版本 |
-| java.home    | Java 安装目录       |
-| os.name      | 操作系统的名称      |
-| os.version   | 操作系统的版本      |
-| user.name    | 用户的账户名称      |
-| user.home    | 用户的主目录        |
-| user.dir     | 用户的当前工作目录  |
-
+<table style="width:30rem">
+    <thead>
+        <tr style="text-align:left">
+            <th>属性名</th>
+            <th>属性说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>java.version</td>
+            <td>Java 运行时环境版本</td>
+        </tr>
+        <tr>
+            <td>java.home</td>
+            <td>Java 安装目录</td>
+        </tr>
+        <tr>
+            <td>os.name</td>
+            <td>操作系统的名称</td>
+        </tr>
+        <tr>
+            <td>os.version</td>
+            <td>操作系统的版本</td>
+        </tr>
+        <tr>
+            <td>user.name</td>
+            <td>用户的账户名称</td>
+        </tr>
+        <tr>
+            <td>user.home</td>
+            <td>用户的主目录</td>
+        </tr>
+        <tr>
+            <td>user.dir</td>
+            <td>用户的当前工作目录</td>
+        </tr>
+    </tbody>
+</table>
 
 ---
 
@@ -2742,14 +2770,14 @@ Integer.TYPE 和 int.class 是相等的，因为 TYPE 表示该包装类对应�
 
 **常用的方法**
 
-| <font color="orange">成员方法</font>   | 功能                                     |
+| <span style="color:orange">成员方法</span>   | 功能                                     |
 | -------------------------------------- | ---------------------------------------- |
 | Integer(int value) / Integer(String s) | 构造 Integer 对象，**Java9 开始过时**    |
 | int intValue()                         | 获取调用对象的 int 值                    |
 | boolean equals(Object obj)             | 比较调用对象与参数指定对象的内容是否相等 |
 | String toString()                      | 获取表示此对象值的 String 对象           |
 
-| <font color=#c88fff>静态方法</font>                          | 功能                                                         |
+| <span style="color:#c88fff">静态方法</span>                          | 功能                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | static Integer valueOf(int i 或 String str)                  | 根据参数指定整数数据获取 Integer 类型对象                    |
 | static int parseInt(String s)                                | 将字符串类型转换为 int 类型并返回                            |
@@ -2787,7 +2815,7 @@ Integer.TYPE 和 int.class 是相等的，因为 TYPE 表示该包装类对应�
 
 **常用的方法**
 
-| <font color="orange">成员方法</font> | 功能                                                         |
+| <span style="color:orange">成员方法</span> | 功能                                                         |
 | ------------------------------------ | ------------------------------------------------------------ |
 | Double(double value 或 String s)     | 构造 Double 对象，**Java9 开始过时**                         |
 | boolean isNaN()                      | 判断调用对象的数值**是否为非数字**（比如：0/0.0 的结果就是 NaN） |
@@ -2795,7 +2823,7 @@ Integer.TYPE 和 int.class 是相等的，因为 TYPE 表示该包装类对应�
 | boolean equals(Object obj)           | 比较调用对象与参数指定对象的内容是否相等                     |
 | String toString()                    | 获取表示此对象值的 String 对象                               |
 
-| <font color=#c88fff>静态方法</font> | 功能                                       |
+| <span style="color:#c88fff">静态方法</span> | 功能                                       |
 | ----------------------------------- | ------------------------------------------ |
 | static Double valueOf(double d)     | 根据参数指定浮点数数据获取 Double 类型对象 |
 | static double parseDouble(String s) | 将字符串类型转换为 double 类型并返回       |
@@ -2820,14 +2848,14 @@ Double 没用提供自动装箱池
 
 **常用的方法**
 
-| <font color="orange">成员方法</font> | 功能                                     |
+| <span style="color:orange">成员方法</span> | 功能                                     |
 | ------------------------------------ | ---------------------------------------- |
 | Boolean(boolean value 或 String s)   | 构造 Boolean 对象，**Java9 开始过时**    |
 | boolean booleanValue()               | 获取调用对象的 Boolean 值                |
 | boolean equals(Object obj)           | 比较调用对象与参数指定对象的内容是否相等 |
 | String toString()                    | 获取表示此对象值的 String 对象           |
 
-| <font color=#c88fff>静态方法</font>   | 功能                                                         |
+| <span style="color:#c88fff">静态方法</span>   | 功能                                                         |
 | ------------------------------------- | ------------------------------------------------------------ |
 | static Boolean valueOf(boolean b)     | 根据参数指定 boolean 数据获取 Boolean 类型对象               |
 | static boolean parseBoolean(String s) | 将字符串 boolean 类型并返回（除了忽略大小写的 “true”，其他都是 false） |
@@ -2850,14 +2878,14 @@ Double 没用提供自动装箱池
 
 **常用的方法**
 
-| <font color="orange">成员方法</font> | 功能                                     |
+| <span style="color:orange">成员方法</span> | 功能                                     |
 | ------------------------------------ | ---------------------------------------- |
 | Character(char value)                | 构造 Character 对象，**Java9 开始过时**  |
 | char charValue()                     | 获取调用对象的 Character 值              |
 | boolean equals(Object obj)           | 比较调用对象与参数指定对象的内容是否相等 |
 | String toString()                    | 获取表示此对象值的 String 对象           |
 
-| <font color=#c88fff>静态方法</font>                          | 功能                                          |
+| <span style="color:#c88fff">静态方法</span>                          | 功能                                          |
 | ------------------------------------------------------------ | --------------------------------------------- |
 | static Character valueOf(char c)                             | 根据参数指定 char 数据获取 Character 类型对象 |
 | static boolean isUpperCase(char ch) / isLowerCase(char ch) / isDigit(char ch) | 判断参数字符是否为大 / 小写 / 数字            |
@@ -2879,7 +2907,7 @@ Double 没用提供自动装箱池
 
 **常用方法**
 
-| <font color=#c88fff>静态方法</font>       | 功能                            |
+| <span style="color:#c88fff">静态方法</span>       | 功能                            |
 | ----------------------------------------- | ------------------------------- |
 | int max(int a, int b) / min(int a, int b) | 返回两个参数中的最大值 / 最小值 |
 | int abs(int a)                            | 返回参数的绝对值                |
@@ -2894,7 +2922,7 @@ Double 没用提供自动装箱池
 
 **常用方法**
 
-| <font color="orange">成员方法</font>                         | 功能                                  |
+| <span style="color:orange">成员方法</span>                     | 功能                                  |
 | ------------------------------------------------------------ | ------------------------------------- |
 | BigDecimal(String val)                                       | 构造对象，参数是字符串类型            |
 | BigDecimal add(BigDecimal augend)                            | 加法运算，调用方法的对象 + 参数对象   |
@@ -2909,7 +2937,7 @@ Double 没用提供自动装箱池
 
 **常用方法**
 
-| <font color="orange">成员方法</font>            | 功能                       |
+| <span style="color:orange">成员方法</span>          | 功能                       |
 | ----------------------------------------------- | -------------------------- |
 | BigInteger(String val)                          | 构造对象，参数是字符串类型 |
 | BigInteger add(BigInteger val)                  | 加法运算                   |
@@ -2979,9 +3007,9 @@ String userName = new String(name.getBytes("ISO-8859-1"),"utf-8");
 
 #### 成员方法
 
-<font color="orange">**熟练**</font>
+<span style="color:orange"><b>熟练</b></span>
 
-##### 字符串常用操作
+##### 常用操作
 
 | 方法声明                             | 功能                                                         |
 | ------------------------------------ | ------------------------------------------------------------ |
@@ -3001,7 +3029,7 @@ String userName = new String(name.getBytes("ISO-8859-1"),"utf-8");
 1. `String.valueOf(12345);`
 2. `"" + 12345;` （推荐这种写法）
 
-##### 字符串判断
+##### 比较判断
 
 | 方法声明                                                     | 功能                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -3013,7 +3041,7 @@ String userName = new String(name.getBytes("ISO-8859-1"),"utf-8");
 | boolean startsWith(String prefix, int toffset)               | 判断字符串 offset 位置开始是否以参数指定字符串开头           |
 | boolean endsWith(String suffix)                              | 判断字符串是否以参数字符串结尾                               |
 
-##### 字符串切割拼接
+##### 切割拼接
 
 | 方法声明                                                     | 功能                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -3021,7 +3049,7 @@ String userName = new String(name.getBytes("ISO-8859-1"),"utf-8");
 | String trim()                                                | 返回去掉前导和后继空白的字符串                               |
 | String substring(int beginIndex)<br/>String substring(int beginIndex, int endIndex) | 返回字符串中下标从 beginIndex 到结尾或到 endIndex 的子字符串<br/>左包含，右不包含 |
 
-##### 字符串正反向查找
+##### 正反向查找
 
 | 方法声明                                                     | 功能                                                         |
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
@@ -3188,7 +3216,7 @@ reg: <div>.*?</div>
 
 ### 可变字符串类（重点）
 
-<font color="red"><b>重点</b></font>
+<span style="color:red"><b>重点</b></span>
 
 在 java.lang 包下的 StringBuffer 和 StringBuilder 类可以描述**字符序列可改变**的字符串  
 StringBuffer 类是从 jdk1.0 开始存在，属于<u>线程安全的类，因此效率比较低</u>  
@@ -3428,7 +3456,7 @@ public class DateTimeFormatterTest {
 
 ### 集合类（重点）
 
-<font color="red">**重点**</font>
+<span style="color:red"><b>重点</b></span>
 
 #### 概述
 
@@ -3969,7 +3997,7 @@ public void show(File file) {
 
 **概述**：IO 就是 Input 和 Output 的简写，输入和输出
 
-[<font color="orange">IO 流 - 博客园</font>](https://www.cnblogs.com/tanghaorong/category/1935652.html)
+[IO 流 - 博客园](https://www.cnblogs.com/tanghaorong/category/1935652.html)
 
 #### 分类
 
@@ -3987,14 +4015,14 @@ public void show(File file) {
 
 | 分类                      | 字节输入流                                                   | 字节输出流                                                   | 字符输入流                                                   | 字符输出流                                                   |
 | ------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| [抽象](#抽象类和方法)基类 | <font color="#ff5050">InputStream</font>                     | <font color="#ff5050">OutputStream</font>                    | <font color="#ff5050">Reader</font>                          | <font color="#ff5050">Writer</font>                          |
-| 访问文件                  | [<font color="#ff5050">FileInputStream</font>](#FileInputStream 类（重点）) | [<font color="#ff5050">FileOutputStream</font>](#FileOutputStream 类（重点）) | [<font color="#ff5050">FileReader</font>](#FileReader 类（重点）) | [<font color="#ff5050">FileWriter</font>](#FileWriter 类（重点）) |
+| [抽象](#抽象类和方法)基类 | <span style="color:#ff5050">InputStream</span>                     | <span style="color:#ff5050">OutputStream</span>                    | <span style="color:#ff5050">Reader</span>                          | <span style="color:#ff5050">Writer</span>                          |
+| 访问文件                  | [<span style="color:#ff5050">FileInputStream</span>](#FileInputStream 类（重点）) | [<span style="color:#ff5050">FileOutputStream</span>](#FileOutputStream 类（重点）) | [<span style="color:#ff5050">FileReader</span>](#FileReader 类（重点）) | [<span style="color:#ff5050">FileWriter</span>](#FileWriter 类（重点）) |
 | 访问数组                  | ByteArrayInputStream                                         | ByteArrayOutputStream                                        | CharArrayReader                                              | CharArrayWriter                                              |
 | 访问管道                  | PipedInputStream                                             | PipedOutputStream                                            | PipedReader                                                  | PipedWriter                                                  |
 | 访问字符串                | --                                                           | --                                                           | StringReader                                                 | StringWriter                                                 |
-| 缓冲流                    | [<font color="#ff5050">BufferedInputStream</font>](#BufferedInputStream 类（重点）) | [<font color="#ff5050">BufferedOutputStream</font>](#BufferedOutputStream 类（重点）) | [<font color="#ff5050">BufferedReader</font>](#BufferedReader 类（重点）) | [<font color="#ff5050">BufferedWriter</font>](#BufferedWriter 类（重点）) |
-| 转换流                    | --                                                           | --                                                           | [<font color="#ff5050">InputStreamReader</font>](#InputStreamReader 类) | [<font color="#ff5050">OutputStreamWriter</font>](#OutputStreamWriter 类) |
-| 对象流                    | [<font color="#ff5050">ObjectInputStream</font>](#ObjectInputStream 类（重点）) | [<font color="#ff5050">ObjectOutputStream</font>](#ObjectOutputStream 类（重点）) | --                                                           | --                                                           |
+| 缓冲流                    | [<span style="color:#ff5050">BufferedInputStream</span>](#BufferedInputStream 类（重点）) | [<span style="color:#ff5050">BufferedOutputStream</span>](#BufferedOutputStream 类（重点）) | [<span style="color:#ff5050">BufferedReader</span>](#BufferedReader 类（重点）) | [<span style="color:#ff5050">BufferedWriter</span>](#BufferedWriter 类（重点）) |
+| 转换流                    | --                                                           | --                                                           | [<span style="color:#ff5050">InputStreamReader</span>](#InputStreamReader 类) | [<span style="color:#ff5050">OutputStreamWriter</span>](#OutputStreamWriter 类) |
+| 对象流                    | [<span style="color:#ff5050">ObjectInputStream</span>](#ObjectInputStream 类（重点）) | [<span style="color:#ff5050">ObjectOutputStream</span>](#ObjectOutputStream 类（重点）) | --                                                           | --                                                           |
 |                           | FilterInputStream                                            | FilterOutputStream                                           | FilterReader                                                 | FilterWriter                                                 |
 | 打印流                    | --                                                           | [PrintStream](#PrintStream 类)                               | --                                                           | [PrintWriter](#PrintWriter 类)                               |
 | 推回输入流                | PushbackInputStream                                          | --                                                           | PushbackReader                                               | --                                                           |
@@ -5007,7 +5035,7 @@ Thread 类中方法：
 
 ##### 线程同步机制
 
-<font color="red">重点</font>
+<span style="color:red">重点</span>
 
 **概述**：
 
@@ -7756,7 +7784,7 @@ Java11 于 2018 年 9 月正式发布，是 Java 大版本周期变化后的第�
 
 ####  [简化的编译运行操作](#程序编写流程)
 
-[<font color="#ff5050">慎用 - online</font>](https://www.infoq.cn/article/58f2ugX4d2FBF1gA9URI)
+[<span style="color:#ff5050">慎用 - online</span>](https://www.infoq.cn/article/58f2ugX4d2FBF1gA9URI)
 
 - 在 Java11 中可以使用 java 命令一次性进行编译和运行操作
 - 执行源文件中的第一个类必须包含主方法
@@ -8043,8 +8071,6 @@ Logback 日志系统的特性，都通过核心配置文件 logback.xml 控制
 
      下载地址：[hamcrest-core-xxx.jar](https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/)  [junit-xxx.jar](https://repo1.maven.org/maven2/junit/junit/)
 
-     <img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/Java基础/JUnit_Library_jar.png" width="25%" style="border-radius:.4rem" float="left" alt="JUnit_Library_jar"/><div style="clear:both"></div>
-
 2. 编写测试方法：该测试方法必须是<u>公共的无参数无返回值的非静态方法</u>
 
 3. 在测试方法上使用 @Test 注解：标注该方法是一个测试方法
@@ -8053,9 +8079,9 @@ Logback 日志系统的特性，都通过核心配置文件 logback.xml 控制
 
 5. 选中测试方法，选择 “JUnit 运行” 
 
-   - 若测试良好，则是<font color="#68bb6c">绿色</font>
-   - 若测试失败，则是<font color="#ef5350">红色</font>
-   - 若不符合预期输出，则是<font color="#ffc107">黄色</font>
+   - 若测试良好，则是 <span style="color:#68bb6c">绿色</span>
+   - 若测试失败，则是 <span style="color:#ef5350">红色</span>
+   - 若不符合预期输出，则是 <span style="color:#ffc107">黄色</span>
 
    测试某个方法，直接右键该方法启动测试
 
@@ -8298,13 +8324,13 @@ XML 使用场景：XML 内容经常被当成消息进行网络传输，或者作
 
 ### 语法
 
-文档声明必须在<font color="red">第一行</font>  
+文档声明必须在**第一行**  
 version：XML 默认的版本号码、该属性必须存在  
 encoding：本 XML 文件的编码
 
 **XML 标签（元素）的规则**：
 
-- 标签由一对尖括号和合法标识符组成：`<name></name>`，必须<font color="red">有且只能有一个</font>根标签
+- 标签由一对尖括号和合法标识符组成：`<name></name>`，必须**有且只能有一个根标签**
 - 标签必须成对出现：`<name></name>`
 - 特殊的标签可以不成对，但是必须有结束标记，如：`<br/>`
 - 标签中可以定义属性，属性和标签名空格隔开，属性值必须用引号引起来：`<student id = "1"></student>`
@@ -8316,9 +8342,14 @@ encoding：本 XML 文件的编码
 
 - 特殊字符
 
-  \&lt;          \<      小于<br/>\&gt;         \>      大于<br/>\&amp;     \&      和号<br/>\&apos;     \'       单引号<br/>\&quot;      \"      引号
+  \&lt;      \<     小于  
+  \&gt;      \>     大于  
+  \&amp;     \&     和号  
+  \&apos;    \'     单引号  
+  \&quot;    \"     引号
 
-- 字符数据区 CDATA：\<![CDATA[ …内容… ]]\><br/>可在里面输入任意内容，无需特殊字符
+- 字符数据区 CDATA：\<![CDATA[ …内容… ]]\>  
+  可在里面输入任意内容，无需特殊字符
 
 **XML 示例**：
 
@@ -8345,7 +8376,7 @@ encoding：本 XML 文件的编码
 
 ### XML 文档约束
 
-<font color="#da9249"><b>了解即可</b></font>
+<span style="color:#da9249"><b>了解即可</b></span>
 
 **概述**：
 
@@ -8529,13 +8560,13 @@ Element、Attribute、Text 都是实现 Node 接口
 
    dom4j-xxx.jar 下载地址：https://dom4j.github.io/
 
-2. 获取[SAXReader](https://dom4j.github.io/javadoc/2.1.3/org/dom4j/io/SAXReader.html)对象，调用 read 方法，加载 XML 文件成为 Document 对象
+2. 获取 [SAXReader](https://dom4j.github.io/javadoc/2.1.3/org/dom4j/io/SAXReader.html) 对象，调用 read 方法，加载 XML 文件成为 Document 对象
 
    建议调用 Class 类的方法 getResourceAsStream，获取路径（Finds a resource with a given name）
 
-3. 调用[Document](https://dom4j.github.io/javadoc/2.1.3/org/dom4j/Document.html)的方法即可获取 XML 文档中的内容
+3. 调用 [Document](https://dom4j.github.io/javadoc/2.1.3/org/dom4j/Document.html) 的方法即可获取 XML 文档中的内容
 
-4. 获取的内容为[Element](https://dom4j.github.io/javadoc/2.1.3/org/dom4j/Element.html)对象，里面有属性[Attribute](https://dom4j.github.io/javadoc/2.1.3/org/dom4j/Attribute.html)和文本[Text](https://dom4j.github.io/javadoc/2.1.3/org/dom4j/Text.html)
+4. 获取的内容为 [Element](https://dom4j.github.io/javadoc/2.1.3/org/dom4j/Element.html) 对象，里面有属性 [Attribute](https://dom4j.github.io/javadoc/2.1.3/org/dom4j/Attribute.html) 和文本 [Text](https://dom4j.github.io/javadoc/2.1.3/org/dom4j/Text.html)
 
 **代码示例**：
 
@@ -8650,7 +8681,7 @@ public void parseToList() throws Exception {
 ### XML 检索
 
 **XPath 技术**  
-它使用<u>路径表达式</u>来定位 XML 文档中的元素节点或属性节点  
+它用**路径表达式**来定位 XML 文档中的元素节点或属性节点  
 如：/元素/子元素/孙元素  
 如：//子元素//孙元素
 
@@ -8662,11 +8693,11 @@ public void parseToList() throws Exception {
 
    [下载地址](http://www.java2s.com/Code/Jar/j/Downloadjaxen112jar.htm) jaxen-xxx.jar
 
-2. 通过 Dom4J 的[SAXReader](https://dom4j.github.io/javadoc/2.1.3/org/dom4j/io/SAXReader.html)对象，调用 read 方法，加载 XML 文件成为 Document 对象
+2. 通过 Dom4J 的 [SAXReader](https://dom4j.github.io/javadoc/2.1.3/org/dom4j/io/SAXReader.html) 对象，调用 read 方法，加载 XML 文件成为 Document 对象
 
 3. 利用 XPath 提供的 API，结合 XPath 的语法，完成选取 XML 文档元素节点，进行解析操作
 
-4. [Document](https://dom4j.github.io/javadoc/2.1.3/org/dom4j/Document.html)从 Node 接口继承下来的，与 Xpath 相关的方法
+4. [Document](https://dom4j.github.io/javadoc/2.1.3/org/dom4j/Document.html) 从 Node 接口继承下来的，与 Xpath 相关的方法
 
    | 方法声明                                        | 说明                                           |
    | ----------------------------------------------- | ---------------------------------------------- |
