@@ -1175,7 +1175,7 @@ private String driver;
 
 ##### 循环依赖
 
-<font color="red">重点</font>
+<span style="color:red">重点</span>
 
 Spring bean 的创建，其本质上还是一个对象的创建，一个完整的对象包含两部分：当前对象实例化、对象属性的实例化
 
@@ -5459,12 +5459,50 @@ You can also deploy Spring Boot applications to any servlet 3.1+ compatible cont
   public class MyController {
       @RequestMapping("")
       public String hello() {
+          Object person = context.getBean("person");
           return "Hello SpringBoot";
       }
   }
   ```
 
   访问 <span>http://localhost:8080/hello</span> 进行测试
+
+- **实体类**：
+
+  ```java
+  @Component  // 声明为组件
+  @Data  // Lombok
+  @ConfigurationProperties(prefix = "person")  // 根据前缀引入配置信息
+  public class Person {
+  
+      private String userName;
+  
+      private Boolean boss;
+  
+      /* 方式一：注解中指定转换格式 */
+      @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+      private LocalDateTime birth;
+  
+      private Integer age;
+  
+      private Pet pet;
+  
+      private String[] interests;
+  
+      private List<String> animal;
+  
+      private Map<String, Object> score;
+  
+      private Set<Double> salary;
+  
+      private Map<String, List<Pet>> allPets;
+  
+      /* 方式二：setter 中指定转换格式 */
+      public void setBirth(String birth) {
+          this.birth= LocalDateTime.parse(birth, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+      }
+  }
+  ```
 
 - **配置**：
 
@@ -5475,10 +5513,36 @@ You can also deploy Spring Boot applications to any servlet 3.1+ compatible cont
   ```yml
   server:
     port: 8080
-  # enable monitoring of components
-  debug: false  # default value is false
+  # 启用组件监控（component monitoring）
+  debug: false  # 默认值为 false
+  
+  # 对实体类 person 的属性配置
+  person:
+    userName: Domenic
+    boss: false
+    # 若日期类型为 Date，则写为 2019/12/12 20:12:33 且默认识别
+    # 若日期类型为 LocalDateTime，则需要在实体类中配置类型转换
+    birth: 2000-02-17 15:02:31
+    age: 18
+    interests: [ 编程, 跑步 ]
+    animal:
+      - jerry
+      - oscar
+    score:
+      english:
+        first: 30
+        second: 40
+        third: 50
+      math: [ 131, 140, 148 ]
+      chinese: { first: 128, second: 136 }
+    salary: [ 3999, 4999.98, 5999.99 ]
+    allPets:
+      sick:
+        - { name: tom }
+        - { name: jerry, weight: 47 }
+      health: [ { name: oscar, weight: 40 } ]
   ```
-
+  
   > 配置文件中设置 debug 为 true，可以开启自动配置报告，输出所有被采用、排除的自动配置类
   >
   > 获取 IOC 容器中的所有类：
@@ -5526,7 +5590,7 @@ You can also deploy Spring Boot applications to any servlet 3.1+ compatible cont
   - Ctrl + Alt + Shift + / --\> Registry  
     √ compiler.automake.allow.when.app.running, √ actionSystem.assertFocusAccessFromEdt
   
-- **配置文件智能提示**
+- **配置文件智能提示**：
 
   会为带有 @ConfigurationProperties 的类生成元数据，让 IDE 提供自动补全功能
 
@@ -5574,7 +5638,8 @@ You can also deploy Spring Boot applications to any servlet 3.1+ compatible cont
       B(spring-boot-starter) --依赖--> C(spring-boot-autoconfigure)
   ```
   
-  所有启动器都依赖 spring-boot-starter，使用者也可以[自定义启动器](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.developing-auto-configuration.custom-starter)<br/>spring-boot-starter 会根据场景，按需进行自动配置
+  所有启动器都依赖 spring-boot-starter，使用者也可以[自定义启动器](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.developing-auto-configuration.custom-starter)  
+  spring-boot-starter 会根据场景，按需进行自动配置
 
   **示例**：
   

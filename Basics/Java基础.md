@@ -604,7 +604,7 @@ Objects.equals(i, l); // 结果为 false
 
    左移 1 位相当于当前整数的数值乘以 2
 
-2. \>\> 右移运算符，用于将数据的二进制位向右移动，左边使用符号位补充
+2. \>\> 右移运算符（算数右移），用于将数据的二进制位向右移动，左边**使用符号位补充**
 
    右移 1 位相当于当前整数的数值整除 2
 
@@ -3047,13 +3047,13 @@ String userName = new String(name.getBytes("ISO-8859-1"),"utf-8");
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | String concat(String str)                                    | 字符串的拼接                                                 |
 | String trim()                                                | 返回去掉前导和后继空白的字符串                               |
-| String substring(int beginIndex)<br/>String substring(int beginIndex, int endIndex) | 返回字符串中下标从 beginIndex 到结尾或到 endIndex 的子字符串<br/>左包含，右不包含 |
+| String substring(int beginIndex)<br/>String substring(int beginIndex, int endIndex) | 返回字符串中下标从 beginIndex 到结尾或到 endIndex 的子字符串<br/>**左包含，右不包含** |
 
 ##### 正反向查找
 
 | 方法声明                                                     | 功能                                                         |
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
-| int indexOf(int ch) / indexOf(int ch, int fromIndex)         | 返回参数 ch 指定字符第一次出现的下标，正向查找<br/>ch 是字符（Unicode 编码）<br/>fromIndex 是从左向右的起始位置，包含该位置 |
+| int indexOf(int ch) / indexOf(int ch, int fromIndex)         | 返回参数 ch 指定字符第一次出现的下标，正向查找<br/>ch 是字符（Unicode 编码）<br/>fromIndex 是从左向右的起始位置，包含该位置<br/>**若没找到则返回 -1** |
 | int indexOf(String str) / int indexOf(String str, int fromIndex) | 返回参数 str 指定字符串第一次出现的下标<br/>（字符串中第一个字符的下标） |
 | int lastIndexOf(int ch) / int lastIndexOf(int ch, int fromIndex) | 返回参数 ch 指定的字符最后出现的索引<br/>fromIndex 是从右向左的起始位置（反向），包含该位置 |
 | int lastIndexOf(String str) / int lastIndexOf(String str, int fromIndex) | 返回参数 str 指定字符串最后出现的索引位置                    |
@@ -8980,13 +8980,17 @@ user-db:
 
 ### 综合示例
 
+Springboot 框架中使用 yaml 进行属性注入
+
 **yaml 配置文件**
 
 ```yml
 person:
   userName: Domenic
   boss: false
-  birth: 2000-02-17 15:02:31  # 若日期类型为 Date，则写为 2019/12/12 20:12:33 且默认识别
+  # 若日期类型为 Date，则写为 2019/12/12 20:12:33 且默认识别
+  # 若日期类型为 LocalDateTime，则需要在实体类中配置类型转换
+  birth: 2000-02-17 15:02:31
   age: 18
   pet:
     name: tomcat
@@ -9013,9 +9017,10 @@ person:
 **Person 类**
 
 ```java
-@Component
-@Data
-@ConfigurationProperties(prefix = "person")
+// Springboot
+@Component  // 声明为组件
+@Data  // Lombok
+@ConfigurationProperties(prefix = "person")  // 根据前缀引入配置信息
 public class Person {
 
     private String userName;
@@ -9074,6 +9079,7 @@ allPets={sick=[Pet(name=tom, weight=null), Pet(name=jerry, weight=47.0)], health
 **Pet 类**
 
 ```java
+// Springboot
 @Component
 @Data
 @ConfigurationProperties(prefix = "person.pet")

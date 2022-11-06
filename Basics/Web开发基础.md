@@ -950,7 +950,7 @@ resp.setContentType("text/html;charset=utf-8");
 
 ##### [ServletConfig 接口](https://tomcat.apache.org/tomcat-8.5-doc/servletapi/javax/servlet/ServletConfig.html)
 
-<font color="orange">熟悉即可</font>
+<span style="color:orange">熟悉即可</span>
 
 **概述**：
 
@@ -1052,7 +1052,7 @@ ServletContext 引用为：org.apache.catalina.core.ApplicationContextFacade@b3e
 
 ##### [ServletContext 接口](https://tomcat.apache.org/tomcat-8.5-doc/servletapi/javax/servlet/ServletContext.html)
 
-<font color="orange">熟悉即可</font>
+<span style="color:orange">熟悉即可</span>
 
 **概述**：
 
@@ -2234,7 +2234,7 @@ forward 动作用于在 JSP 中实现转发，将请求转发到另一个指定�
 
 #### 内置对象
 
-<font color="red"><b>重点</b></font>
+<span style="color:red"><b>重点</b></span>
 
 - 在 JSP 程序中有 9 个内置对象，<u>由容器为用户进行实例化</u>，可以不用定义就直接使用这些变量
 - 在 JSP 转换成 Servlet 后，会自动追加这些变量的定义，使用内置对象可简化 JSP 的开发
