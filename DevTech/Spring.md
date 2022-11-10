@@ -14,13 +14,19 @@ Spring 是轻代码而重配置的框架，配置比较繁重，可能影响开�
 
 **两大核心**：IOC（Inverse Of Control：控制反转）、AOP（Aspect Oriented Programming：面向切面编程）
 
-- [**IOC**](#IOC)<br/>是面向对象编程中的一种设计原则，可以用来减低计算机代码之间的耦合度<br/>其中最常见的方式叫做依赖注入（Dependency Injection，简称 DI），还有一种方式叫 “依赖查找”（Dependency Lookup）
+- [**IOC**](#IOC)
+
+  是面向对象编程中的一种设计原则，可以用来减低计算机代码之间的耦合度  
+  其中最常见的方式叫做依赖注入（Dependency Injection，简称 DI），还有一种方式叫 “依赖查找”（Dependency Lookup）
 
   采用依赖注入技术之后，A 的代码只需要定义一个 B 对象，不是直接 new 来获得这个对象，而是通过相关的容器控制程序来将 B 对象在外部 new 出来并注入到 A 类里的引用中。而具体获取的方法、对象被获取时的状态由配置文件（如 XML）指定
 
-- [**AOP**](#AOP)<br/>是一种程序设计思想，旨在将横切关注点与业务主体进行进一步分离，以提高代码的模块化程度（在不修改源代码的情况下，对方法进行增强），AOP 的底层就是动态代理
+- [**AOP**](#AOP)
 
-  通过在现有代码基础上增加额外的通知（Advice）机制，能够对被声明为 “切点（Pointcut）” 的代码块进行统一管理与装饰<br/>如：“给所有方法名以 set 开头的方法添加日志”，该思想使开发人员能将与代码核心业务逻辑关系不密切的功能（如：日志）添加至程序中，同时又不降低业务代码的可读性
+  是一种程序设计思想，旨在将横切关注点与业务主体进行进一步分离，以提高代码的模块化程度（在不修改源代码的情况下，对方法进行增强），AOP 的底层就是动态代理
+
+  通过在现有代码基础上增加额外的通知（Advice）机制，能够对被声明为 “切点（Pointcut）” 的代码块进行统一管理与装饰  
+  如：“给所有方法名以 set 开头的方法添加日志”，该思想使开发人员能将与代码核心业务逻辑关系不密切的功能（如：日志）添加至程序中，同时又不降低业务代码的可读性
 
 <details>
     <summary><b>Spring 发展历程</b></summary>
@@ -49,11 +55,17 @@ Spring 是轻代码而重配置的框架，配置比较繁重，可能影响开�
 
 **Spring 优点**
 
-1. 方便解耦，简化开发<br/>Spring 就是一个容器，可以将所有对象创建和关系维护交给 Spring 管理<br/>通常说当一个模块（对象）更改时也需要更改其他模块（对象），这就是耦合，耦合度过高会使代码的维护成本增加
-2. 支持 AOP 编程<br/>Spring 提供面向切面编程，方便实现程序进行权限拦截，运行监控等功能
-3. 支持声明式事务<br/>通过配置完成事务的管理，无需手动编程
-4. 方便测试，降低 JavaEE API 的使用<br/>Spring 支持 Junit4，可以使用注解测试
-5. 方便集成各种优秀框架<br/>不排除各种优秀的开源框架，内部提供了对各种优秀框架的直接支持
+1. 方便解耦，简化开发  
+   Spring 就是一个容器，可以将所有对象创建和关系维护交给 Spring 管理  
+   通常说当一个模块（对象）更改时也需要更改其他模块（对象），这就是耦合，耦合度过高会使代码的维护成本增加
+2. 支持 AOP 编程  
+   Spring 提供面向切面编程，方便实现程序进行权限拦截，运行监控等功能
+3. 支持声明式事务  
+   通过配置完成事务的管理，无需手动编程
+4. 方便测试，降低 JavaEE API 的使用  
+   Spring 支持 Junit4，可以使用注解测试
+5. 方便集成各种优秀框架  
+   不排除各种优秀的开源框架，内部提供了对各种优秀框架的直接支持
 
 **Spring 体系结构**
 
@@ -92,7 +104,8 @@ ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.x
 
 - **xmlns** - XML 文件默认的命名空间
 
-  XML 命名空间可以避免元素命名冲突，将命名空间和元素名、属性连在一起使用（类似于 Java 中包的作用）<br/>在 XML 中，采用现成的、在全球范围唯一的域名，即 URL 作为 Namespace
+  XML 命名空间可以避免元素命名冲突，将命名空间和元素名、属性连在一起使用（类似于 Java 中包的作用）  
+  在 XML 中，采用现成的、在全球范围唯一的域名，即 URL 作为 Namespace
 
 - **xmlns:xxx** - xxx 是给对应命名空间起的一个前缀名，所有带有相同前缀的子元素都会与同一个命名空间相关联
 
@@ -163,9 +176,9 @@ http://www.springframework.org/schema/context/spring-context.xsd
 >
 > 原本需要手动 new Person() 来获取实例，而反转后是直接从 Spring 的 IOC 容器获取，对象的创建权交给了 Spring，在程序启动时，Spring 会创建类对象存在 IOC 容器中
 
-当有多个 IOC 容器时，会有**父容器**和**子容器**。子容器可以访问父容器中的 bean，但父容器不能访问子容器的 bean
+当有多个 IOC 容器时，会有 **父容器** 和 **子容器**。子容器可以访问父容器中的 bean，但父容器不能访问子容器的 bean
 
-如：Spring 和 SpringMVC 整合后，Spring 的 IOC 容器为**父容器**，SpringMVC 的 IOC 容器为**子容器**
+如：Spring 和 SpringMVC 整合后，Spring 的 IOC 容器为 **父容器**，SpringMVC 的 IOC 容器为 **子容器**
 
 ### 模拟实现 IOC
 
@@ -210,7 +223,8 @@ public class UserDaoImpl implements UserDao {
 
 编写工厂类 BeanFactory：
 
-该类将会读取 xml 配置文件，创建所有待创建的实例对象，该类中有方法可以实现根据对象名，获取实例<br/>BeanFactory 就是一个简单的 Spring 的 IOC 容器所具备的功能
+该类将会读取 xml 配置文件，创建所有待创建的实例对象，该类中有方法可以实现根据对象名，获取实例  
+BeanFactory 就是一个简单的 Spring 的 IOC 容器所具备的功能
 
 ```java
 public class BeansFactory {
@@ -296,7 +310,8 @@ public class UserDaoImpl implements UserDao {
 
 编写 Spring 核心配置文件：
 
-在 maven 项目的 resources 目录下，创建 applicationContext.xml，就是核心配置文件<br/>若使用的 idea，可以在导入 spring-context 后，通过右键 resources -> New -> XML Configuration File -> Spring Config，自动生成配置文件中的基础代码
+在 maven 项目的 resources 目录下，创建 applicationContext.xml，就是核心配置文件  
+若使用的 idea，可以在导入 spring-context 后，通过右键 resources -> New -> XML Configuration File -> Spring Config，自动生成配置文件中的基础代码
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -366,21 +381,21 @@ API 体系结构图（没有包含所有类）：
 
 常用实现类：
 
-1. ClassPathXmlApplicationContext
-从类的根路径下加载配置文件（推荐）
-2. FileSystemXmlApplicationContext
-从磁盘路径下加载配置文件，配置文件可以在磁盘的任意位置
-3. AnnotationConfigApplicationContext
-当使用注解配置容器对象时，需要使用此类来创建 Spring 容器、读取注解
+1. ClassPathXmlApplicationContext  
+   从类的根路径下加载配置文件（推荐）
+2. FileSystemXmlApplicationContext  
+   从磁盘路径下加载配置文件，配置文件可以在磁盘的任意位置
+3. AnnotationConfigApplicationContext  
+   当使用注解配置容器对象时，需要使用此类来创建 Spring 容器、读取注解
 
 常用方法：
 
-1. Object getBean(String name);
-根据 Bean 的 id 从容器中获得 Bean 实例，返回类型为 Object，需强转
-2. \<T\> T getBean(Class\<T\> requiredType);
-根据类型从容器中匹配 Bean 实例。当容器中有多个同类型的 Bean 时，此方法会报错 NoUniqueBeanDefinitionException
-3. \<T\> T getBean(String name, Class\<T\> requiredType);
-根据 Bean 的 id 和类型获得 Bean 实例，可解决容器中有多个同类型 Bean 的情况
+1. Object getBean(String name);  
+   根据 Bean 的 id 从容器中获得 Bean 实例，返回类型为 Object，需强转
+2. \<T\> T getBean(Class\<T\> requiredType);  
+   根据类型从容器中匹配 Bean 实例。当容器中有多个同类型的 Bean 时，此方法会报错 NoUniqueBeanDefinitionException
+3. \<T\> T getBean(String name, Class\<T\> requiredType);  
+   根据 Bean 的 id 和类型获得 Bean 实例，可解决容器中有多个同类型 Bean 的情况
 
 ```java
 ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
@@ -417,13 +432,17 @@ Spring 核心配置文件命名示例：applicationContext.xml
 
 - **\<bean\> ** 的属性和子元素：
 
-  - **id**<br/>Bean 的唯一标识符，Spring IOC 容器对 Bean 的配置和管理都通过该属性完成。id 的值必须以字母开始，可以包含字母、数字、下划线等符号
+  - **id**  
+    Bean 的唯一标识符，Spring IOC 容器对 Bean 的配置和管理都通过该属性完成。id 的值必须以字母开始，可以包含字母、数字、下划线等符号
 
-  - **name**<br/>该属性表示 Bean 的名称，我们可以通过 name 属性为同一个 Bean 同时指定多个名称，名称之间用逗号或分号隔开。Spring 容器可以通过 name 属性配置和管理容器中的 Bean
+  - **name**  
+    该属性表示 Bean 的名称，我们可以通过 name 属性为同一个 Bean 同时指定多个名称，名称之间用逗号或分号隔开。Spring 容器可以通过 name 属性配置和管理容器中的 Bean
 
-  - **class**<br/>该属性指定了 Bean 的具体实现类，它必须是一个完整的类名，即类的全限定名（Fully Qualified Name）
+  - **class**  
+    该属性指定了 Bean 的具体实现类，它必须是一个完整的类名，即类的全限定名（Fully Qualified Name）
 
-  - **scope**<br/>表示 Bean 的作用域，默认为 singleton，属性值有 singleton（单例）、prototype（多例）和 Web 项目中的 request、session、global Session（global session 应用在 Portlet 环境）
+  - **scope**  
+    表示 Bean 的作用域，默认为 singleton，属性值有 singleton（单例）、prototype（多例）和 Web 项目中的 request、session、global Session（global session 应用在 Portlet 环境）
 
     > 1. 当 **scope = "singleton"**：
     > Bean 的实例化时机：当 Spring 核心文件被加载时，实例化配置的 Bean 实例
@@ -438,17 +457,27 @@ Spring 核心配置文件命名示例：applicationContext.xml
     > 对象运行：只要对象在使用中，就一直活着
     > 对象销毁：当对象长时间不用时，被 Java 的垃圾回收器回收了
 
-  - **lazy-init**<br/>懒加载，值为 true，容器在首次请求时才会创建 Bean 实例；值为 false，容器在启动时创建 Bean 实例<br/>该方法只在 scope=singleton 时有效
+  - **lazy-init**  
+    懒加载，值为 true，容器在首次请求时才会创建 Bean 实例；值为 false，容器在启动时创建 Bean 实例  
+    该方法只在 scope=singleton 时有效
 
-  - **factory-bean**<br/>引用工厂类的 bean
+  - **factory-bean**  
+    引用工厂类的 bean
 
-  - **factory-method**<br/>通过工厂方法来获取对象实例
+  - **factory-method**  
+    通过工厂方法来获取对象实例
 
-  - **init-method**<br/>容器加载 Bean 时调用指定方法（方法定义在该类中），类似于 Servlet 中的 init() 方法
+  - **init-method**  
+    容器加载 Bean 时调用指定方法（方法定义在该类中），类似于 Servlet 中的 init() 方法
 
-  - **destroy-method**<br/>容器删除 Bean 时调用指定方法（方法定义在该类中），类似于 Servlet 中的 destroy() 方法<br/>该方法只在 scope=singleton 时有效<br/>调用 ClassPathXmlApplicationContext 类的 close 方法关闭容器，可以看到
+  - **destroy-method**  
+    容器删除 Bean 时调用指定方法（方法定义在该类中），类似于 Servlet 中的 destroy() 方法  
+    该方法只在 scope=singleton 时有效  
+    调用 ClassPathXmlApplicationContext 类的 close 方法关闭容器，可以看到
 
-  - **\<constructor-arg\>**<br/>用于将构造参数传入，以实现 Bean 的实例化<br/>该元素的 index 属性指定构造参数的序号（从 0 开始），type 属性指定构造参数的类型
+  - **\<constructor-arg\>**  
+    用于将构造参数传入，以实现 Bean 的实例化  
+    该元素的 index 属性指定构造参数的序号（从 0 开始），type 属性指定构造参数的类型
 
     - **name**
     - **ref**
@@ -459,7 +488,9 @@ Spring 核心配置文件命名示例：applicationContext.xml
     - **\<set\>**
     - **\<props\>**
 
-  - **\<property\>**<br/>用于调用 Bean 实例中的 setter 方法对属性进行赋值，进行属性的注入<br/>该元素的 name 属性用于指定 Bean 实例中相应的属性名
+  - **\<property\>**  
+    用于调用 Bean 实例中的 setter 方法对属性进行赋值，进行属性的注入  
+    该元素的 name 属性用于指定 Bean 实例中相应的属性名
 
     - **name**
     - **ref**
@@ -472,7 +503,8 @@ Spring 核心配置文件命名示例：applicationContext.xml
 
 - **\<import>**：
 
-  - **resource**<br/>导入的配置文件的路径
+  - **resource**  
+    导入的配置文件的路径
 
 #### 实例化
 
@@ -998,26 +1030,72 @@ public class test {&#10;
 
 ### 注解开发
 
-#### 注解
+#### IOC 注解
 
 Spring 常用注解主要是替代 \<bean> 配置
 
-| 注解           | 说明                                             |
-| -------------- | ------------------------------------------------ |
-| **@Component**     | 使用在类上，用于实例化 Bean                       |
-| **@Controller**    | 使用在 web 层类上，用于实例化 Bean                |
-| **@Service**       | 使用在 service 层类上，用于实例化 Bean            |
-| **@Repository**    | 使用在 dao 层类上，用于实例化 Bean                |
-| **@Autowired**     | 使用在字段上，用于根据类型依赖注入（若匹配到多个，会根据变量名自动进行二次匹配） |
-| **@Qualifier**     | 结合 @Autowired 使用（不能单独使用），根据名称进行依赖注入 |
-| **@Resource**      | 相当于 @Autowired + @Qualifier，按照名称进行注入（是 javax.annotation 包下的） |
-| **@Value**         | 注入普通属性                                     |
-| **@Scope**         | 指定 Bean 的作用范围，默认 singleton |
-| @PostConstruct | 使用在方法上，标注该方法是 Bean 的初始化方法，相当于 init-method |
-| @PreDestroy    | 使用在方法上，标注该方法是 Bean 的销毁方法，相当于 destroy-method |
+<table style="width:60rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width=20%>注解</th>
+            <th width=80%>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>@Component</b></td>
+            <td>使用在类上，用于实例化 Bean</td>
+        </tr>
+        <tr>
+            <td><b>@Controller</b></td>
+            <td>使用在 web 层类上，用于实例化 Bean</td>
+        </tr>
+        <tr>
+            <td><b>@Service</b></td>
+            <td>使用在 service 层类上，用于实例化 Bean</td>
+        </tr>
+        <tr>
+            <td><b>@Repository</b></td>
+            <td>使用在 dao 层类上，用于实例化 Bean</td>
+        </tr>
+        <tr>
+            <td><b>@Autowired</b></td>
+            <td>使用在字段上，用于根据类型依赖注入（若匹配到多个，会根据变量名自动进行二次匹配）</td>
+        </tr>
+        <tr>
+            <td><b>@Qualifier</b></td>
+            <td>结合 @Autowired 使用（不能单独使用），根据名称进行依赖注入</td>
+        </tr>
+        <tr>
+            <td><b>@Resource</b></td>
+            <td>相当于 @Autowired + @Qualifier，按照名称进行注入（是 javax.annotation 包下的）</td>
+        </tr>
+        <tr>
+            <td><b>@Value</b></td>
+            <td>注入普通属性</td>
+        </tr>
+        <tr>
+            <td><b>@Scope</b></td>
+            <td>指定 Bean 的作用范围，默认 singleton</td>
+        </tr>
+        <tr>
+            <td>@PostConstruct</td>
+            <td>使用在方法上，标注该方法是 Bean 的初始化方法，相当于 init-method</td>
+        </tr>
+        <tr>
+            <td>@PreDestroy</td>
+            <td>使用在方法上，标注该方法是 Bean 的销毁方法，相当于 destroy-method</td>
+        </tr>
+    </tbody>
+</table>
 
-> 1. **@Controller、@Service、@Repository**<br/>这三个注解都是从 @Component 扩展出来的，相当于 \<bean>，区分为四个，主要是为了代码编写规范<br/>这四个注解使用时若不指定对象实例的名字，则默认用首字母小写的驼峰形式，如：AccountDao，名字为 accountDao
-> 2. **@Autowired、@Qualifier、@Resource、@Value**<br/>相当于 \<property>，但是无需写 setter 方法，Spring 容器会自动实现注入<br/>@Autowired 通过类型可能会匹配到多个实例，此时会根据变量名自动进行二次匹配，查找 id 与变量名相同的实例<br/>@Qualifier 就是直接通过自动名称去查找实例
+> 1. **@Controller、@Service、@Repository**  
+>    这三个注解都是从 @Component 扩展出来的，相当于 \<bean\>，区分为四个，主要是为了代码编写规范  
+>    这四个注解使用时若不指定对象实例的名字，则默认用首字母小写的驼峰形式，如：AccountDao，名字为 accountDao
+> 2. **@Autowired、@Qualifier、@Resource、@Value**  
+>    相当于 \<property\>，但是无需写 setter 方法，Spring 容器会自动实现注入  
+>    @Autowired 通过类型可能会匹配到多个实例，此时会根据变量名自动进行二次匹配，查找 id 与变量名相同的实例  
+>    @Qualifier 就是直接通过自动名称去查找实例
 
 JDK11 及以后完全移除了 javax 扩展包，导致无法使用 @Resource 注解（其实用的不多），需要 pom 引入依赖
 
@@ -1038,13 +1116,36 @@ JDK11 及以后完全移除了 javax 扩展包，导致无法使用 @Resource �
 * 组件扫描的配置：\<context:component-scan\>
 * 引入其他文件：\<import\>
 
-| 注解            | 说明                                                         |
-| --------------- | ------------------------------------------------------------ |
-| @Configuration  | 标识该类为核心配置类，代替了核心配置文件                     |
-| @ComponentScan  | 配置组件扫描，value 为初始化容器时要扫描的包                 |
-| @Import         | 导入其他的配置类，value 为配置类的 class 对象数组            |
-| @PropertySource | 用于加载 properties 文件中的配置                             |
-| @Bean           | 将标识的方法的返回值作为 Bean 进行管理若注解未设置 value，则 Bean 的 id 为方法的方法名若注解设置了 value，则 id 为 value 的值 |
+<table style="width:55rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width=25%>注解</th>
+            <th width=75%>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Configuration</td>
+            <td>标识该类为核心配置类，代替了核心配置文件</td>
+        </tr>
+        <tr>
+            <td>@ComponentScan</td>
+            <td>配置组件扫描，value 为初始化容器时要扫描的包</td>
+        </tr>
+        <tr>
+            <td>@Import</td>
+            <td>导入其他的配置类，value 为配置类的 class 对象数组</td>
+        </tr>
+        <tr>
+            <td>@PropertySource</td>
+            <td>用于加载 properties 文件中的配置</td>
+        </tr>
+        <tr>
+            <td>@Bean</td>
+            <td>将标识的方法的返回值作为 Bean 进行管理若注解未设置 value<br/>则 Bean 的 id 为方法的方法名若注解设置了 value，则 id 为 value 的值</td>
+        </tr>
+    </tbody>
+</table>
 
 通过如下代码加载核心配置类：
 
@@ -1057,7 +1158,8 @@ ApplicationContext ac = new AnnotationConfigApplicationContext(SpringConfig.clas
 
 #### 使用
 
-首先在 applicationContext.xml 中配置组件扫描<br/>指定哪个包及其子包下的 Bean 需要进行扫描以便识别使用注解配置的类、字段、方法
+首先在 applicationContext.xml 中配置组件扫描  
+指定哪个包及其子包下的 Bean 需要进行扫描以便识别使用注解配置的类、字段、方法
 
 ```xml
 <!-- 注解的组件扫描 -->
@@ -1096,14 +1198,14 @@ private String driver;
 
 依赖注入三种方式：
 
-- 属性注入
+- **属性**注入
 
   ```java
   @Autowired
   private UserDao userDao;
   ```
 
-- 构造器注入
+- **构造器**注入
 
   ```java
   final UserDao userDao;
@@ -1114,7 +1216,7 @@ private String driver;
   }
   ```
 
-- set 方法注入
+- **set 方法**注入
 
   ```java
   private UserDao userDao;
@@ -1228,7 +1330,9 @@ Spring 实例化 bean 是通过 ApplicationContext.getBean() 方法
 
 实现方式：
 
-Spring 中有两个池子：成品池子、半成品池子<br/>循环依赖的前提是 Spring 开启了 allowCircularReferences（默认为 true），那么一个正在被创建的 bean 才会被放进半成品池子<br/>在向容器获取 bean 时，首先向成品池子要，要不到，再去向半成品池子要
+Spring 中有两个池子：成品池子、半成品池子  
+循环依赖的前提是 Spring 开启了 allowCircularReferences（默认为 true），那么一个正在被创建的 bean 才会被放进半成品池子  
+在向容器获取 bean 时，首先向成品池子要，要不到，再去向半成品池子要
 
 > 出现循环依赖是业务设计有问题，高层业务和底层业务的划分不够清晰，一般业务的依赖方向需要是无环的，有环的业务，在后续的维护和拓展中有一定困难
 
@@ -1247,11 +1351,11 @@ public void destroy(){
 
 ##### 核心配置类
 
-<table style="width:60rem">
+<table style="width:45rem">
     <thead>
         <tr style="text-align:left">
-            <th>注解</th>
-            <th>说明</th>
+            <th width=30%>注解</th>
+            <th width=70%>说明</th>
         </tr>
     </thead>
     <tbody>
@@ -1277,6 +1381,7 @@ public void destroy(){
         </tr>
     </tbody>
 </table>
+
 
 
 示例命名：SpringConfig.java
@@ -1381,7 +1486,8 @@ AOP 是 OOP（面向对象编程）的延续，是 Spring 框架中的一个重�
 
 AOP 的底层是通过 Spring 提供的动态代理技术实现的。在运行期间，Spring 通过动态代理技术动态地生成代理对象，代理对象方法执行时进行增强功能的介入，再去调用目标对象的方法，从而完成功能的增强
 
-动态代理有两种方式 JDK、CGLIB，Spring 框架会根据目标类是否实现了接口来决定采用哪种方式<br/>也可以强制使用 CGLIB 方式：配置 `<aop:aspectj-autoproxy proxyt-target-class="true"/>`
+动态代理有两种方式 JDK、CGLIB，Spring 框架会根据目标类是否实现了接口来决定采用哪种方式  
+也可以强制使用 CGLIB 方式：配置 `<aop:aspectj-autoproxy proxyt-target-class="true"/>`
 
 **AOP 相关术语**：
 
@@ -1391,7 +1497,9 @@ AOP 的底层是通过 Spring 提供的动态代理技术实现的。在运行�
 * Pointcut（切入点）：指要对哪些 Joinpoint 进行拦截的定义
 * Advice（通知/增强）：指拦截到 Joinpoint 后要做的事就是通知：前置通知、后置通知、异常通知、最终通知、环绕通知
 * Aspect（切面）：是切入点和通知（引介）的结合，切点 + 通知
-* Weaving（织入）：指把增强应用到目标对象来创建新的代理对象的过程<br/>Spring 在运行期间通过代理生成目标类，是动态代理织入<br/>AspectJ 采用编译期织入和类装载期织入，在编译期间将切面代码编译到目标代码中，是静态代理
+* Weaving（织入）：指把增强应用到目标对象来创建新的代理对象的过程  
+  Spring 在运行期间通过代理生成目标类，是动态代理织入  
+  AspectJ 采用编译期织入和类装载期织入，在编译期间将切面代码编译到目标代码中，是静态代理
 
 ### 案例引入
 
@@ -1458,7 +1566,9 @@ INSERT INTO `account`(`id`,`name`,`money`) VALUES (1,'tom',1000), (2,'jerry',100
     </code></pre>
 </details>
 
-本案例采用 XML 配置 与 注解配置 结合的方式<br/>DataSource、QueryRunner 对象创建在 applicationContext.xml 中配置<br/>其他配置用注解实现
+本案例采用 XML 配置 与 注解配置 结合的方式  
+DataSource、QueryRunner 对象创建在 applicationContext.xml 中配置  
+其他配置用注解实现
 
 <details>
     <summary>applicationContext.xml</summary>
@@ -1544,7 +1654,8 @@ public class Account {
 
 ConnectionUtil.java
 
-从数据源中获取一个连接，并实现<u>连接和线程的绑定</u><br/>dao 层的方法只有使用同一个连接 Connection，才会在同一个事务中
+从数据源中获取一个连接，并实现<u>连接和线程的绑定</u>  
+dao 层的方法只有使用同一个连接 Connection，才会在同一个事务中
 
 ```java
 @Component
@@ -1704,16 +1815,24 @@ public class JunitTest {
 
 #### 代理优化
 
-原始代码由于添加了事务控制，产生了一个问题：<br/>业务层方法变得臃肿了，出现了大量事务代码，当业务多起来后，会有许多重复代码<br/>并且业务层方法和事务控制方法的耦合，违背了面向对象的开发思想
+原始代码由于添加了事务控制，产生了一个问题：  
+业务层方法变得臃肿了，出现了大量事务代码，当业务多起来后，会有许多重复代码  
+并且业务层方法和事务控制方法的耦合，违背了面向对象的开发思想
 
-因此，需要将业务代码和事务代码进行拆分，通过动态代理的方式，对业务方法进行事务的增强<br/>实现在业务层只编写业务层相关的代码，分工明确
+因此，需要将业务代码和事务代码进行拆分，通过动态代理的方式，对业务方法进行事务的增强  
+实现在业务层只编写业务层相关的代码，分工明确
 
 Spring 的 AOP 实现底层就是对动态代理的代码进行了封装，封装后程序员只需对需要关注的部分进行代码编写，并通过配置的方式完成指定目标方法的增强
 
 **常用的动态代理技术**：
 
-- JDK 代理<br/>基于**接口**的动态代理技术：被代理类至少要实现一个接口，代理时，利用拦截器（实现 InvocationHandler 接口）加上反射机制生成一个代理接口的匿名类，在调用具体方法前调用 InvokeHandler 来处理，对原方法进行增强
-- CGLIB 代理<br/>基于**父类**的动态代理技术：为被代理类动态生成一个代理子类，子类重写被代理类的所有非 final 方法。在子类中采用方法拦截（实现 MethodInterceptor 接口）拦截所有的父类方法的调用，顺势织入横切逻辑（可以理解为重写父类方法），对原方法进行增强
+- JDK 代理
+
+  基于**接口**的动态代理技术：被代理类至少要实现一个接口，代理时，利用拦截器（实现 InvocationHandler 接口）加上反射机制生成一个代理接口的匿名类，在调用具体方法前调用 InvokeHandler 来处理，对原方法进行增强
+
+- CGLIB 代理
+
+  基于**父类**的动态代理技术：为被代理类动态生成一个代理子类，子类重写被代理类的所有非 final 方法。在子类中采用方法拦截（实现 MethodInterceptor 接口）拦截所有的父类方法的调用，顺势织入横切逻辑（可以理解为重写父类方法），对原方法进行增强
 
 **注意**：
 
@@ -1721,13 +1840,31 @@ Spring 的 AOP 实现底层就是对动态代理的代码进行了封装，封�
 - CGLIB 方式无法代理 final 方法，而 JDK 方式可以
 - JDK 方式通过反射实现，效率较低；CGLIB 方式采用 ASM 字节码生成框架，使用字节码技术生成代理类，效率较高
 
-<img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/Spring/Spring_AOP_案例引入_代理优化_JDK&CGLIB_图示.png" width="720rem" style="border-radius:.4rem" align="left" alt="Spring_AOP_案例引入_代理优化_JDK&CGLIB_图示"/><div style="clear:both"></div>
+```mermaid
+flowchart
+  subgraph "JDK 动态代理"
+    direction RL
+    subgraph "内存 2（Java运行时）"
+      A("代理对象")
+    end
+    B("目标接口") --> A
+    C("目标对象") --> B
+  end
+  subgraph "cglib 动态代理"
+    direction TB
+    subgraph "内存 1（Java运行时）"
+      D("代理对象")
+    end
+    E("目标接口") --> D
+  end
+```
 
 ##### JDK 代理
 
 被代理对象（目标对象）是 AccountServiceImpl，它实现了 AccountService 接口，所以满足条件
 
-我们需要编写获取代理对象的方法<br/>因为代理对象和目标对象是平级的，代理对象不能代表目标对象，因此获取代理对象的方法的返回值需要是目标接口类型
+我们需要编写获取代理对象的方法  
+因为代理对象和目标对象是平级的，代理对象不能代表目标对象，因此获取代理对象的方法的返回值需要是目标接口类型
 
 创建代理对象工厂类 JDKProxyFactory：
 
@@ -1748,8 +1885,11 @@ public class JDKProxyFactory {
                 as.getClass().getInterfaces(),
                 new InvocationHandler() {
                     @Override
-                    // proxy: 当前的代理对象引用，method: 被调用的目标方法的引用，args: 被调用的目标方法所用到的参数
-                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                    // proxy: 当前的代理对象引用
+                    // method: 被调用的目标方法的引用
+                    // args: 被调用的目标方法所用到的参数
+                    public Object invoke(
+                        Object proxy, Method method, Object[] args) throws Throwable {
                         Object res = null;
                         try {
                             tm.begin(); // 开启事务
@@ -1847,7 +1987,7 @@ public class CglibProxyFactory {
 }
 ```
 
-简化 Service 层代码（仅保留业务相关代码）\. \. \.
+简化 Service 层代码（仅保留业务相关代码）...
 
 测试代码：
 
@@ -1891,13 +2031,42 @@ http://www.springframework.org/schema/aop/spring-aop.xsd
 <aop:通知类型 method="通知类中的方法名" pointcut="切点表达式"/>
 ```
 
-| 类型     | 标签                  | 说明                                     |
-| -------- | --------------------- | ---------------------------------------- |
-| 前置通知 | \<aop:before\>         | 增强方法在切入点方法前执行               |
-| 后置通知 | \<aop:afterReturning\> | 增强方法在切入点方法后执行               |
-| 异常通知 | \<aop:afterThrowing\>  | 增强方法在出现异常后执行                 |
-| 最终通知 | \<aop:after\>          | 无论切入点方法执行时是否有异常，都会执行 |
-| 环绕通知 | \<aop:around\>         | 可以手动控制增强代码在什么时候执行       |
+<table style="width:50rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width=20%>类型</th>
+            <th width=30%>标签</th>
+            <th width=50%>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>前置通知</td>
+            <td>&lt;aop:before&gt;</td>
+            <td>增强方法在切入点方法前执行</td>
+        </tr>
+        <tr>
+            <td>后置通知</td>
+            <td>&lt;aop:afterReturning&gt;</td>
+            <td>增强方法在切入点方法后执行</td>
+        </tr>
+        <tr>
+            <td>异常通知</td>
+            <td>&lt;aop:afterThrowing&gt;</td>
+            <td>增强方法在出现异常后执行</td>
+        </tr>
+        <tr>
+            <td>最终通知</td>
+            <td>&lt;aop:after&gt;</td>
+            <td>无论切入点方法执行时是否有异常，都会执行</td>
+        </tr>
+        <tr>
+            <td>环绕通知</td>
+            <td>&lt;aop:around&gt;</td>
+            <td>可以手动控制增强代码在什么时候执行</td>
+        </tr>
+    </tbody>
+</table>
 
 #### 切点表达式
 
@@ -2017,13 +2186,42 @@ public void testTransfer() throws Exception {
 
 注解语法：@通知注解("切点表达式")
 
-| 类型     | 标签                  | 说明                                     |
-| -------- | --------------------- | ---------------------------------------- |
-| 前置通知 | @Before         | 增强方法在切入点方法前执行               |
-| 后置通知 | @AfterReturning | 增强方法在切入点方法后执行               |
-| 异常通知 | @AfterThrowing  | 增强方法在出现异常后执行                 |
-| 最终通知 | @After          | 无论切入点方法执行时是否有异常，都会执行 |
-| 环绕通知 | @Around         | 可以手动控制增强代码在什么时候执行       |
+<table style="width:50rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width=20%>类型</th>
+            <th width=30%>标签</th>
+            <th width=50%>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>前置通知</td>
+            <td>@Before</td>
+            <td>增强方法在切入点方法前执行</td>
+        </tr>
+        <tr>
+            <td>后置通知</td>
+            <td>@AfterReturning</td>
+            <td>增强方法在切入点方法后执行</td>
+        </tr>
+        <tr>
+            <td>异常通知</td>
+            <td>@AfterThrowing</td>
+            <td>增强方法在出现异常后执行</td>
+        </tr>
+        <tr>
+            <td>最终通知</td>
+            <td>@After</td>
+            <td>无论切入点方法执行时是否有异常，都会执行</td>
+        </tr>
+        <tr>
+            <td>环绕通知</td>
+            <td>@Around</td>
+            <td>可以手动控制增强代码在什么时候执行</td>
+        </tr>
+    </tbody>
+</table>
 
 前四个通知的执行顺序：@Before -> @After -> @AfterReturning（如有异常：@AfterThrowing）
 
@@ -2147,7 +2345,8 @@ Spring 对数据库的操作在 JDBC 上做了封装，用 Spring 的注入功�
 
 **JdbcTemplate 是 Spring JDBC 支持类的中心类**，负责创建和释放资源，如：创建和关闭连接对象等
 
-JdbcTemplate 位于 spring-jdbc 中，其全限定命名为 org.springframework.jdbc.core.JdbcTemplate<br/>使用 JdbcTemlate 还需 spring-tx，包含了事务和异常控制
+JdbcTemplate 位于 spring-jdbc 中，其全限定命名为 org.springframework.jdbc.core.JdbcTemplate  
+使用 JdbcTemlate 还需 spring-tx，包含了事务和异常控制
 
 [spring-jdbc-5.3.23 JavaDoc - javadoc.io](https://javadoc.io/static/org.springframework/spring-jdbc/5.3.23/overview-summary.html)
 
@@ -2175,8 +2374,10 @@ JdbcTemplate 主要提供以下四类方法：
 
 Spring 的事务控制可分为 编程式事务控制 和 声明式事务控制
 
-- **编程式**<br/>直接把事务代码和业务代码耦合到一起，在实际开发中不用
-- **声明式**<br/>用配置的方式来实现的事务控制，事务代码和业务代码解耦合，用的 AOP 思想
+- **编程式**  
+  直接把事务代码和业务代码耦合到一起，在实际开发中不用
+- **声明式**  
+  用配置的方式来实现的事务控制，事务代码和业务代码解耦合，用的 AOP 思想
 
 #### Spring 事务
 
@@ -2192,22 +2393,60 @@ PlatformTransactionManager 接口，是 Spring 的**事务管理器**，提供�
 - Dao 层技术是 hibernate：HibernateTransactionManager
 - Dao 层技术是 JPA：JpaTransactionManager
 
-| 方法                                                         | 说明               |
-| ------------------------------------------------------------ | ------------------ |
-| TransactionStatus getTransaction(TransactionDefinition definition) | 获取事务的状态信息 |
-| void commit(TransactionStatus status)                        | 提交事务           |
-| void rollback(TransactionStatus status)                      | 回滚事务           |
+<table style="width:58rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width=75%>方法</th>
+            <th width=25%>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>TransactionStatus getTransaction(TransactionDefinition definition)</td>
+            <td>获取事务的状态信息</td>
+        </tr>
+        <tr>
+            <td>void commit(TransactionStatus status)</td>
+            <td>提交事务</td>
+        </tr>
+        <tr>
+            <td>void rollback(TransactionStatus status)</td>
+            <td>回滚事务</td>
+        </tr>
+    </tbody>
+</table>
+
 
 ##### 事务的定义信息
 
 TransactionDefinition 接口提供**事务的定义信息**：事务隔离级别、事务传播行为等
 
-| 方法                         | 说明               |
-| ---------------------------- | ------------------ |
-| int getIsolationLevel()      | 获得事务的隔离级别 |
-| int getPropogationBehavior() | 获得事务的传播行为 |
-| int getTimeout()             | 获得超时时间       |
-| boolean isReadOnly()         | 是否只读           |
+<table style="width:35rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width=60%>方法</th>
+            <th width=40%>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>int getIsolationLevel()</td>
+            <td>获得事务的隔离级别</td>
+        </tr>
+        <tr>
+            <td>int getPropogationBehavior()</td>
+            <td>获得事务的传播行为</td>
+        </tr>
+        <tr>
+            <td>int getTimeout()</td>
+            <td>获得超时时间</td>
+        </tr>
+        <tr>
+            <td>boolean isReadOnly()</td>
+            <td>是否只读</td>
+        </tr>
+    </tbody>
+</table>
 
 * timeout（超时时间）：默认值是 -1，没有超时限制；若有，以秒为单位进行设置
 * read-only（是否只读）：查询时建议设置为只读
@@ -2228,26 +2467,75 @@ TransactionDefinition 接口提供**事务的定义信息**：事务隔离级别
 
 事务传播行为是指**当一个业务方法被另一个业务方法调用**时，应该如何进行事务控制
 
-| 类型                      | 说明                                                         |
-| ------------------------- | ------------------------------------------------------------ |
-| **PROPAGATION_REQUIRED**  | 若当前没有事务，就新建一个事务<br/>若已存在一个事务，则加入到这个事务中（最常见的选择）<br/>被调用的方法必须要进行事务控制 |
-| **PROPAGATION_SUPPORTS**  | 支持当前事务；若当前没有事务，就以非事务方式执行             |
-| PROPAGATION_MANDATORY     | 使用当前的事务；若当前没有事务，就抛出异常                   |
-| PROPAGATION_REQUIRES_NEW  | 新建事务；若当前存在事务，把当前事务挂起                     |
-| PROPAGATION_NOT_SUPPORTED | 以非事务方式执行操作；若当前存在事务，就把当前事务挂起       |
-| PROPAGATION_NEVER         | 以非事务方式执行；若当前存在事务，则抛出异常                 |
-| PROPAGATION_NESTED        | 若当前存在事务，则在嵌套事务内执行<br/>若当前没有事务，则执行与 PROPAGATION_REQUIRED 类似的操作 |
+<table style="width:55rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width=35%>类型</th>
+            <th width=65%>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>PROPAGATION_REQUIRED</b></td>
+            <td>若当前没有事务，就新建一个事务<br/>若已存在一个事务，则加入到这个事务中（最常见的选择）<br/>被调用的方法必须要进行事务控制</td>
+        </tr>
+        <tr>
+            <td><b>PROPAGATION_SUPPORTS</b></td>
+            <td>支持当前事务；若当前没有事务，就以非事务方式执行</td>
+        </tr>
+        <tr>
+            <td>PROPAGATION_MANDATORY</td>
+            <td>使用当前的事务；若当前没有事务，就抛出异常</td>
+        </tr>
+        <tr>
+            <td>PROPAGATION_REQUIRES_NEW</td>
+            <td>新建事务；若当前存在事务，把当前事务挂起</td>
+        </tr>
+        <tr>
+            <td>PROPAGATION_NOT_SUPPORTED</td>
+            <td>以非事务方式执行操作；若当前存在事务，就把当前事务挂起</td>
+        </tr>
+        <tr>
+            <td>PROPAGATION_NEVER</td>
+            <td>以非事务方式执行；若当前存在事务，则抛出异常</td>
+        </tr>
+        <tr>
+            <td>PROPAGATION_NESTED</td>
+            <td>若当前存在事务，则在嵌套事务内执行<br/>若当前没有事务，则执行与 PROPAGATION_REQUIRED 类似的操作</td>
+        </tr>
+    </tbody>
+</table>
 
 ##### 事务运行状态
 
 TransactionStatus 接口提供具体的**事务运行状态**
 
-| 方法                       | 说明         |
-| -------------------------- | ------------ |
-| boolean isNewTransaction() | 是否是新事务 |
-| boolean hasSavepoint()     | 是否是回滚点 |
-| boolean isRollbackOnly()   | 事务是否回滚 |
-| boolean isCompleted()      | 事务是否完成 |
+<table style="width:35rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width=60%>方法</th>
+            <th width=40%>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>boolean isNewTransaction()</td>
+            <td>是否是新事务</td>
+        </tr>
+        <tr>
+            <td>boolean hasSavepoint()</td>
+            <td>是否是回滚点</td>
+        </tr>
+        <tr>
+            <td>boolean isRollbackOnly()</td>
+            <td>事务是否回滚</td>
+        </tr>
+        <tr>
+            <td>boolean isCompleted()</td>
+            <td>事务是否完成</td>
+        </tr>
+    </tbody>
+</table>
 
 #### 编程式事务（了解）
 
@@ -2399,7 +2687,7 @@ applicationContext.xml
 它可以设置事务的传播、隔离、超时、只读、回滚条件，还可以指定事务管理器
 
 注解可以用在接口、类、方法的定义上，它们根据优先级顺序相互覆盖  
-优先级从低到高：接口 -> 超类 -> 类 -> 接口方法 -> 超类方法 -> 类方法
+优先级从低到高：接口 -\> 超类 -\> 类 -\> 接口方法 -\> 超类方法 -\> 类方法
 
 Spring 会将类级的 @Transactional 应用于没有使用该注解的该类的所有 public 方法
 
@@ -2429,24 +2717,27 @@ SpringMVC 是基于 Java 实现 MVC 设计模式的轻量级 Web 框架，是 Sp
 
 **MVC 模式**：
 
-- **M 代表 模型（Model）**<br/>模型就是数据，就是 dao、bean
-- **V 代表 视图（View）**<br/>就是网页、JSP，用来展示模型中的数据
-- **C 代表 控制器（controller)**<br/>控制器的作用是把不同的数据（Model），显示在不同的视图（View）上，Servlet 扮演的就是这样的角色
+- **M 代表 模型（Model）**  
+  模型就是数据，就是 dao、bean
+- **V 代表 视图（View）**  
+  就是网页、JSP，用来展示模型中的数据
+- **C 代表 控制器（controller)**  
+  控制器的作用是把不同的数据（Model），显示在不同的视图（View）上，Servlet 扮演的就是这样的角色
 
 ```mermaid
-graph LR
+flowchart LR
   A1(("浏览器")) --> B["Spring 控制层"]
-  A2(("手机")) --> B["Spring 控制层"]
-  A3(("电脑")) --> B["Spring 控制层"]
+  A2(("手机")) --> B
+  A3(("电脑")) --> B
   subgraph Spring MVC 架构
-    B["Spring 控制层"] --> C["业务层 (Service)"]
-    C["业务层 (Service)"] --> B["Spring 控制层"]
+    B --> C["业务层 (Service)"]
+    C["业务层 (Service)"] --> B
     subgraph 夹带事务的模型层
-      C["业务层 (Service)"] --> D["数据访问层 (DAO)"]
-      D["数据访问层 (DAO)"] --> C["业务层 (Service)"]
+      C --> D["数据访问层 (DAO)"]
+      D --> C
     end
   end
-  D["数据访问层 (DAO)"] --> E[("数据库")]
+  D --> E[("数据库")]
 ```
 
 ### 入门示例
@@ -2564,7 +2855,9 @@ spring-mvc.xml：
 
 ### 静态资源访问
 
-若 SpringMVC 的前端控制器 DispatcherServlet 的 url-pattern 配置的是 /（缺省）<br/>加载静态资源时，会被 DispatcherServlet 处理，而不会执行 Tomcat 内置的 DefaultServlet 处理<br/>从而导致无法访问静态资源（因为没有配置映射）
+若 SpringMVC 的前端控制器 DispatcherServlet 的 url-pattern 配置的是 /（缺省）  
+加载静态资源时，会被 DispatcherServlet 处理，而不会执行 Tomcat 内置的 DefaultServlet 处理  
+从而导致无法访问静态资源（因为没有配置映射）
 
 **解决方法 1**：
 
@@ -2639,31 +2932,137 @@ Tomcat 8.5 以上的版本，GET 请求的乱码问题已经解决，但 POST �
 
 > 注意：在控制器方法中，通过 ServletAPI 设置编码是无效的。因为前端控制器 DispatcherServlet 已经获取过请求参数了，**若设置编码之前获取过请求参数，那之后设置的编码是没有任何效果的**
 
-### HTTP 状态码
+## HTTP 状态码
 
 spring-web 包下有个枚举类 [HttpStatus](https://www.javadoc.io/static/org.springframework/spring-web/5.3.23/org/springframework/http/HttpStatus.html)，列举了请求状态码
 
-| Code | HTTP Operation            | Body Contents  | Description                                            |
-| :--- | :------------------------ | :------------- | :----------------------------------------------------- |
-| 200  | GET,PUT                   | 资源           | 操作成功                                               |
-| 201  | POST                      | 资源，元数据   | 对象创建成功                                           |
-| 202  | POST,PUT,DELETE,PATCH     | N/A            | 请求已经被接受                                         |
-| 204  | DELETE,PUT,PATCH          | N/A            | 操作已经执行成功，但没有返回数据                       |
-| 301  | GET                       | 链接           | 永久重定向。资源已被移除，请求的资源已被分配了新的 URI |
-| 302  | GET                       | 链接           | 临时重定向                                             |
-| 303  | GET                       | 链接           | 与 302 类似，但明确要求用 GET 方法重定向到新的 URI     |
-| 304  | GET                       | N/A            | 资源没有被修改                                         |
-| 400  | GET,POST,PUT,DELETE,PATCH | 错误提示(消息) | 参数列表错误（缺少，格式不匹配）                       |
-| 401  | GET,POST,PUT,DELETE,PATCH | 错误提示(消息) | 末授权                                                 |
-| 403  | GET,POST,PUT,DELETE,PATCH | 错误提示(消息) | 访问受限，授权过期                                     |
-| 404  | GET,POST,PUT,DELETE,PATCH | 错误提示(消息) | 资源，服务末找到（headers 不匹配也是这个报错）         |
-| 405  | GET,POST,PUT,DELETE,PATCH | 错误提示(消息) | 不允许的 HTTP 方法                                     |
-| 406  | GET,POST,PUT,DELETE,PATCH | 错误提示(消息) | 客户端无法解析服务端返回的内容                         |
-| 409  | GET,POST,PUT,DELETE,PATCH | 错误提示(消息) | 资源冲突，或者资源被锁定                               |
-| 415  | GET,POST,PUT,DELETE,PATCH | 错误提示(消息) | 不支持的数据（媒体类型）                               |
-| 429  | GET,POST,PUT,DELETE,PATCH | 错误提示(消息) | 请求过多，被限制                                       |
-| 500  | GET,POST,PUT,DELETE,PATCH | 错误提示(消息) | 系统内部错误                                           |
-| 501  | GET,POST,PUT,DELETE,PATCH | 错误提示(消息) | 接口未实现                                             |
+<table style="width:60rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width=8%>Code</th>
+            <th width=30%>HTTP Operation</th>
+            <th width=16%>Body Contents</th>
+            <th width=46%>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>200</td>
+            <td>GET,PUT</td>
+            <td>资源</td>
+            <td>操作成功</td>
+        </tr>
+        <tr>
+            <td>201</td>
+            <td>POST</td>
+            <td>资源，元数据</td>
+            <td>对象创建成功</td>
+        </tr>
+        <tr>
+            <td>202</td>
+            <td>POST,PUT,DELETE,PATCH</td>
+            <td>N/A</td>
+            <td>请求已经被接受</td>
+        </tr>
+        <tr>
+            <td>204</td>
+            <td>DELETE,PUT,PATCH</td>
+            <td>N/A</td>
+            <td>操作已经执行成功，但没有返回数据</td>
+        </tr>
+        <tr>
+            <td>301</td>
+            <td>GET</td>
+            <td>链接</td>
+            <td>永久重定向。资源已被移除，请求的资源已被分配了新的 URI</td>
+        </tr>
+        <tr>
+            <td>302</td>
+            <td>GET</td>
+            <td>链接</td>
+            <td>临时重定向</td>
+        </tr>
+        <tr>
+            <td>303</td>
+            <td>GET</td>
+            <td>链接</td>
+            <td>与 302 类似，但明确要求用 GET 方法重定向到新的 URI</td>
+        </tr>
+        <tr>
+            <td>304</td>
+            <td>GET</td>
+            <td>N/A</td>
+            <td>资源没有被修改</td>
+        </tr>
+        <tr>
+            <td>400</td>
+            <td>GET,POST,PUT,DELETE,PATCH</td>
+            <td>错误提示(消息)</td>
+            <td>参数列表错误（缺少，格式不匹配）</td>
+        </tr>
+        <tr>
+            <td>401</td>
+            <td>GET,POST,PUT,DELETE,PATCH</td>
+            <td>错误提示(消息)</td>
+            <td>末授权</td>
+        </tr>
+        <tr>
+            <td>403</td>
+            <td>GET,POST,PUT,DELETE,PATCH</td>
+            <td>错误提示(消息)</td>
+            <td>访问受限，授权过期</td>
+        </tr>
+        <tr>
+            <td>404</td>
+            <td>GET,POST,PUT,DELETE,PATCH</td>
+            <td>错误提示(消息)</td>
+            <td>资源，服务末找到（headers 不匹配也是这个报错）</td>
+        </tr>
+        <tr>
+            <td>405</td>
+            <td>GET,POST,PUT,DELETE,PATCH</td>
+            <td>错误提示(消息)</td>
+            <td>不允许的 HTTP 方法</td>
+        </tr>
+        <tr>
+            <td>406</td>
+            <td>GET,POST,PUT,DELETE,PATCH</td>
+            <td>错误提示(消息)</td>
+            <td>客户端无法解析服务端返回的内容</td>
+        </tr>
+        <tr>
+            <td>409</td>
+            <td>GET,POST,PUT,DELETE,PATCH</td>
+            <td>错误提示(消息)</td>
+            <td>资源冲突，或者资源被锁定</td>
+        </tr>
+        <tr>
+            <td>415</td>
+            <td>GET,POST,PUT,DELETE,PATCH</td>
+            <td>错误提示(消息)</td>
+            <td>不支持的数据（媒体类型）</td>
+        </tr>
+        <tr>
+            <td>429</td>
+            <td>GET,POST,PUT,DELETE,PATCH</td>
+            <td>错误提示(消息)</td>
+            <td>请求过多，被限制</td>
+        </tr>
+        <tr>
+            <td>500</td>
+            <td>GET,POST,PUT,DELETE,PATCH</td>
+            <td>错误提示(消息)</td>
+            <td>系统内部错误</td>
+        </tr>
+        <tr>
+            <td>501</td>
+            <td>GET,POST,PUT,DELETE,PATCH</td>
+            <td>错误提示(消息)</td>
+            <td>接口未实现</td>
+        </tr>
+    </tbody>
+</table>
+
 
 ---
 
@@ -2679,7 +3078,7 @@ ServletContext --> context-param（无顺序）--> listener（无顺序）--> fi
 
 详细加载过程：
 
-- 启动一个 web 项目，web 容器会读取它的配置文件 web.xml，先读取 \<context-param> 和 \<listener>
+- 启动一个 web 项目，web 容器会读取它的配置文件 web.xml，先读取 \<context-param\> 和 \<listener\>
 
 - 创建一个 ServletContext（Servlet 上下文），此 web 项目的所有部分都将共享这个上下文
 
@@ -2795,8 +3194,12 @@ ServletContext --> context-param（无顺序）--> listener（无顺序）--> fi
 
   **url-pattern** - 匹配访问路径
 
-  - **/\*** 会匹配所有路径<br/>会覆盖所有其他 servlet，包括 servletcontainer 提供的所有 servlet，如默认 servlet 和 JSP servlet<br/>因此 /\* 通常值使用在 Filter 上
-  - **/** 只覆盖 servletcontainer 的内置默认 servlet<br/>这通常只在<u>静态资源</u>（如 HTML,CSS,JS,image,etc）和<u>目录列表</u>（如 /login）上调用<br/>\*.jsp 不会被命中，因为 servletcontainer 内置的 JSP servlet 会被调用，它映射了具体的 URL 模式 \*.jsp
+  - **/\*** 会匹配所有路径  
+    会覆盖所有其他 servlet，包括 servletcontainer 提供的所有 servlet，如默认 servlet 和 JSP servlet  
+    因此 /\* 通常值使用在 Filter 上
+  - **/** 只覆盖 servletcontainer 的内置默认 servlet  
+    这通常只在 <u>静态资源</u>（如 HTML,CSS,JS,image,etc）和 <u>目录列表</u>（如 /login）上调用  
+    \*.jsp 不会被命中，因为 servletcontainer 内置的 JSP servlet 会被调用，它映射了具体的 URL 模式 \*.jsp
 
 - **\<session-config\>**
 
@@ -2864,13 +3267,48 @@ REST 的行为是通过 HTTP 表示操作的方法来定义的：GET、POST、PU
 
 **REST 资源操作性质**：
 
-| HTTP 方法 | 资源操作 | 幂等性&nbsp;&nbsp; | 安全性&nbsp;&nbsp; |
-| --------- | -------- | ------------------ | ------------------ |
-| GET       | SELECT   | &#10004;           | &#10004;           |
-| POST      | INSERT   | &#10006;           | &#10006;           |
-| PUT       | UPDATE   | &#10004;           | &#10006;           |
-| DELETE    | DELETE   | &#10004;           | &#10006;           |
-| PATCH     | UPDATE   | &#10006;           | &#10006;           |
+<table style="width:40rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width="25%">HTTP 方法</th>
+            <th width="25%">资源操作</th>
+            <th width="25%">幂等性</th>
+            <th width="25%">安全性</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>GET</td>
+            <td>SELECT</td>
+            <td>&#10004;</td>
+            <td>&#10004;</td>
+        </tr>
+        <tr>
+            <td>POST</td>
+            <td>INSERT</td>
+            <td>&#10006;</td>
+            <td>&#10006;</td>
+        </tr>
+        <tr>
+            <td>PUT</td>
+            <td>UPDATE</td>
+            <td>&#10004;</td>
+            <td>&#10006;</td>
+        </tr>
+        <tr>
+            <td>DELETE</td>
+            <td>DELETE</td>
+            <td>&#10004;</td>
+            <td>&#10006;</td>
+        </tr>
+        <tr>
+            <td>PATCH</td>
+            <td>UPDATE</td>
+            <td>&#10006;</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
 
 - **幂等性**：一个幂等操作，执行任意多次所产生的影响均与一次执行的影响相同
 - **安全性**：一个安全操作，不会使服务器端资源的状态发生改变（所有安全的 HTTP 方法都是幂等的）
@@ -2879,15 +3317,45 @@ REST 的行为是通过 HTTP 表示操作的方法来定义的：GET、POST、PU
 
 通过 HTTP 操作方法和占位符 `{}` 中的值来区分 URL 请求
 
-| 客户端请求   | 原始 URL            | RESTful URL            |
-| ------------ | ------------------- | ---------------------- |
-| 查询所有     | /user/findAll       | /user -> GET 请求      |
-| 根据 ID 查询 | /user/findById?id=1 | /user/1 -> GET 请求    |
-| 新增         | /user/save          | /user -> POST 请求     |
-| 修改         | /user/update        | /user -> PUT 请求      |
-| 删除         | /user/delete?id=1   | /user/1 -> DELETE 请求 |
+<table style="width:40rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width="24%">客户端请求</th>
+            <th width="38%">原始 URL</th>
+            <th width="38%">RESTful URL</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>查询所有</td>
+            <td>/user/findAll</td>
+            <td>/user -&gt; GET 请求</td>
+        </tr>
+        <tr>
+            <td>根据 ID 查询</td>
+            <td>/user/findById?id=1</td>
+            <td>/user/1 -&gt; GET 请求</td>
+        </tr>
+        <tr>
+            <td>新增</td>
+            <td>/user/save</td>
+            <td>/user -&gt; POST 请求</td>
+        </tr>
+        <tr>
+            <td>修改</td>
+            <td>/user/update</td>
+            <td>/user -&gt; PUT 请求</td>
+        </tr>
+        <tr>
+            <td>删除</td>
+            <td>/user/delete?id=1</td>
+            <td>/user/1 -&gt; DELETE 请求</td>
+        </tr>
+    </tbody>
+</table>
 
-RESTful 相关注解，前往：SpringMVC -> 注解 -> RESTful
+
+RESTful 相关注解，前往：SpringMVC -\> 注解 -\> RESTful
 
 ### 使用
 
@@ -3094,7 +3562,7 @@ public ModelAndView getEmployee(ModelAndView mv) {
 示例，删除一条数据：
 
 删除操作和更新操作类似，但是需要把请求方法改为 DELETE  
-思路：点击删除按钮时，动态修改一个 form 表单的 action 值，加上待删除数据的 id，并提交该表单，表单中带有 _method 参数
+思路：点击删除按钮时，动态修改一个 form 表单的 action 值，加上待删除数据的 id，并提交该表单，表单中带有 \_method 参数
 
 ```html
 <!-- 作用：提交 _method 参数，使 SpringMVC 将请求方式解析为 DELETE -->
@@ -3140,18 +3608,7 @@ public ModelAndView getEmployee(ModelAndView mv) {
 
 ---
 
-## 注解
-
-### @Controller
-
-是特殊的 @Component，只能应用于类，用来将类标记为 Web 请求处理程序
-
-SpringMVC 基于 Spring 容器，所以在进行 SpringMVC 操作时，需要将 Controller 存储到 Spring 容器中：
-
-```xml
-<!-- 配置注解扫描 -->
-<context:component-scan base-package="com.domenic.controller"/>
-```
+## MVC 注解
 
 ### 请求
 
@@ -3246,7 +3703,8 @@ param 的四种表达式：
 - "param"：要求请求，**必须携带** param 参数
 - "!param"：要求请求，**不能携带** param 参数
 - "param=value"：要求请求，**必须携带** param 参数，且 **param == value**
-- "param!=value"：要求请求，**可不携带** param 参数，若携带则 **param != value**<br/>因为若不携带 param，服务器获取的值为 null，那么 null 肯定不等于 value
+- "param!=value"：要求请求，**可不携带** param 参数，若携带则 **param != value**  
+  因为若不携带 param，服务器获取的值为 null，那么 null 肯定不等于 value
 
 ```java
 // 必须携带 name
@@ -3262,7 +3720,8 @@ headers 的四种表达式：
 - "header"：要求请求，**必须携带** header 请求头
 - "!header"：要求请求，**不能携带** header 请求头
 - "header=value"：要求请求，**必须携带** header 请求头，且 **header=value**
-- "header!=value"：要求请求，**可不携带** header 请求头，若携带则 **header!=value**<br/>因为若不携带 headers，服务器获取的值为 null，那么 null 肯定不等于 value
+- "header!=value"：要求请求，**可不携带** header 请求头，若携带则 **header!=value**  
+  因为若不携带 headers，服务器获取的值为 null，那么 null 肯定不等于 value
 
 请求头中的 key 不区分大小写，但 value 区分大小写
 
@@ -3312,7 +3771,7 @@ public class UserController {
 
 根据不同的 Content-Type，SpringMVC 会使用不同的 HttpMessageConverter\<T\> 接口的实现来进行信息解析转换
 
-> @RequestBody 与 @RequestParam 可同时用，@RequestBody 只能有一个，而 @RequestParam 能有多个
+> @RequestBody 与 @RequestParam 可同时用；@RequestBody 只能有一个，而 @RequestParam 可以有多个
 
 自动封装参数，底层是通过 Setter 方法给封装类的属性赋值的，因此要求请求体中参数 key 的名称和属性名称要一致
 
@@ -3350,17 +3809,59 @@ public void ajaxRequest(@RequestBody List<User>list,
 
 ```java
 @RequestMapping("/requestHead")
-public String requestHead(@RequestHeader("cookie") String cookie, 
-                          @RequestHeader("accept-encoding") String encoding) { ... }
+public String requestHead(
+    @RequestHeader("cookie") String cookie, 
+    @RequestHeader("accept-encoding") String encoding) { ... }
 ```
 
 #### @CookieValue
 
 把请求头中关于 cookie 的值绑定到方法的参数上
 
+> Cookie 示例  
+> cookie: __stripe_mid=6543c51s-302d-4a2f-7a98; ak_bmsc=03B6B876E2A1F5246C6;
+
 ```java
 @RequestMapping("/cookieParam")  
-public void getCookie(@CookieValue("JSESSIONID") String jesessionId) { ... }
+public void getCookie(@CookieValue("__stripe_mid") String jesessionId) { ... }
+```
+
+#### @...Attribute
+
+简化开发，提高复用性；进一步屏蔽源生 Servlet API，增加扩展性
+
+- RequestAttribute - 获取 request 域中的属性
+- SessionAttribute - 获取 session 域中的属性
+- ModelAttribute - 获取 model 中的属性，或向 model 中设置属性
+
+**获取值**：
+
+在形参上使用注解，表明取出属性值，并填充到形参中
+
+```java
+public String handleRequestById (
+    // 从 Session 域中获取 visitor 的值
+    @SessionAttribute("visitor") String visitor, 
+    // 从 model 中获取 user 的值
+    @ModelAttribute("user") String user
+) { ... }
+```
+
+**设置值**：
+
+在方法上使用 @ModelAttribute 时，表明该方法的目的是，添加一个或多个 model 属性
+
+注意：SpringMVC 在调用任何请求处理方法之前，总是会先调用该方法
+
+```java
+@ModelAttribute
+public void addAttributes(Model model) {
+    model.addAttribute("name", "Domenic");
+    model.addAttribute("msg", "I Love Spring!");
+}
+
+/* 其他的 Controller 方法，可以获取到 */
+@ModelAttribute("name") String name, @ModelAttribute("msg") String msg
 ```
 
 ### 响应
@@ -3413,19 +3914,68 @@ axios.post("请求路径").then(res => {
 
 #### @SessionAttributes
 
-若要在多个请求间共享数据，则可以在控制器类上使用该注解，SpringMVC 将存放在 model 中的对应数据同步到 HttpSession 中
+该注解使用在类上
 
-```java
-@Controller
-@SessionAttributes("username") // request 域中 key 为 username 的数据，会被同步到 session 域中
-public class UserController {
-    @RequestMapping("/forward")
-    public String forward(Model model) {
-        model.addAttribute("username", "Domenic");
-        return "forward:/WEB-INF/pages/start.html";
-    }
-}
-```
+若要在多个请求间共享数据，则可以在控制器类上使用该注解  
+SpringMVC 将存放在 model 中的对应数据**同步**到 HttpSession 中  
+数据可以用 **@SessionAttribute** 或 **@ModelAttribute** 注解取出
+
+- **示例一**：
+
+  访问 .../forward  
+  通过 `model.addAttribute` 向 model 中设置数据，session 中就会同步 username  
+  之后转发到控制方法 user()，取出数据 username
+
+  ```java
+  @Controller
+  /* request 域中 key 为 username 的数据，会被同步到 session 域中 */
+  @SessionAttributes("username") // value 类型为 String[]
+  public class MyController {
+  
+      @RequestMapping("/forward")
+      public String forward(Model model) {
+          model.addAttribute("username", "Domenic");
+          return "forward:/user";
+      }
+  
+      @RequestMapping("/user")
+      @ResponseBody
+      public String user (
+          // 取出 username
+          @SessionAttribute("username") String username) {
+          return username;
+      }
+  }
+  ```
+  
+- **示例二**：
+
+  访问 .../visit  
+  通过 `@ModelAttribute` 注解方法，来添加 model 属性  
+  Spring MVC 在调用任何请求处理方法之前，总会先调用该方法
+
+  ```java
+  @Controller
+  /* 将 visitor 属性同步到 session 域中 */
+  @SessionAttributes("visitor")
+  public class MyController {
+  
+      /* 将返回值填充到 visitor 中 */
+      @ModelAttribute("visitor")
+      public String getVisitor () {
+          return "Domenic";
+      }
+  
+      @RequestMapping("/visit")
+      @ResponseBody
+      public String visit (
+          // 取出 visitor
+          @SessionAttribute("visitor") String visitor) {
+          return visitor;
+      }
+  }
+  ```
+
 
 ### RESTful
 
@@ -3524,14 +4074,40 @@ public String getMethod(@PathVariable Map<String, String> pathVarsMap) {
 
 ### 配置
 
-| 注解            | 说明                                                         |
-| --------------- | ------------------------------------------------------------ |
-| @Configuration  | 标识该类为核心配置类，代替了核心配置文件                     |
-| @ComponentScan  | 配置组件扫描，value 为初始化容器时要扫描的包                 |
-| @EnableWebMvc   | 配置 MVC 注解驱动                                            |
-| @Import         | 导入其他的配置类，value 为配置类的 class 对象数组            |
-| @PropertySource | 用于加载 properties 文件中的配置                             |
-| @Bean           | 将标识的方法的返回值作为 Bean 进行管理<br/>若注解未设置 value，则 Bean 的 id 为方法的方法名<br/>若注解设置了 value，则 id 为 value 的值 |
+<table style="width:50rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width=30%>注解</th>
+            <th width=70%>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Configuration</td>
+            <td>标识该类为核心配置类，代替了核心配置文件</td>
+        </tr>
+        <tr>
+            <td>@ComponentScan</td>
+            <td>配置组件扫描，value 为初始化容器时要扫描的包</td>
+        </tr>
+        <tr>
+            <td>@EnableWebMvc</td>
+            <td>配置 MVC 注解驱动</td>
+        </tr>
+        <tr>
+            <td>@Import</td>
+            <td>导入其他的配置类，value 为配置类的 class 对象数组</td>
+        </tr>
+        <tr>
+            <td>@PropertySource</td>
+            <td>用于加载 properties 文件中的配置</td>
+        </tr>
+        <tr>
+            <td>@Bean</td>
+            <td>将标识的方法的返回值作为 Bean 进行管理<br/>若注解未设置 value，则 Bean 的 id 为方法的方法名<br/>若注解设置了 value，则 id 为 value 的值</td>
+        </tr>
+    </tbody>
+</table>
 
 代替 web.xml 的类
 
@@ -3831,7 +4407,23 @@ public String converterParam(LocalDate date) {
 
 请求体中的内容示例：
 
-<img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/Spring/SpringMVC_请求_文件上传_请求内容示例.png" width="600rem" style="border-radius:.4rem" float="left" alt="SpringMVC_请求_文件上传_请求内容示例"/><div style="clear:both"></div>
+```http
+POST /domeniczzblog/index.html HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary3DfBw6vqOdoveTPQ
+
+# request body（表单项被 boundary 分隔为了几个部分）
+----WebKitFormBoundary3DfBw6vqOdoveTPQ
+Content-Disposition: form-data; name="upload"; filename="abc.txt"
+
+----WebKitFormBoundary3DfBw6vqOdoveTPQ
+Content-Disposition: form-data; name="username"
+
+----WebKitFormBoundary3DfBw6vqOdoveTPQ
+Content-Disposition: form-data; name="password"
+
+----WebKitFormBoundary3DfBw6vqOdoveTPQ
+...
+```
 
 #### 实现
 
@@ -3988,7 +4580,7 @@ ModelAndView 只是包含两者，以使控制器可以在单个 return 中返�
 Controller 返回 ModelAndView 对象后，经过处理器适配器、前端控制器，最终来到视图解析器
 
 ```java
-// 可以直接将 ModelAndView 作为参数传入
+/* 可以直接将 ModelAndView 作为参数传入 */
 public ModelAndView demoMAV(ModelAndView mv) {
     // -- 转发 --
     // 设置 ViewName
@@ -3998,8 +4590,8 @@ public ModelAndView demoMAV(ModelAndView mv) {
     mv.setViewName("redirect:/findAll");
     return mv;
 }
--------------------------------------------
-// 也可以在方法中 new ModelAndView 对象
+
+/* 也可以在方法中 new ModelAndView 对象 */
 public ModelAndView demoMAV() {
     ModelAndView mv = new ModelAndView("success");
     return mv;
@@ -4038,7 +4630,7 @@ public ModelAndView demoMAV() {
 
   **注意**：使用了 forward、redirect 关键字后，不会再到视图解析器了，会直接调用 servlet-api 的转发、重定向方法
 
-  转发 forward:，路径必须写成实际视图 url
+  转发 `forward:`，路径必须写成实际视图 url
 
   ```java
   // 转发到 html 资源
@@ -4070,7 +4662,7 @@ public ModelAndView demoMAV() {
 <mvc:view-controller path="/test" view-name="success"/>
 ```
 
-被 \<mvc:view-controller\> 替代的控制器方法：
+被 `<mvc:view-controller>` 替代的控制器方法：
 
 ```java
 @RequestMapping(value = "/test")
@@ -4147,7 +4739,7 @@ public void returnVoid(HttpServletRequest req, HttpServletResponse res) throws E
 
   作用：一个 JavaWeb 应用只创建一个 ServletContext 对象。ServletContext 在服务器启动时创建，服务器关闭时销毁，所有的客户端在访问服务器时都共享同一个 ServletContext 对象，一般用于多客户端之间的数据共享
 
-#### Request 域中共享
+#### Request 域
 
 视图解析器会将 model 中的每个元素都用 **request.setAttribute(name, value)** 添加到 **request 请求域 **中
 
@@ -4194,7 +4786,7 @@ public void returnVoid(HttpServletRequest req, HttpServletResponse res) throws E
    }
    ```
 
-#### Session 域中共享
+#### Session 域
 
 用 ServletAPI 实现较为方便
 
@@ -4207,10 +4799,11 @@ public String testSession(HttpSession session){
 
 > 若想在 IntelliJ IDEA 中重启服务器或重部署项目后，Session 数据不丢失：
 >
-> 1. 开启 Session 的钝化和活化：<br/>Run/Debug Configuration --> Tomcat Server Settings --> Preserve sessions across restarts and redeploys
+> 1. 开启 Session 的钝化和活化：  
+>    Run/Debug Configuration --> Tomcat Server Settings --> Preserve sessions across restarts and redeploys
 > 2. Session 中数据若是实体类对象，还需实现 Serializable 接口
 
-#### Application 域中共享
+#### Application 域
 
 用 ServletAPI 实现较为方便
 
@@ -4233,12 +4826,23 @@ Java 有两种异常处理方式：
 - try-catch 捕获处理，当会造成业务代码和异常处理代码的耦合
 - throws 抛出给调用者，SpringMVC 的异常处理机制就是基于此方法
 
-<img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/Spring/SpringMVC_异常处理_抛出图示.png" width="650rem" style="border-radius:.4rem" float="left" alt="SpringMVC_异常处理_抛出图示"/><div style="clear:both"></div>
+异常一级级向上抛，若都处理不了，由 前端控制器 调用 HandlerExceptionResolver 来处理
+
+```mermaid
+flowchart LR
+  A("客户端") --"请求"--> B("前端控制器")
+  B --"请求"--> C("Controller")
+  C --"异常"--> B
+  C --"请求"--> D("Service")
+  D --"异常"--> C
+  D --"请求"--> E("DAO")
+  E --"异常"--> D
+```
 
 **SpringMVC 异常处理方式共有三种**：
 
 - 内置的异常处理机制
-- 实现 HandlerExceptionResolver 接口， 自定义异常处理机制
+- 实现 HandlerExceptionResolver 接口，自定义异常处理机制
 - @ExceptionHandler 注解
 - Web 处理机制，根据 error code 来处理
 
@@ -4303,7 +4907,8 @@ public class MyExceptionResolver implements HandlerExceptionResolver {
 
 **解决方案**：
 
-1. 使用 **@ControllerAdvice**，该注解允许将多个分散的 @ExceptionHandlers 整合到一个单一的全局异常处理组件中
+1. 使用 **@ControllerAdvice**，该注解允许将多个分散的 @ExceptionHandler **整合**到一个单一的全局异常处理组件中  
+   意味着，有该注解的 Controller 可以作为一个异常处理类，处理其他 Controller 中产生的异常
 
    ```java
    @ControllerAdvice
@@ -4320,7 +4925,8 @@ public class MyExceptionResolver implements HandlerExceptionResolver {
    }
    ```
 
-2. 让所有控制器都**继承一个基本控制器类**来解决这个限制。缺点：有可能某个控制器已经继承了一些类，无法再继承基本控制器类
+2. 让所有控制器都**继承一个基本控制器类**（如 BaseController）来解决这个限制  
+   缺点：有可能某个控制器已经继承了一些类，无法再继承基本控制器类
 
    ```java
    @Controller
@@ -4358,7 +4964,7 @@ SpringMVC 的拦截器 Interceptor 类似于 Servlet 开发中的过滤器 Filte
 
 **拦截器的方法**：
 
-<table style="width:65rem">
+<table style="width:60rem">
     <thead>
         <tr style="text-align:left">
             <th width=20%>方法</th>
@@ -4382,19 +4988,32 @@ SpringMVC 的拦截器 Interceptor 类似于 Servlet 开发中的过滤器 Filte
 </table>
 
 
+
 **多拦截器执行顺序**：
 
 - **若 preHandler 都返回 true**
 
-  preHandler 会按配置顺序；<br/>postHandler、afterCompletion 会按配置的反序
+  preHandler 会按配置顺序；  
+  postHandler、afterCompletion 会按配置的反序
 
-  示例：<br/>First -> preHandle<br/>Second -> preHandle<br/>Second -> postHandle<br/>First -> postHandle<br/>Second -> afterCompletion<br/>First -> afterCompletion
+  示例：  
+  First -> preHandle  
+  Second -> preHandle  
+  Second -> postHandle  
+  First -> postHandle  
+  Second -> afterCompletion  
+  First -> afterCompletion
 
 - **若有一个 preHandler 返回 false**
 
-  当前返回 false 的和之前拦截器的 preHandler 会按配置顺序执行；<br/>postHandler 都不会执行；<br/>当前返回 false 的拦截器的 afterCompletion 会按配置的反序执行
+  当前返回 false 的和之前拦截器的 preHandler 会按配置顺序执行；  
+  postHandler 都不会执行；  
+  当前返回 false 的拦截器的 afterCompletion 会按配置的反序执行
 
-  示例：<br/>First -> preHandle（返回 false）<br/>Second -> preHandle<br/>First -> afterCompletion
+  示例：  
+  First -> preHandle（返回 false）  
+  Second -> preHandle  
+  First -> afterCompletion
 
 #### 示例
 
@@ -4426,7 +5045,8 @@ public class MyInterceptor implements HandlerInterceptor {
 
 在核心配置文件中配置拦截器
 
-- 可以用 \<bean\>、\<ref\> 标签来配置拦截器，\<ref\> 就是引用已经创建的 bean<br/>这两个标签配置的拦截器，默认对 DispatcherServlet 处理的所有请求进行拦截
+- 可以用 \<bean\>、\<ref\> 标签来配置拦截器，\<ref\> 就是引用已经创建的 bean  
+  这两个标签配置的拦截器，默认对 DispatcherServlet 处理的所有请求进行拦截
 - \<mvc:mapping\> 配置拦截请求路径
 - \<mvc:exclude-mapping\> 配置排除的请求路径
 - path 属性：
@@ -4492,10 +5112,9 @@ public class MyInterceptor implements HandlerInterceptor {
         </tr>
     </tbody>
 </table>
-
 **三大组件对比**：
 
-<table>
+<table style="width:60rem">
     <thead>
         <tr style="text-align:left">
             <th></th>
@@ -4531,8 +5150,7 @@ public class MyInterceptor implements HandlerInterceptor {
         </tr>
     </tbody>
 </table>
-
-应用场景区别：
+应用场景的区别：
 
 - **过滤器**
 
@@ -4558,22 +5176,23 @@ public class MyInterceptor implements HandlerInterceptor {
 
 ---
 
-## 框架详解
+## SpringMVC 框架详解
 
 ### SpringMVC 组件
 
 使用 SpringMVC 必须配置的三大组件：**处理器映射器**、**处理器适配器**、**视图解析器**
 
-1. **前端控制器**：DispatcherServlet
+1. **前端控制器**：[DispatcherServlet](#DispatcherServlet)
    用户请求到达前端控制器 DispatcherServlet，它就相当于 MVC 模式中的 Controller，是整个流程控制的中心，由它调用其它组件来处理用户的请求。DispatcherServlet 的存在降低了组件之间的耦合性
 
 2. **处理器映射器**：HandlerMapping
-   HandlerMapping 负责根据请求找到 Handler（处理器）<br/>SpringMVC 根据请求的 url、method 等信息查找匹配的 Handler（控制器方法）
+   HandlerMapping 负责根据请求找到 Handler（处理器）  
+   SpringMVC 根据请求的 url、method 等信息查找匹配的 Handler（控制器方法）
 
 3. **处理器适配器**：HandlerAdapter
    通过 HandlerAdapter 对处理器进行执行，这是[适配器模式](https://www.runoob.com/design-pattern/adapter-pattern.html)的应用，通过扩展适配器可以对更多类型的处理器进行执行
 
-4. **处理器**：Handler【**由开发者编写**】
+4. **处理器**：Handler【**由使用者编写**】
    开发中要编写的具体业务控制器。由 DispatcherServlet 把用户请求转发到 Handler，Handler 对具体的用户请求进行处理
 
 5. **视图解析器**：ViewResolver
@@ -4581,7 +5200,7 @@ public class MyInterceptor implements HandlerInterceptor {
 
    不同的视图解析器，如：ThymeleafView、InternalResourceView、RedirectView
 
-6. **视图**：View【**由开发者编写**】
+6. **视图**：View【**由使用者编写**】
    一般需要通过页面标签或页面模版技术，将模型数据通过页面展示给用户。SpringMVC 框架提供了很多的 View 视图类型的支持
 
 ### SpringMVC 执行流程
@@ -4598,8 +5217,8 @@ public class MyInterceptor implements HandlerInterceptor {
 
      判断是否配置了 \<mvc:default-servlet-handler\>
 
-     - 若没配置：控制台报错映射查找不到，客户端展示 404 错误
-     - 若配置了：访问目标资源（如：HTML,JS,CSS），若找不到，客户端就展示 404 错误
+     - 是：控制台报错映射查找不到，客户端展示 404 错误
+     - 否：访问目标资源（如：HTML,JS,CSS），若找不到，客户端就展示 404 错误
 
    - 映射存在，执行下面流程
 
@@ -4609,9 +5228,10 @@ public class MyInterceptor implements HandlerInterceptor {
 
 4. HandlerAdapter 根据 Handler 信息找到并执行相应的 Handler（常称为 Controller）和拦截器
 
-   - 执行前，会先执行拦截器的 preHandler(...) 方法
+   执行前，会先执行拦截器的 preHandler(...) 方法
 
-   HandlerAdapter 会提取 Request 中的模型数据，填充 Handler 的入参<br/>在该过程中，Spring 会进行的额外操作：
+   HandlerAdapter 会提取 Request 中的模型数据，填充 Handler 的入参  
+   在该过程中，Spring 会进行的额外操作：
 
    - HttpMessageConveter：将请求消息（如：JSON、XML 等）转换为一个对象，将对象转换为指定的响应信息
    - 数据转换：如 String 转换为 Integer、Double 等
@@ -4633,10 +5253,10 @@ public class MyInterceptor implements HandlerInterceptor {
 
 ### DispatcherServlet
 
-DispatcherServlet 本质上是一个 Servlet，遵循 Servlet 的生命周期。所以宏观上是 Servlet 生命周期来进行调度
+DispatcherServlet 本质上是个 Servlet，遵循 Servlet 的生命周期。所以，宏观上是 Servlet 生命周期来进行调度
 
 ```mermaid
-graph LR
+flowchart LR
     A(DispatcherServlet) -- 继承 --> B(FrameworkServlet);
     B -- 继承 --> C(HttpServletBean);
     C -- 继承 --> D(HttpServlet);
@@ -4644,9 +5264,78 @@ graph LR
     E -- 实现 --> F[Servlet];
 ```
 
+请求会先到达 FrameworkServlet 中的 doGet、doPost、doPut、doDelete 方法  
+之后，通过 processRequest 方法调用 doService，而 DispatcherServlet 重写了 doService 方法
+
+```mermaid
+flowchart
+
+  subgraph FrameworkServlet
+
+    B("doGet")
+
+    C("doPost")
+
+    D("doPut")
+
+    E("doDelete")
+
+  end
+
+  subgraph DispatcherServlet
+
+    B --> F("doService")
+
+    C --> F
+
+    D --> F
+
+    E --> F
+
+    F --> G("doDispatch")
+
+  end
+```
+
 DispatcherServlet 中的执行过程：
 
-获取请求 --> 执行 --> (视图渲染：doService() --> doDispatch() --> processDispatchResult() --> render())
+获取请求 --> 执行 --> doService() --> doDispatch() --> processDispatchResult() --> (视图渲染：render())
+
+### 处理器映射器
+
+在 DispatcherServlet 的 doDispatch 方法中，会获取匹配的 Handler 对象，该对象封装在 HandlerExecutionChain 中
+
+```java
+/* 获取执行链的方法 */
+protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+    if (this.handlerMappings != null) {
+        Iterator var2 = this.handlerMappings.iterator();
+        // 循环遍历 List<HandlerMapping>
+        while(var2.hasNext()) {
+            HandlerMapping mapping = (HandlerMapping)var2.next();
+            // 获取对应的 Handler
+            HandlerExecutionChain handler = mapping.getHandler(request);
+            if (handler != null) {
+                return handler;
+            }
+        }
+    }
+    return null;
+}
+```
+
+HandlerMapping 接口：  
+用于定义请求和处理程序对象之间的映射关系，也就是返回一个 HandlerExecutionChain 对象  
+若返回为 null，就表示该 HandlerMapping 不能找到请求的映射关系
+
+以下五个处理器映射器，用来获取合适的 Handler  
+实现了 HandlerMapping 接口，继承了 AbstractHandlerMapping 类
+
+- RequestMappingHandlerMapping - 处理访问控制器方法的 HandlerMapping
+- WelcomePageHandlerMapping - 处理访问欢迎页的 HandlerMapping
+- BeanNameUrlHandlerMapping
+- SimpleUrlHandlerMapping
+- RouterFunctionMapping
 
 ---
 
@@ -5106,13 +5795,13 @@ th:checked 来控制选框是否被选中
 **工程间的继承**：
 
 ```mermaid
-graph BT
+flowchart BT
     G(ssm-exception) --继承--> A(ssm_edu_manage)
-    B(ssm-utils) --继承--> A(ssm_edu_manage)
-    C(ssm-domain) --继承--> A(ssm_edu_manage)
-    D(ssm-dao) --继承--> A(ssm_edu_manage)
-    E(ssm-service) --继承--> A(ssm_edu_manage)
-    F(ssm-web) --继承--> A(ssm_edu_manage)
+    B(ssm-utils) --继承--> A
+    C(ssm-domain) --继承--> A
+    D(ssm-dao) --继承--> A
+    E(ssm-service) --继承--> A
+    F(ssm-web) --继承--> A
 ```
 
 **工程间的依赖**：
@@ -5120,12 +5809,12 @@ graph BT
 ssm-web 间接依赖了所有工程
 
 ```mermaid
-graph RL
+flowchart RL
     A(ssm-utils) --> F(ssm-exception)
-    B(ssm-domain) --> A(ssm-utils)
-    C(ssm-dao) --> B(ssm-domain)
-    D(ssm-service) --> C(ssm-dao)
-    E(ssm-web) --> D(ssm-service)
+    B(ssm-domain) --> A
+    C(ssm-dao) --> B
+    D(ssm-service) --> C
+    E(ssm-web) --> D
 ```
 
 **项目目录结构**：
@@ -5216,10 +5905,10 @@ ssm_edu_manage          <-- 父工程（一般父工程的 src 下不写代码�
 一个课程分为多个章节，一个章节分为多个课时
 
 ```mermaid
-graph LR
-    A(课程 Course) --1 to N--> B(章节 Section)
-    B(章节 Section) --1 to N--> C(课时 Lesson)
-    C(课时 Lesson)--1 to 1--> D(课时视频 Media)
+flowchart LR
+    A(课程 Course) --"1 to N"--> B(章节 Section)
+    B --"1 to N"--> C(课时 Lesson)
+    C--"1 to 1"--> D(课时视频 Media)
 ```
 
 **需实现的功能**：
@@ -5242,8 +5931,8 @@ graph LR
 **数据表的结构**：
 
 ```mermaid
-graph LR
-    A(广告位 ad Space) --1 to N--> B(广告 ad)
+flowchart LR
+    A(广告位 ad Space) --"1 to N"--> B(广告 ad)
 ```
 
 **需实现的功能**：
@@ -5271,13 +5960,16 @@ graph LR
 
    ACL 是面向资源的访问控制模型，它的机制是围绕 “资源” 展开的
 
-   原理：<br/>每一项资源，都配有一个列表，列表记录了用户对该资源的权限<br/>当访问一项资源时，会先检查列表中是否有关于当前用户的访问权限
+   原理：  
+   每一项资源，都配有一个列表，列表记录了用户对该资源的权限  
+   当访问一项资源时，会先检查列表中是否有关于当前用户的访问权限
 
 2. **RBAC**（Role-Based Access Control）
 
    RBAC 是基于角色的访问控制
 
-   原理：<br/>把用户按角色进行分类，通过角色来判断对资源的权限
+   原理：  
+   把用户按角色进行分类，通过角色来判断对资源的权限
 
 RBAC 应用更为广泛，原因：
 
@@ -5287,14 +5979,14 @@ RBAC 应用更为广泛，原因：
 **数据表的结构**： 
 
 ```mermaid
-graph LR
-    U(用户表) --1 to N--> M1(用户角色中间表)
-    M1(用户角色中间表) --N to 1--> R(角色表)
-    R(角色表) --1 to N--> M2(角色菜单中间表)
-    M2(角色菜单中间表) --N to 1--> Menu(菜单表)
-    R(角色表) --1 to N--> M3(角色资源中间表)
-    M3(角色资源中间表) --N to 1--> Re(资源表)
-    Re(资源表) --N to 1--> ReS(资源分类表)
+flowchart LR
+    U(用户表) --"1 to N"--> M1(用户角色中间表)
+    M1 --"N to 1"--> R(角色表)
+    R --"1 to N"--> M2(角色菜单中间表)
+    M2 --"N to 1"--> Menu(菜单表)
+    R --"1 to N"--> M3(角色资源中间表)
+    M3 --"N to 1"--> Re(资源表)
+    Re --"N to 1"--> ReS(资源分类表)
 ```
 
 权限模块可细分为：角色模块、菜单模块、资源模块
@@ -5370,21 +6062,55 @@ Once we split a huge application into small microservices, there will inevitably
 
 Explicit build support is provided for the following build tools：
 
-| Build Tool | Version           |
-| :--------- | :---------------- |
-| Maven      | 3.5+              |
-| Gradle     | 6.8.x, 6.9.x, 7.x |
+<table style="width:30rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width=45%>Build Tool</th>
+            <th width=55%>Version</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Maven</td>
+            <td>3.5+</td>
+        </tr>
+        <tr>
+            <td>Gradle</td>
+            <td>6.8.x, 6.9.x, 7.x</td>
+        </tr>
+    </tbody>
+</table>
 
 **Servlet Containers**
 
 Spring Boot supports the following embedded servlet containers：
 
-| Name         | Servlet Version |
-| :----------- | :-------------- |
-| Tomcat 9.0   | 4.0             |
-| Jetty 9.4    | 3.1             |
-| Jetty 10.0   | 4.0             |
-| Undertow 2.0 | 4.0             |
+<table style="width:30rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width=45%>Name</th>
+            <th width=55%>Servlet Version</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Tomcat 9.0</td>
+            <td>4.0</td>
+        </tr>
+        <tr>
+            <td>Jetty 9.4</td>
+            <td>3.1</td>
+        </tr>
+        <tr>
+            <td>Jetty 10.0</td>
+            <td>4.0</td>
+        </tr>
+        <tr>
+            <td>Undertow 2.0</td>
+            <td>4.0</td>
+        </tr>
+    </tbody>
+</table>
 
 You can also deploy Spring Boot applications to any servlet 3.1+ compatible container.
 
@@ -5435,10 +6161,11 @@ You can also deploy Spring Boot applications to any servlet 3.1+ compatible cont
   @SpringBootApplication 注解等效于 @Configuration、@EnableAutoConfiguration、@ComponentScan 的默认属性
 
   ```java
-  @SpringBootApplication  // mark this class as a starter
-  public class MyApplication {
+  @SpringBootApplication  // 标识为启动类
+  public class MyApp {
       public static void main(String[] args) {
-          SpringApplication.run(MyApplication.class, args);
+          ConfigurableApplicationContext context = SpringApplication.run(MyApp.class, args);
+          Object person = context.getBean("person");  // 获取 IOC 中的 bean
       }
   }
   ```
@@ -5450,22 +6177,6 @@ You can also deploy Spring Boot applications to any servlet 3.1+ compatible cont
   > ```java
   > @SpringBootApplication(scanBasePackages = "com.domenic")
   > ```
-
-- **Contoller 类**：
-
-  ```java
-  @RestController
-  @RequestMapping("/hello")
-  public class MyController {
-      @RequestMapping("")
-      public String hello() {
-          Object person = context.getBean("person");
-          return "Hello SpringBoot";
-      }
-  }
-  ```
-
-  访问 <span>http://localhost:8080/hello</span> 进行测试
 
 - **实体类**：
 
@@ -5602,237 +6313,7 @@ You can also deploy Spring Boot applications to any servlet 3.1+ compatible cont
   </dependency>
   ```
 
-## 自动配置原理
-
-基于 Spring Boot 2.7.4
-
-### 依赖管理
-
-- **spring-boot-starter-parent**
-
-  这是 SpringBoot 项目的父依赖
-
-  ```xml
-  <parent>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-parent</artifactId>
-      <version>2.7.4</version>
-  </parent>
-  ```
-
-  spring-boot-starter-parent 还有一个父依赖 spring-boot-dependencies
-
-  spring-boot-dependencies 工程对大量的依赖进行了版本控制
-
-  因此 spring-boot-starter-parent 的作用就是声明所有开发中常用的依赖的版本号，进行自动版本仲裁（也可以自定义依赖版本）
-
-- **spring-boot-starter**
-
-  - Starters are a set of convenient dependency descriptors that you can include in your application.
-  - You get a one-stop shop for all the Spring and related technologies that you need without having to hunt through sample code and copy-paste loads of dependency descriptors.
-  - The starters contain a lot of the dependencies that you need to get a project up and running quickly and with a consistent, supported set of managed transitive dependencies.
-
-  ```mermaid
-  graph LR
-      A(spring-boot-starter-xxx) --依赖--> B(spring-boot-starter)
-      B(spring-boot-starter) --依赖--> C(spring-boot-autoconfigure)
-  ```
-  
-  所有启动器都依赖 spring-boot-starter，使用者也可以[自定义启动器](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.developing-auto-configuration.custom-starter)  
-  spring-boot-starter 会根据场景，按需进行自动配置
-
-  **示例**：
-  
-  ```xml
-  <!-- web 启动器，导入这个场景需要的一系列依赖 -->
-  <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-  </dependency>
-  ```
-  
-
-### 自动配置
-
-- **@SpringBootApplication**
-
-  使用在启动类上
-
-  ```java
-  @Target({ElementType.TYPE})
-  @Retention(RetentionPolicy.RUNTIME)
-  @Documented
-  @Inherited                // 子类会继承父类的注解
-  @SpringBootConfiguration  // 标注当前类为配置类（封装了 @Configuration）
-  @EnableAutoConfiguration  // 开启自动配置
-  @ComponentScan(           // 开启包扫描
-      excludeFilters = {@Filter(
-      type = FilterType.CUSTOM,
-      classes = {TypeExcludeFilter.class}
-  ), @Filter(
-      type = FilterType.CUSTOM,
-      classes = {AutoConfigurationExcludeFilter.class}
-  )}
-  )
-  public @interface SpringBootApplication { ... }
-  ```
-
-- **@EnableAutoConfiguration**
-
-  开启自动导入配置
-
-  ```java
-  @Target({ElementType.TYPE})
-  @Retention(RetentionPolicy.RUNTIME)
-  @Documented
-  @Inherited
-  @AutoConfigurationPackage  // 自动导包
-  @Import({AutoConfigurationImportSelector.class})  // 自动配置的导入选择（按需导入）
-  public @interface EnableAutoConfiguration { ... }
-  ```
-
-  - **@AutoConfigurationPackage**
-
-    自动导包
-
-    ```java
-    @Target({ElementType.TYPE})
-    @Retention(RetentionPolicy.RUNTIME)
-    @Documented
-    @Inherited
-    @Import({Registrar.class})  // 导入了 Registrar
-    public @interface AutoConfigurationPackage { ... }
-    ```
-
-    **Registrar.class**
-
-    通过 Registrar 给容器中导入一系列组件
-    
-    ```java
-    // AutoConfigurationPackage 抽象类中的内部类
-    static class Registrar implements ImportBeanDefinitionRegistrar, DeterminableImports {
-        ...
-        public void registerBeanDefinitions(AnnotationMetadata metadata, 
-                                            BeanDefinitionRegistry registry) {
-            /*
-             * 该方法的第二个参数就是当前启动类所在的包名
-             */
-            AutoConfigurationPackages.register(registry, 
-                (String[])(new AutoConfigurationPackages.PackageImports(metadata))
-                .getPackageNames().toArray(new String[0]));
-        }
-    }
-    ```
-
-    **注意**：@AutoConfigurationPackage 和 @ComponentScan 不同
-    
-    - 比如，使用 Spring Data JPA 时，可能会在实体类上写 `@Entity` 注解  
-      这个 `@Entity` 注解由 `@AutoConfigurationPackage` 扫描并加载，而 `@Controller`/`@Service`/`@Component`/`@Repository` 由 `@ComponentScan` 扫描并加载
-    - `Registrar.class` 来注册项目包外的 bean，因为 `@ComponentScan` 只能扫描注册项目包内的 bean
-    
-    > [@EnableAutoConfiguration](https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/autoconfigure/EnableAutoConfiguration.html) document excerpts：
-    >
-    > Enable auto-configuration of the Spring Application Context, attempting to guess and configure beans that you are likely to need.
-    >
-    > Auto-configuration is always applied after user-defined beans have been registered.
-    >
-    > It will be used when scanning for `@Entity` classes. It is generally recommended that you place `@EnableAutoConfiguration` (if you're not using `@SpringBootApplication`) in a root package so that all sub-packages and classes can be searched.
-    
-  - **AutoConfigurationImportSelector.class**
-  
-    自动配置信息的导入选择器，根据场景按需导入
-  
-    selectImports()，该方法的作用是根据配置文件将需要的 bean 注入容器中
-  
-    版本 2.7 开始，配置文件为 spring-boot-autoconfigure 包下 META-INF 下的 spring.factories 和 org.springframework.boot.autoconfigure.AutoConfiguration.imports
-    
-    版本 2.7 以前，配置文件只有 spring.factories
-
-### 举例分析
-
-SpringBoot 选择需要自动导入的配置，底层实现使用了 [@Conditional...](#@Conditional...) 注解，会进行各种判断，如：类路径下是否有指定类、容器中是否有指定 bean、是否有指定的配置项...
-
-SpringBoot 会判断容器中是否已存在用户自定义的配置（如：multipartResolver），若有则不再进行配置
-
-实现各种场景自动配置的类，都在 org.springframework.boot.autoconfigure 包下
-
-- **AopAutoConfiguration**
-
-  源码截取：
-
-  ```java
-  @AutoConfiguration
-  @ConditionalOnProperty(  // 配置项 spring.aop.auto=true 时才会自动配置 AOP
-      prefix = "spring.aop",
-      name = {"auto"},
-      havingValue = "true",
-      matchIfMissing = true  // 若没配置则默认为 true
-  )
-  public class AopAutoConfiguration {
-      ...
-      @Configuration(proxyBeanMethods = false)
-      @ConditionalOnClass({Advice.class})  // 若存在 org.aspectj.weaver.Advice 这个类，则进行自动配置
-      static class AspectJAutoProxyingConfiguration { ... }
-  }
-  ```
-
-- **DispatcherServletAutoConfiguration**
-
-  源码截取：
-
-  ```java
-  @AutoConfigureOrder(-2147483648)
-  @AutoConfiguration(
-      after = {ServletWebServerFactoryAutoConfiguration.class}
-  )
-  @ConditionalOnWebApplication( // 项目为 web 项目时，才会进行该自动配置
-      type = Type.SERVLET
-  )
-  @ConditionalOnClass({DispatcherServlet.class})  // 类路径中要有 DispatcherServlet
-  public class DispatcherServletAutoConfiguration {
-      @Bean
-      @ConditionalOnBean({MultipartResolver.class})
-      // 若容器中已有用户自定义的 multipartResolver，则不进行创建
-      @ConditionalOnMissingBean(name = {" multipartResolver"})
-      public MultipartResolver multipartResolver(MultipartResolver resolver) { ... }
-  }
-  ```
-
-- **CacheAutoConfiguration**
-
-  源码截取：
-
-  ```java
-  @AutoConfiguration(
-      // 配置完这些类后，才会进行 CacheAutoConfiguration
-      after = {CouchbaseDataAutoConfiguration.class, HazelcastAutoConfiguration.class,
-               HibernateJpaAutoConfiguration.class, RedisAutoConfiguration.class}
-  )
-  @ConditionalOnClass({CacheManager.class})
-  @ConditionalOnBean({CacheAspectSupport.class})
-  // 容器中没有 id 为 cacheResolver，类型为 CacheManager 的 bean 时才会自动配置
-  @ConditionalOnMissingBean(
-      value = {CacheManager.class},
-      name = {"cacheResolver"}
-  )
-  @EnableConfigurationProperties({CacheProperties.class})  // 开启配置信息的绑定
-  @Import({CacheAutoConfiguration.CacheConfigurationImportSelector.class, CacheAutoConfiguration.CacheManagerEntityManagerFactoryDependsOnPostProcessor.class})
-  public class CacheAutoConfiguration { ... }
-  ```
-
-  ```java
-  // 配置文件中与缓存有关的属性名都要以 spring.cache 开头，如：spring.cache.redis.cache-null-values
-  @ConfigurationProperties(prefix = "spring.cache")
-  public class CacheProperties { ... }
-  ```
-
-### 执行流程
-
-SpringBoot 自动配置的流程：
-
-<img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/Spring/SpringBoot_自动配置_实现原理_流程图.png" width="900rem" style="border-radius:.4rem" float="left" alt="SpringBoot_自动配置_实现原理_流程图"/><div style="clear:both"></div>
-
-## 注解
+## Boot 注解
 
 ### @Configuration
 
@@ -5844,7 +6325,7 @@ SpringBoot 自动配置的流程：
 
 - proxyBeanMethods - 定义代理 bean 的方式
 
-  - true（默认）- full 模式，多次调用 @Bean 方法，返回的组件都是**单实例**的
+  - true（**默认**）- full 模式，多次调用 @Bean 方法，返回的组件都是**单实例**的
   - false - lite 模式，多次调用 @Bean 方法，返回的组件都是**新建**的
 
   组件依赖必须使用 full 模式
@@ -6084,16 +6565,279 @@ IDE 可以利用该依赖，在写配置时进行智能提示
 </dependency>
 ```
 
+## 自动配置原理
+
+基于 Spring Boot 2.7.4
+
+### 依赖管理
+
+- **spring-boot-starter-parent**
+
+  这是 SpringBoot 项目的父依赖
+
+  ```xml
+  <parent>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-parent</artifactId>
+      <version>2.7.4</version>
+  </parent>
+  ```
+
+  spring-boot-starter-parent 还有一个父依赖 spring-boot-dependencies
+
+  spring-boot-dependencies 工程对大量的依赖进行了版本控制
+
+  因此 spring-boot-starter-parent 的作用就是声明所有开发中常用的依赖的版本号，进行自动版本仲裁（也可以自定义依赖版本）
+
+- **spring-boot-starter**
+
+  - Starters are a set of convenient dependency descriptors that you can include in your application.
+  - You get a one-stop shop for all the Spring and related technologies that you need without having to hunt through sample code and copy-paste loads of dependency descriptors.
+  - The starters contain a lot of the dependencies that you need to get a project up and running quickly and with a consistent, supported set of managed transitive dependencies.
+
+  ```mermaid
+  flowchart LR
+      A(spring-boot-starter-xxx) --依赖--> B(spring-boot-starter)
+      B --依赖--> C(spring-boot-autoconfigure)
+  ```
+
+  所有启动器都依赖 spring-boot-starter，使用者也可以[自定义启动器](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.developing-auto-configuration.custom-starter)  
+  spring-boot-starter 会根据场景，按需进行自动配置
+
+  **示例**：
+
+  ```xml
+  <!-- web 启动器，导入这个场景需要的一系列依赖 -->
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+  </dependency>
+  ```
+
+### 自动配置
+
+- **@SpringBootApplication**
+
+  使用在启动类上
+
+  ```java
+  @Target({ElementType.TYPE})
+  @Retention(RetentionPolicy.RUNTIME)
+  @Documented
+  @Inherited                // 子类会继承父类的注解
+  @SpringBootConfiguration  // 标注当前类为配置类（封装了 @Configuration）
+  @EnableAutoConfiguration  // 开启自动配置
+  @ComponentScan(           // 开启包扫描
+      excludeFilters = {@Filter(
+      type = FilterType.CUSTOM,
+      classes = {TypeExcludeFilter.class}
+  ), @Filter(
+      type = FilterType.CUSTOM,
+      classes = {AutoConfigurationExcludeFilter.class}
+  )}
+  )
+  public @interface SpringBootApplication { ... }
+  ```
+
+- **@EnableAutoConfiguration**
+
+  开启自动导入配置
+
+  ```java
+  @Target({ElementType.TYPE})
+  @Retention(RetentionPolicy.RUNTIME)
+  @Documented
+  @Inherited
+  @AutoConfigurationPackage  // 自动导包
+  @Import({AutoConfigurationImportSelector.class})  // 自动配置的导入选择（按需选择）
+  public @interface EnableAutoConfiguration { ... }
+  ```
+
+  - **@AutoConfigurationPackage**
+
+    自动导包
+
+    ```java
+    @Target({ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    @Inherited
+    @Import({Registrar.class})  // 导入了 Registrar
+    public @interface AutoConfigurationPackage { ... }
+    ```
+
+    **Registrar.class**
+
+    通过 Registrar 给容器中导入一系列组件
+
+    ```java
+    // AutoConfigurationPackage 抽象类中的内部类
+    static class Registrar implements ImportBeanDefinitionRegistrar, DeterminableImports {
+        ...
+        public void registerBeanDefinitions(AnnotationMetadata metadata, 
+                                            BeanDefinitionRegistry registry) {
+            /*
+             * 该方法的第二个参数就是当前启动类所在的包名
+             */
+            AutoConfigurationPackages.register(registry, 
+                (String[])(new AutoConfigurationPackages.PackageImports(metadata))
+                .getPackageNames().toArray(new String[0]));
+        }
+    }
+    ```
+
+    **注意**：@EnableAutoConfiguration 和 @ComponentScan 的不同
+
+    - `@EnableAutoConfiguration` 自动配置 Spring Boot 应用程序类路径中存在的 bean
+
+      `@ComponentScan` 扫描并加载 Spring 组件 `@Controller`/`@Service`/`@Component`/`@Repository`
+
+      > 比如，使用 Spring Data JPA 时，可能会在实体类上写 `@Entity` 注解  
+      > 这个 `@Entity` 注解由 `@AutoConfigurationPackage` 扫描并加载
+
+    - `Registrar.class` 来注册项目包外的 bean，因为 `@ComponentScan` 只能扫描注册项目包内的 bean
+
+    > [@EnableAutoConfiguration](https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/autoconfigure/EnableAutoConfiguration.html) document excerpts：
+    >
+    > Enable auto-configuration of the Spring Application Context, attempting to guess and configure beans that you are likely to need.
+    >
+    > Auto-configuration is always applied after user-defined beans have been registered.
+    >
+    > It will be used when scanning for `@Entity` classes. It is generally recommended that you place `@EnableAutoConfiguration` (if you're not using `@SpringBootApplication`) in a root package so that all sub-packages and classes can be searched.
+
+  - **AutoConfigurationImportSelector.class**
+
+    自动配置信息的导入选择器，根据场景按需导入
+
+    selectImports()，该方法的作用是根据配置文件将需要的 bean 注入容器中
+
+    ```mermaid
+    flowchart LR
+      A("selectImports") --call--> B("getAutoConfigurationEntry") --call--> C("getCandidateConfigurations")
+    ```
+
+    最终，会调用 SpringFactoriesLoader.class 来获取候选类，之后再经过去重、筛选，才会确定要自动配置的类
+
+    - 版本 2.7 以前，配置文件只有 spring.factories
+    - 版本 2.7 开始，配置文件为 spring-boot-autoconfigure 包下 META-INF 下的 spring.factories 和 org.springframework.boot.autoconfigure.AutoConfiguration.imports
+
+### 举例分析
+
+SpringBoot 选择需要自动导入的配置，底层实现使用了 [@Conditional...](#@Conditional...) 注解，会进行各种判断，如：类路径下是否有指定类、容器中是否有指定 bean、是否有指定的配置项...
+
+SpringBoot 会判断容器中是否已存在用户自定义的配置（如：multipartResolver），若有则不再进行配置
+
+实现各种场景自动配置的类，都在 org.springframework.boot.autoconfigure 包下
+
+- **AopAutoConfiguration**
+
+  源码截取：
+
+  ```java
+  @AutoConfiguration
+  @ConditionalOnProperty(  // 配置项 spring.aop.auto=true 时才会自动配置 AOP
+      prefix = "spring.aop",
+      name = {"auto"},
+      havingValue = "true",
+      matchIfMissing = true  // 若没配置则默认为 true
+  )
+  public class AopAutoConfiguration {
+      ...
+      @Configuration(proxyBeanMethods = false)
+      @ConditionalOnClass({Advice.class})  // 若存在 org.aspectj.weaver.Advice 这个类，则进行自动配置
+      static class AspectJAutoProxyingConfiguration { ... }
+  }
+  ```
+
+- **DispatcherServletAutoConfiguration**
+
+  源码截取：
+
+  ```java
+  @AutoConfigureOrder(-2147483648)
+  @AutoConfiguration(
+      after = {ServletWebServerFactoryAutoConfiguration.class}
+  )
+  @ConditionalOnWebApplication( // 项目为 web 项目时，才会进行该自动配置
+      type = Type.SERVLET
+  )
+  @ConditionalOnClass({DispatcherServlet.class})  // 类路径中要有 DispatcherServlet
+  public class DispatcherServletAutoConfiguration {
+      @Bean
+      @ConditionalOnBean({MultipartResolver.class})
+      // 若容器中已有用户自定义的 multipartResolver，则不进行创建
+      @ConditionalOnMissingBean(name = {" multipartResolver"})
+      public MultipartResolver multipartResolver(MultipartResolver resolver) { ... }
+  }
+  ```
+
+- **CacheAutoConfiguration**
+
+  源码截取：
+
+  ```java
+  @AutoConfiguration(
+      // 配置完这些类后，才会进行 CacheAutoConfiguration
+      after = {CouchbaseDataAutoConfiguration.class, HazelcastAutoConfiguration.class,
+               HibernateJpaAutoConfiguration.class, RedisAutoConfiguration.class}
+  )
+  @ConditionalOnClass({CacheManager.class})
+  @ConditionalOnBean({CacheAspectSupport.class})
+  // 容器中没有 id 为 cacheResolver，类型为 CacheManager 的 bean 时才会自动配置
+  @ConditionalOnMissingBean(
+      value = {CacheManager.class},
+      name = {"cacheResolver"}
+  )
+  @EnableConfigurationProperties({CacheProperties.class})  // 开启配置信息的绑定
+  @Import({CacheAutoConfiguration.CacheConfigurationImportSelector.class, CacheAutoConfiguration.CacheManagerEntityManagerFactoryDependsOnPostProcessor.class})
+  public class CacheAutoConfiguration { ... }
+  ```
+
+  ```java
+  // 配置文件中与缓存有关的属性名都要以 spring.cache 开头，如：spring.cache.redis.cache-null-values
+  @ConfigurationProperties(prefix = "spring.cache")
+  public class CacheProperties { ... }
+  ```
+
+### 执行流程
+
+SpringBoot 自动配置的流程：
+
+```mermaid
+flowchart TD
+    A(("启动")) --> B("@SpringBootApplication<br/>启动类注解")
+    B --> C("@SpringBootConfiguration<br/>标识为启动类")
+    B --> D("@EnableAutoConfiguration<br/>开启自动导入配置")
+    B --> E("@ComponentScan<br/>包扫描")
+    C --> F("@Configuration<br/>标识为配置类")
+    D --> G("@Import({AutoConfigurationImportSelector.class})<br/>自动配置的导入选择 - 按需选择")
+    G --> J("AutoConfigurationImportSelector<br/>获取所有候选的自动配置")
+    J --> K("SpringFactoriesLoader#loadFactoryNames<br/>获取候选的自动配置类")
+    K --> L("spring.factories<br/>...AutoConfiguration.imports<br/>记录所有候选类的配置文件")
+    L --"web"--> M("spring-boot-starter-web<br/>xxxAutoConfiguration<br/>...")
+    L --"cache"--> N("spring-boot-starter-cache<br/>xxxAutoConfiguration<br/>...")
+    M --> P{"@Conditional<br/>运行时判断"}
+    N --> P
+    P --"是"--> Y["加入 IOC 容器"]
+    P --"否"--> X["不加载"]
+    D --> H("@AutoConfigurationPackage<br/>自动导入配置类的包")
+    H --> I("@Import({Registrar.class})<br/>自动配置应用程序类路径下的 bean")
+```
+
 ## Web
 
-默认情况下，Spring Boot 静态内容的路径：
+### 使用
+
+#### 静态资源
+
+默认情况下，Spring Boot 静态资源路径：
 
 1. classpath 中名为 /static（或 /public 或 /resources 或 /META-INF/resources）的目录
 2. ServletContext 的根目录（/webapp 目录）
 
 访问地址：http://localhost:8088/demo.html
 
-以下都是正确的路径：
+正确的静态资源存放路径：
 
 ```ASCII
 main
@@ -6110,4 +6854,240 @@ main
 └── webapp
     └── e.html
 ```
+
+**自定义存放路径**：
+
+```yml
+spring:
+  web:
+    resources:
+      static-locations: [classpath:/assets/]  # 数组
+```
+
+配置后，就更改了 SpringBoot 默认的静态资源映射规则，只映射配置的路径下的资源
+
+访问地址：http://localhost:8088/demo.html
+
+**自定义访问前缀**：
+
+```yml
+spring:
+  mvc:
+    static-path-pattern: /resource/**
+```
+
+访问地址：http://localhost:8088/resource/demo.html，静态资源存放地址不变
+
+#### REST
+
+SpringBoot 也支持 REST 风格请求处理
+
+**Contoller 类**：
+
+```java
+ @RestController
+ @RequestMapping("/hello")
+ public class MyController {
+     @RequestMapping("")
+     public String hello() {
+         return "Hello SpringBoot";
+     }
+ }
+```
+
+访问路径：http://localhost:8080/hello
+
+RESTful 风格使用详解：[Spring MVC -> RESTful](#RESTful)
+
+SpringBoot 需要如下配置，来开启隐藏方法
+
+```yml
+ spring:
+   mvc:
+     hiddenmethod:
+       filter:
+         enabled: true
+```
+
+可以自定义 HiddenHttpMethodFilter 过滤器的相关属性
+
+```java
+@Configuration
+public class HiddenHttpMethodConfig {
+    @Bean
+    // 自定义，并将该对象交予 IOC 容器管理
+    public HiddenHttpMethodFilter hiddenHttpMethodFilter(){
+        HiddenHttpMethodFilter methodFilter = new HiddenHttpMethodFilter();
+        // 将默认的隐藏方法参数名 _method 改为 _m
+        methodFilter.setMethodParam("_m");
+        return methodFilter;
+    }
+}
+```
+
+#### 视图跳转
+
+##### 转发到页面
+
+需要 thymeleaf 依赖，来执行视图解析器的工作
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>
+```
+
+控制器
+
+```java
+@RestController
+public class MyController {
+    @RequestMapping("/test")
+    public ModelAndView test(ModelAndView mv) {
+        mv.setViewName("abc");  // 转发到 abc.html
+        return mv;
+    }
+}
+```
+
+**注意**：目标资源文件，默认在 src/main/resources/templates 文件夹下
+
+调用 URL 时，控制器会搜索模板文件夹中的 HTML 文件。若文件不可用，将引发此异常  
+错误原因可能是，控制器中错误的 viewName 或 template 文件夹中的资源文件不可用
+
+自定义 template 的 存放地址 和 后缀：
+
+```yml
+spring:
+  thymeleaf:
+    prefix: classpath:/static/
+    suffix: .html
+```
+
+##### 转发到控制器
+
+若返回 ModelAndView，viewName 是识别为静态资源名称，不会跳转到 Controller 方法
+
+```java
+@Controller
+public class MyController {
+    @RequestMapping("/test1")
+    public String test1(HttpServletRequest req) {
+        req.setAttribute("name", "Domenic");
+        return "forward:/test2";  // 转发到 "/test2"
+    }
+    @RequestMapping("/test2")
+    @ResponseBody
+    public String test2(@RequestAttribute String name) {
+        return name;
+    }
+}
+```
+
+### 工作原理
+
+[SpringMVC 框架详解](#SpringMVC%20框架详解)，包含组件介绍、执行流程、处理器映射器
+
+#### 静态资源映射
+
+配置信息绑定到 webMvcProperies 和 WebProperties 上
+
+```java
+@ConfigurationProperties(prefix = "spring.mvc")
+public class WebMvcProperties { ... }
+
+@ConfigurationProperties("spring.web")
+public class WebProperties { ... }
+```
+
+静态资源映射的自动配置在 **WebMvcAutoConfiguration** 类中实现
+
+内部类 WebMvcAutoConfigurationAdapter 是配置器适配器
+
+```java
+...
+/* 指定了 spring.mvc 和 spring.web 配置 */
+@EnableConfigurationProperties({WebMvcProperties.class, WebProperties.class})
+public static class WebMvcAutoConfigurationAdapter... { ... }
+```
+
+该类拥有以下属性：
+
+- *resourceProperties* - spring.resources 绑定的所有配置的值
+- *mvcProperties* - spring.mvc 绑定的所有配置的值
+- *beanFactory* - Spring 的 beanFactory
+- *messageConvertersProvider* - 所有的 HttpMessageConverter
+- *dispatchServletPath* - 前端控制器
+- *ServletRegistrations* - 给应用注册 Servlet、Filter...
+- *resourceHandlerRegistrationCustomizer* - 资源处理器的自定义器
+
+该类下的 addResourceHandlers 方法，描述静态资源默认的处理规则
+
+**欢迎页**
+
+WelcomePageHandlerMapping 类中封装了欢迎页的规则
+
+```java
+/* 构造函数中的代码 */
+// static-path-pattern 设置后，欢迎页就无法访问，因为必须等于 /**
+if (welcomePage != null && "/**".equals(staticPathPattern)) {
+    logger.info("Adding welcome page: " + welcomePage);
+    this.setRootViewName("forward:index.html");  // 转发到欢迎页
+} else if (this.welcomeTemplateExists(templateAvailabilityProviders, applicationContext)) {
+    logger.info("Adding welcome page template: index");
+    this.setRootViewName("index");  // 转发到映射路径为 "/" 的 controller 方法
+}
+```
+
+#### REST 请求处理
+
+**WebMvcAutoConfiguration** 类中创建了处理 HiddenMethod 的类对象
+
+```java
+@Bean
+@ConditionalOnMissingBean({HiddenHttpMethodFilter.class})
+@ConditionalOnProperty(
+    prefix = "spring.mvc.hiddenmethod.filter",  // 需要有该配置项
+    name = {"enabled"}  // 该值默认为 false，需要设置为 true 才生效
+)
+public OrderedHiddenHttpMethodFilter hiddenHttpMethodFilter() {
+    return new OrderedHiddenHttpMethodFilter();
+}
+```
+
+OrderedHiddenHttpMethodFilter 类继承了 HiddenHttpMethodFilter 类
+
+HiddenHttpMethodFilter 类中的 doFilterInternal 方法，会获取名为 \_method 的参数值作为隐藏方法，并对请求重新包装
+
+```java
+protected void doFilterInternal(...) ... {
+    // 复制一份 request，用于重新包装
+    HttpServletRequest requestToUse = request;
+    // getMethod() 获取请求方法
+    if ("POST".equals(request.getMethod()) && 
+        request.getAttribute("javax.servlet.error.exception") == null) {
+        // 获取名为 _method 的参数值
+        String paramValue = request.getParameter(this.methodParam);
+        if (StringUtils.hasLength(paramValue)) {
+            // 将值转为大写
+            String method = paramValue.toUpperCase(Locale.ENGLISH);
+            if (ALLOWED_METHODS.contains(method)) {
+                // 重新包装
+                requestToUse = new HiddenHttpMethodFilter.HttpMethodRequestWrapper(request, method);
+            }
+        }
+    }
+    // 放行请求
+    filterChain.doFilter((ServletRequest)requestToUse, response);
+}
+```
+
+#### 处理器映射器
+
+详见：[SpringMVC 框架详解](#SpringMVC%20框架详解) -> 处理器映射器
+
+从接收一个 Controller 请求，到执行对应的控制器方法，SpringBoot 通过控制器方法映射，来查找对应的控制器方法
+
+DispatcherServlet 中的 doDispatch 方法，会获取到 HandlerExecutionChain
 

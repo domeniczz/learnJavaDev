@@ -31,11 +31,11 @@
 是用 Java 语言进行动态 Web 资源开发技术的统称，是解决相关 Web 互联网领域的技术总和
 
 ```mermaid
-graph LR
+flowchart LR
   B["Chrome 浏览器"] --"HTTP 请求"--> S("服务器<br/><br/>静态：HTML 文件<br/><br/>动态：Servlet、JSP")
-  S("服务器<br/><br/>静态：HTML 文件<br/><br/>动态：Servlet、JSP") --"HTTP 响应"--> B["Chrome 浏览器"]
-  C["Firefox 浏览器"] --"HTTP 请求"--> S("服务器<br/><br/>静态：HTML 文件<br/><br/>动态：Servlet、JSP")
-  S("服务器<br/><br/>静态：HTML 文件<br/><br/>动态：Servlet、JSP") --"HTTP 响应"--> C["Firefox 浏览器"]
+  S --"HTTP 响应"--> B
+  C["Firefox 浏览器"] --"HTTP 请求"--> S
+  S --"HTTP 响应"--> C
 ```
 
 静态资源：指 Web 中始终不变的数据<br/>动态资源：指 Web 中由程序产生的数据，会动态变化
@@ -456,9 +456,9 @@ pom.xml
 
 2. 创建一个 Servlet，三种方式：
 
-   - 实现[Servlet 接口](#Servlet 接口)
-   - 继承[GenericServlet 类](#GenericServlet 类)
-   - 继承[HttpServlet 类](#HttpServlet 类)（推荐）
+   - 实现 [Servlet 接口](#Servlet%20接口)
+   - 继承 [GenericServlet 类](#GenericServlet%20类)
+   - 继承 [HttpServlet 类](#HttpServlet%20类)（推荐）
 
    在/main/java 下创建包，并且创建 java 文件：HelloServlet.java
 
@@ -1172,7 +1172,7 @@ public class ContextServlet extends HttpServlet {
 
 如果一个 Servlet 只负责一个功能，当项目规模越来越大时，Servlet 数量会非常多，也会有很多冗余代码，不方便维护
 
-通用 Servlet 就是把同一模块的功能（如：学生信息的增删改查）放入一个 Servlet 中<br/>例：[学生管理系统](#案例 - 学生管理系统)案例中的 Servlet 功能可以分为 3 个模块：管理员、学生、班级，那么只需 3 个 Servlet 即可
+通用 Servlet 就是把同一模块的功能（如：学生信息的增删改查）放入一个 Servlet 中<br/>例：[学生管理系统](#案例%20-%20学生管理系统)案例中的 Servlet 功能可以分为 3 个模块：管理员、学生、班级，那么只需 3 个 Servlet 即可
 
 **思路**：
 
@@ -1282,7 +1282,7 @@ public class TestServlet extends BaseServlet {
 
 #### 实现步骤
 
-需求：实现注册功能，本案例没有使用[MVC 设计模式](#MVC 设计模式)
+需求：实现注册功能，本案例没有使用[MVC 设计模式](#MVC%20设计模式)
 
 1. 创建数据库和数据表
 2. 编写前端注册页面
@@ -2196,7 +2196,7 @@ page 指令用于导包和设置一些页面属性，常用属性：
 - prefix 属性用于指定库前缀
 - uri 属性用于指定库的标识
 
-可以用来引入[JSTL 标签](#JSTL 标签)
+可以用来引入[JSTL 标签](#JSTL%20标签)
 
 ##### include 指令
 
@@ -2241,15 +2241,15 @@ forward 动作用于在 JSP 中实现转发，将请求转发到另一个指定�
 
 | 对象变量    | 对象变量            | 作用             |
 | ----------- | ------------------- | ---------------- |
-| [out](#out 对象)        | JSPWriter           | 输出流           |
-| [request](#request 对象)    | HttpServletRequest  | 请求信息         |
-| [response](#response 对象)   | HttpServletResponse | 响应信息         |
-| [session](#session 对象)    | HttpSession         | 会话             |
-| [application](#application 对象) | ServletContext      | 全局的上下文对象 |
-| [pageContext](#pageContext 对象) | PageContext         | JSP 页面上下文   |
+| [out](#out%20对象)        | JSPWriter           | 输出流           |
+| [request](#request%20对象)    | HttpServletRequest  | 请求信息         |
+| [response](#response%20对象)   | HttpServletResponse | 响应信息         |
+| [session](#session%20对象)    | HttpSession         | 会话             |
+| [application](#application%20对象) | ServletContext      | 全局的上下文对象 |
+| [pageContext](#pageContext%20对象) | PageContext         | JSP 页面上下文   |
 | page        | Object              | JSP 页面本身     |
-| [config](#config 对象)     | ServletConfig       | Servlet 配置对象 |
-| [exception](#exception 对象)  | Throwable           | 捕获网页异常     |
+| config    | ServletConfig       | Servlet 配置对象 |
+| [exception](#exception%20对象)  | Throwable           | 捕获网页异常     |
 
 **注意**：若无法识别内置对象，则需要导包
 
@@ -2301,7 +2301,9 @@ out 对象继承自抽象类 javax.servlet.jsp.JspWriter 的实例，在实际�
 
 ##### request 对象
 
-request 对象是[HttpServletRequest](https://tomcat.apache.org/tomcat-8.5-doc/servletapi/javax/servlet/http/HttpServletRequest.html)接口的一个实例<br/>封装的是调用 JSP 页面的请求信息<br/>该对象的属性值只在一个请求中保存
+request 对象是 [HttpServletRequest](https://tomcat.apache.org/tomcat-8.5-doc/servletapi/javax/servlet/http/HttpServletRequest.html) 接口的一个实例  
+封装的是调用 JSP 页面的请求信息  
+该对象的属性值只在一个请求中保存
 
 **常用方法**
 
@@ -2321,7 +2323,9 @@ request 对象是[HttpServletRequest](https://tomcat.apache.org/tomcat-8.5-doc/s
 
 ##### response 对象
 
-response 对象是[HttpServletResponse](https://tomcat.apache.org/tomcat-8.5-doc/servletapi/javax/servlet/http/HttpServletResponse.html)接口的一个实例<br/>用于向客户端响应处理结果<br/>常用于：设置 HTTP 标题，添加 cookie、设置响应内容的类型和状态、发送 HTTP 重定向和编码 URL
+response 对象是 [HttpServletResponse](https://tomcat.apache.org/tomcat-8.5-doc/servletapi/javax/servlet/http/HttpServletResponse.html) 接口的一个实例  
+用于向客户端响应处理结果  
+常用于：设置 HTTP 标题，添加 cookie、设置响应内容的类型和状态、发送 HTTP 重定向和编码 URL
 
 **常用方法**
 
@@ -2349,7 +2353,8 @@ response 对象是[HttpServletResponse](https://tomcat.apache.org/tomcat-8.5-doc
 
 ##### session 对象
 
-session 对象是[HttpSession](https://tomcat.apache.org/tomcat-8.5-doc/servletapi/javax/servlet/http/HttpSession.html)类型的一个实例<br/>表示浏览器和服务器间的一次会话，一次会话可包含多次请求，在多次请求间可用 session 对象存储信息
+session 对象是 [HttpSession](https://tomcat.apache.org/tomcat-8.5-doc/servletapi/javax/servlet/http/HttpSession.html) 类型的一个实例  
+表示浏览器和服务器间的一次会话，一次会话可包含多次请求，在多次请求间可用 session 对象存储信息
 该对象的属性值在一次会话范围中保存，保存在服务器端，只要不关闭浏览器，默认 30 分钟内都可访问
 
 **常用方法**
@@ -2373,7 +2378,9 @@ session 对象是[HttpSession](https://tomcat.apache.org/tomcat-8.5-doc/servleta
 
 ##### application 对象
 
-application 对象是[ServletContext](https://tomcat.apache.org/tomcat-8.5-doc/servletapi/javax/servlet/ServletContext.html)类型的一个实例<br/>是一个 web 程序的全局变量<br/>在整个服务器上保存数据，所有用户共享
+application 对象是 [ServletContext](https://tomcat.apache.org/tomcat-8.5-doc/servletapi/javax/servlet/ServletContext.html) 类型的一个实例  
+是一个 web 程序的全局变量  
+在整个服务器上保存数据，所有用户共享
 
 **常用方法**
 
@@ -2393,15 +2400,17 @@ application 对象是[ServletContext](https://tomcat.apache.org/tomcat-8.5-doc/s
 
 ##### pageContext 对象
 
-pageContext 对象是[PageContext](https://docs.oracle.com/javaee/7/api/javax/servlet/jsp/PageContext.html)类型的对象<br/>可以使用这个对象来管理其他的隐含对象<br/>该对象中的数据只在一个页面中有效（转发也无效） 
+pageContext 对象是 [PageContext](https://docs.oracle.com/javaee/7/api/javax/servlet/jsp/PageContext.html) 类型的对象  
+可以使用这个对象来管理其他的隐含对象  
+该对象中的数据只在一个页面中有效（转发也无效） 
 
 **常用方法**
 
 | 方法声明                                                  | 功能                                                |
 | --------------------------------------------------------- | --------------------------------------------------- |
-| void setAttribute(String name, Object value, [int scope]) | 使用适当的作用域设置指定的名称和值                  |
-| Object getAttribute(String name, [int scope])             | 返回指定作用域中名称关联的对象，若找不到则返回 null |
-| removeAttribute(String name, [int scope])                 | 在给定范围内删除与指定名称关联的对象引用            |
+| void setAttribute(String name, Object value, \[int scope]) | 使用适当的作用域设置指定的名称和值                  |
+| Object getAttribute(String name, \[int scope])             | 返回指定作用域中名称关联的对象，若找不到则返回 null |
+| removeAttribute(String name, \[int scope])                 | 在给定范围内删除与指定名称关联的对象引用            |
 | ServletRequest getRequest()                               | 获取请求对象                                        |
 | ServletResponse getResponse()                             | 获取响应对象                                        |
 | HttpSession getSession()                                  | 获取会话对象                                        |
@@ -2426,7 +2435,8 @@ pageContext 对象是[PageContext](https://docs.oracle.com/javaee/7/api/javax/se
 
 ##### exception 对象
 
-exception 对象是[Throwable](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html)的实例，表示 JSP 的异常信息<br/>若要使用它，必须将对应页面 page 指令的 isErrorPage 属性设置成 true
+exception 对象是 [Throwable](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Throwable.html) 的实例，表示 JSP 的异常信息  
+若要使用它，必须将对应页面 page 指令的 isErrorPage 属性设置成 true
 
 - 单个页面的处理方式
 
@@ -2969,7 +2979,7 @@ JSTL（JSP Standard Tag Library）被称为 JSP 标准标签库
 </dependency>
 ```
 
-在 JSP 页面中使用 [taglib](#taglib 指令) 指定引入 JSTL 标签库：
+在 JSP 页面中使用 [taglib](#taglib%20指令) 指定引入 JSTL 标签库：
 
 ```jsp
 <!-- prefix 属性，指定库前缀（调用时，使用该前缀） -->
@@ -3227,15 +3237,15 @@ MVC 是模型（Model）和视图（View）以及控制器（Controller）的简
 ```mermaid
 flowchart LR
   subgraph server
-    B["Servlet"]
-    E["JSP"]
-    C(("JavaBean"))
+    B
+    E
+    C
   end
   A("浏览器") --1--> B["Servlet"]
-  B["Servlet"] --4--> E["JSP"]
-  E["JSP"] --5--> A("浏览器")
-  B["Servlet"] <--2--> C(("JavaBean"))
-  C(("JavaBean")) <--3--> D[("数据库")]
+  B --4--> E["JSP"]
+  E --5--> A("浏览器")
+  B <--2--> C(("JavaBean"))
+  C <--3--> D[("数据库")]
 ```
 
 表现层 + 业务层 + 持久层：
@@ -3580,10 +3590,10 @@ Filter 是 JavaWeb 的三大组件之一（Servlet、Filter、Listener）
 ```mermaid
 flowchart LR
   subgraph 过滤器
-    B("身份认证<br/>资源审核<br/>资源加密访问")
+    B
   end
   A("浏览器") <--请求/响应--> B("身份认证<br/>资源审核<br/>资源加密访问")
-  B("身份认证<br/>资源审核<br/>资源加密访问") <--请求/响应--> C("Web 资源")
+  B <--请求/响应--> C("Web 资源")
 ```
 
 **优点**：
@@ -3601,10 +3611,10 @@ flowchart LR
 flowchart LR
   A("浏览器") <--> B("过滤器 1")
   subgraph 过滤器链
-    B("过滤器 1") <--> C("过滤器 2")
-    C("过滤器 2") <--> D("过滤器 3")
+    B <--> C("过滤器 2")
+    C <--> D("过滤器 3")
   end
-  D("过滤器 3") <--> E("Web 资源")
+  D <--> E("Web 资源")
 ```
 
 ### 使用
@@ -4341,7 +4351,7 @@ INSERT INTO `t_user` VALUES (1, 'admin', '123456');
 
 ### 项目架构
 
-采用[MVC 设计模式](#MVC 设计模式)  
+采用[MVC 设计模式](#MVC%20设计模式)  
 分为三层：模型（Model）和视图（View）以及控制器（Controller）
 
 - M：存放用于封装业务数据的 JavaBean（Bean）、业务逻辑的 JavaBean（Service）、访问数据库的 DAO 对象
@@ -6267,7 +6277,7 @@ manageStudent.jsp
 
 #### 6. Servlet
 
-该部分未编写[通用 Servlet](#通用 Servlet)，而是一个 Servlet 只负责一个功能，会有部分冗余代码
+该部分未编写[通用 Servlet](#通用%20Servlet)，而是一个 Servlet 只负责一个功能，会有部分冗余代码
 
 ##### 管理员部分
 

@@ -127,11 +127,11 @@ charset 是 character set 的简写，即**字符集**
 **编码依赖于字符集**，**一个字符集可以有多个编码实现**，就像代码中的接口实现依赖于接口一样
 
 ```mermaid
-graph BT
+flowchart BT
     subgraph Unicode
         F(UTF-8 编码) --> E(Unicode 字符集)
-        G(UTF-16 编码) --> E(Unicode 字符集)
-        H(UTF-32 编码) --> E(Unicode 字符集)
+        G(UTF-16 编码) --> E
+        H(UTF-32 编码) --> E
     end
     subgraph ASCII
         A(ASCII 编码) --> B(ASCII 字符集)
@@ -4031,22 +4031,22 @@ public void show(File file) {
 **常用 IO 类的框架**
 
 ```mermaid
-graph TB
+flowchart TB
   A(IO流) --> B(字节流)
-  A(IO流) --> C(字符流)
-  B(字节流) --> D(InputStream)
+  A --> C(字符流)
+  B --> D(InputStream)
   D(InputStream) --> H("FileInputStream<br/>BufferedInputStream<br/>DataInputStream<br/>ObjectInputStream")
-  B(字节流) --> E(OutputStream)
-  E(OutputStream) --> I("FileOutputStream<br/>BufferedOutputStream<br/>DataOutputStream<br/>ObjectOutputStream<br/>PrintStream")
-  C(字符流) --> F(Reader)
-  F(Reader) --> J("FileReader<br/>BufferedReader<br/>InputStreamReader")
-  C(字符流) --> G(Writer)
-  G(Writer) --> K("FileWriter<br/>BufferedWriter<br/>OutputStreamWriter<br/>PrintWriter")
+  B --> E(OutputStream)
+  E --> I("FileOutputStream<br/>BufferedOutputStream<br/>DataOutputStream<br/>ObjectOutputStream<br/>PrintStream")
+  C --> F(Reader)
+  F --> J("FileReader<br/>BufferedReader<br/>InputStreamReader")
+  C --> G(Writer)
+  G --> K("FileWriter<br/>BufferedWriter<br/>OutputStreamWriter<br/>PrintWriter")
   subgraph 抽象类
-    D(InputStream)
-    E(OutputStream)
-    F(Reader)
-    G(Writer)
+    D
+    E
+    F
+    G
   end
 ```
 
@@ -6441,16 +6441,16 @@ if (null != url) {
   当程序执行过程中发生异常但又没有手动处理时，则由 Java 虚拟机采用默认方式处理异常<br/>就是：打印异常的名称、异常发生的原因、异常发生的位置以及终止程序
 
 ```mermaid
-graph LR
+flowchart LR
     A(Throwable 类) --> B(Error 类)
-    A(Throwable 类) --> C(Exception 类)
-    C(Exception 类) --> D(RuntimeException 类)
-    C(Exception 类) --> E(IOException 类)
-    D(RuntimeException 类) --> F(ArithmeticException 类)
-    D(RuntimeException 类) --> G(ArrayIndexOutOfBoundsException 类)
-    D(RuntimeException 类) --> H(NullPointerException 类)
-    D(RuntimeException 类) --> I(ClassCastException 类)
-    D(RuntimeException 类) --> J(NumberFormatException 类)
+    A --> C(Exception 类)
+    C --> D(RuntimeException 类)
+    C --> E(IOException 类)
+    D --> F(ArithmeticException 类)
+    D --> G(ArrayIndexOutOfBoundsException 类)
+    D --> H(NullPointerException 类)
+    D --> I(ClassCastException 类)
+    D --> J(NumberFormatException 类)
 ```
 
 #### 异常的捕获
@@ -7659,7 +7659,7 @@ Comparator<Integer> comparator = new Comparator<>() {
 
 **概述**：
 
-- Java9 的[List](#List 集合（重中之重）)、[Set](#Set 集合)和[Map](#Map 集合（重点）)集合中增加了静态工厂方法 of 实现<u>不可变实例</u>的创建
+- Java9 的 [List](#List%20集合（重中之重）)、[Set](#Set%20集合) 和 [Map](#Map%20集合（重点）) 集合中增加了静态工厂方法 of 实现**不可变实例**的创建
 - 不可变体现在无法 增、删、改 它们的元素
 - 不允许添加 null 元素对象
 - 若尝试更改该实例的内容，编译不出错，运行会抛 UnsupportedOperationException 异常
@@ -7795,7 +7795,7 @@ Java11 于 2018 年 9 月正式发布，是 Java 大版本周期变化后的第�
 | 方法声明                                                     | 功能                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | boolean isBlank()                                            | 判断字符串是否为空或只包含空白代码点<br/>空格、“\n”、“\f”、“\t”、“\r”，返回 true |
-| \<U\> [Optional](#Optional 类)\<U\> map(Function\<? super T,? extends U\> mapper) | Optional 类中的方法<br/>根据参数指定规则的结果来得到 Optional 类型的对象 |
+| \<U\> [Optional](#Optional%20类)\<U\> map(Function\<? super T,? extends U\> mapper) | Optional 类中的方法<br/>根据参数指定规则的结果来得到 Optional 类型的对象 |
 | T orElse(T other)                                            | Optional 类中的方法<br/>若该值存在就返回，否则返回 other 的数值 |
 
 **使用示例**
@@ -7827,15 +7827,15 @@ String res = strOpt.orElse("0");                        // res: Hello
 ### 技术体系
 
 ```mermaid
-graph LR
+flowchart LR
     F(Logging Facade) --> A("Commons Logging (JCL)")
-    F(Logging Facade) --> B("Simple Logging Facade for Java (slf4j)")
-    A("Commons Logging (JCL)") --> C((implements))
-    B("Simple Logging Facade for Java (slf4j)") --> C((implements))
-    C((implements)) --> H(log4j)
-    C((implements)) --> I(logback)
-    C((implements)) --> J(log4j2)
-    C((implements)) --> K(JUL)
+    F --> B("Simple Logging Facade for Java (slf4j)")
+    A --> C((implements))
+    B --> C
+    C --> H(log4j)
+    C --> I(logback)
+    C --> J(log4j2)
+    C --> K(JUL)
 ```
 
 日志规范：一些接口，提供给日志的实现框架设计的标准
@@ -8496,7 +8496,7 @@ schema 本身也是一个 XML 文件，也可以受到其他约束文件的约�
   - 优点：元素与元素之间保留结构关系，因此可以进行增删改查操作
   - 缺点：XML 文档过大，可能出现内存溢出显现
   
-  DOM 解析常用技术框架：[dom4j](#Dom4J 解析)
+  DOM 解析常用技术框架：[dom4j](#Dom4J%20解析)
 
 **DOM 解析解析文档对象模型**
 
@@ -8521,22 +8521,22 @@ schema 本身也是一个 XML 文件，也可以受到其他约束文件的约�
 文档对象模型：
 
 ```mermaid
-graph TB
+flowchart TB
   A(Document) --> B(Students)
-  B(Students) --> C(Student)
-  C(Student) --> E(id)
-  E(id) --> F(1)
-  C(Student) --> G(name)
-  G(name) --> H(Domenic)
-  C(Student) --> I(age)
-  I(age) --> J(23)
-  B(Students) --> D(Student)
-  D(Student) --> K(id)
-  K(id) --> L(2)
-  D(Student) --> M(name)
-  M(name) --> N(Louis)
-  D(Student) --> O(age)
-  O(age) --> P(24)
+  B --> C(Student)
+  C --> E(id)
+  E --> F(1)
+  C --> G(name)
+  G --> H(Domenic)
+  C --> I(age)
+  I --> J(23)
+  B --> D(Student)
+  D --> K(id)
+  K --> L(2)
+  D --> M(name)
+  M --> N(Louis)
+  D --> O(age)
+  O --> P(24)
 ```
 
 Document 对象表示整个 XML 文档
@@ -9168,24 +9168,24 @@ Gradle 和 Maven 是用于构建软件的不同工具
 * 插件（Plugin）
 
 ```mermaid
-graph LR
+flowchart LR
   A["pom.xml"] --> B("项目对象模型<br/>（POM）")
   subgraph maven
     subgraph object model
-      B("项目对象模型<br/>（POM）") --> C("依赖管理模型<br/>（Dependency）")
+      B --> C("依赖管理模型<br/>（Dependency）")
     end
     subgraph lifecycle
       D("构建生命周期/阶段<br/>Build lifecycle & phases") --> E(插件 1)
-      D("构建生命周期/阶段<br/>Build lifecycle & phases") --> F(插件 2)
+      D --> F(插件 2)
     end
   end
-  C("依赖管理模型<br/>（Dependency）") --> H[(仓库)]
+  C --> H[(仓库)]
   classDef invisible fill-opacity:0,stroke-opacity:0
 ```
 
 如上，就是 Maven 的模型
 
-lifecycle 部分，是用来完成标准化构建流程的，就是 [Maven 的生命周期](#Maven 生命周期)  
+lifecycle 部分，是用来完成标准化构建流程的，就是 [Maven 的生命周期](#Maven%20生命周期)  
 如需编译，Maven 提供了编译插件，如需打包，Maven 提供了打包插件...
 
 object model 部分，项目对象模型 POM 就是将项目抽象成对象模型，有专属的坐标  
@@ -9366,19 +9366,19 @@ Maven 对项目构建的生命周期划分为 3 套：
 三套生命周期：
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph site
         H(pre-site) --> I(site)
-        I(site) --> J(post-site)
+        I --> J(post-site)
     end
     subgraph default
         A(compile) --> B(test)
-        B(test) --> C(package)
-        C(package) --> D(install)
+        B --> C(package)
+        C --> D(install)
     end
     subgraph clean
         F(pre-clean) --> E(clean)
-        E(clean) --> G(post-clean)
+        E --> G(post-clean)
     end
     classDef invisible fill-opacity:0,stroke-opacity:0
 ```
@@ -9592,10 +9592,10 @@ Scope 的取值信息：
 若要使用某个项目中的资源，就需要依赖该项目（直接和间接依赖）
 
 ```mermaid
-graph LR;
-    C(项目 C) --间接依赖--> A(项目 A);
-    C(项目 C) --直接依赖--> B(项目 B);
-    B(项目 B) --直接依赖--> A(项目 A);
+flowchart LR;
+    C(项目 C) --"间接依赖"--> A(项目 A);
+    C --"直接依赖"--> B(项目 B);
+    B --"直接依赖"--> A;
 ```
 
 ```xml
@@ -9708,22 +9708,22 @@ graph LR;
 **工程间的继承**：
 
 ```mermaid
-graph BT
+flowchart BT
     B(maven-utils) --继承--> A(maven-parent)
-    C(maven-domain) --继承--> A(maven-parent)
-    D(maven-dao) --继承--> A(maven-parent)
-    E(maven-service) --继承--> A(maven-parent)
-    F(maven-web) --继承--> A(maven-parent)
+    C(maven-domain) --继承--> A
+    D(maven-dao) --继承--> A
+    E(maven-service) --继承--> A
+    F(maven-web) --继承--> A
 ```
 
 **工程间的依赖**：
 
 ```mermaid
-graph RL
+flowchart RL
     B(maven-domain) --依赖--> A(maven-utils)
-    C(maven-dao) --依赖--> B(maven-pojo)
-    D(maven-service) --依赖--> C(maven-dao)
-    E(maven-web) --依赖--> D(maven-service)
+    C(maven-dao) --依赖--> B
+    D(maven-service) --依赖--> C
+    E(maven-web) --依赖--> D
 ```
 
 **Maven 工程的继承**
@@ -9851,3 +9851,4 @@ graph RL
       </configuration>
   </plugin>
   ```
+

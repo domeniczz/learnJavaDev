@@ -242,9 +242,9 @@ flowchart LR
   subgraph 数据库
   direction LR
     B[("数据库")] --> C["数据表"]
-    B[("数据库")] --> D["..."]
+    B --> D["..."]
     C["数据表"] --> E("数据")
-    C["数据表"] --> F("数据")
+    C --> F("数据")
   end
   A("数据库管理系统") --> 数据库
 ```
@@ -1825,7 +1825,8 @@ TRUNCATE 删除表所有数据，是将整张表删除，然后再创建一个�
 
 **实现方式**
 
-**在任意一方加入外键**，关联另一方主键，并且设置外键为<u>唯一（UNIQUE）</u><br/>限制外键只可出现一次，就实现了一对一
+**在任意一方加入外键**，关联另一方主键，并且设置外键为<u>唯一（UNIQUE）</u>  
+限制外键只可出现一次，就实现了一对一
 
 **使用示例**
 
@@ -1876,7 +1877,8 @@ CREATE TABLE tb_user (
 
 一个部门可以拥有多个员工，但是一个员工不能属于多个部门
 
-员工表属于多，而部门表属于一，因此，在员工表中添加 dep_id，指向部门表的主键 id<br/>部门与员工是一对多的关系
+员工表属于多，而部门表属于一，因此，在员工表中添加 dep_id，指向部门表的主键 id  
+部门与员工是一对多的关系
 
 <img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/数据库/一对多_示例_表.png" width="680rem" style="border-radius:.4rem" float="left" alt="一对多_示例_表"/><div style="clear:both"></div>
 
@@ -1912,13 +1914,15 @@ CREATE TABLE tb_emp(
 
 **实现方式**
 
-建立<u>中间表</u>，中间表至少包含两个外键，分别关联两方主键<br/>两表与中间表都是一对多的关系，中间表间接实现两表的多对多
+建立<u>中间表</u>，中间表至少包含两个外键，分别关联两方主键  
+两表与中间表都是一对多的关系，中间表间接实现两表的多对多
 
 **使用示例**
 
 一个订单可以对应多个商品，一个商品也可以对应多个订单
 
-订单表和商品表都属于多，此时需要创建一个中间表<br/>在中间表中添加订单表的外键和商品表的外键，分别指向两张表的主键
+订单表和商品表都属于多，此时需要创建一个中间表  
+在中间表中添加订单表的外键和商品表的外键，分别指向两张表的主键
 
 > 中间表和订单表、中间表和商品表的关系都是多对一，中间表是多的一方
 
@@ -1966,7 +1970,8 @@ FOREIGN KEY(goods_id) REFERENCES tb_goods(id);
 
 <img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/数据库/多对多_示例_表结构模型图.png" width="560rem" style="border-radius:.4rem" float="left" alt="多对多_示例_表结构模型图"/><div style="clear:both"></div>
 
-从模型图可知，订单表 和 商品表 与 中间表 都是一对多关系<br/>是 中间表 间接实现了 订单表 和 商品表 多对多的关系
+从模型图可知，订单表 和 商品表 与 中间表 都是一对多关系  
+是 中间表 间接实现了 订单表 和 商品表 多对多的关系
 
 ### 实操练习
 
@@ -3950,7 +3955,7 @@ Java 代码操作数据库流程（如上图）：
 
 #### 查询日志
 
-* [启用 MySQL 日志](#MySQL 日志)
+* [启用 MySQL 日志](#MySQL%20日志)
 
 * 执行代码示例，查看 mysql.log 中记录的日志
 
@@ -4758,10 +4763,10 @@ ResultSetHandler 接口的几个常见实现类能实现数据库的增删改查
 
 | 实现类                                     | 说明                                                         |
 | ------------------------------------------ | ------------------------------------------------------------ |
-| [ArrayHandler](#ArrayHandler 示例)         | 将结果集中的第一条记录封装到一个 Object[] 数组中，数组中的每一个元素就是这条记录中的每一个字段的值 |
-| [ArrayListHandler](#ArrayListHandler 示例) | 将结果集中的每一条记录都封装到一个 Object[] 数组中，再将这些数组再封装到 List 集合中 |
+| [ArrayHandler](#ArrayHandler%20示例)         | 将结果集中的第一条记录封装到一个 Object[] 数组中，数组中的每一个元素就是这条记录中的每一个字段的值 |
+| [ArrayListHandler](#ArrayListHandler%20示例) | 将结果集中的每一条记录都封装到一个 Object[] 数组中，再将这些数组再封装到 List 集合中 |
 | BeanHandler                                | 将结果集中第一条记录封装到一个指定的 javaBean 中             |
-| [BeanListHandler](#BeanListHandler 示例)   | 将结果集中每一条记录封装到指定的 javaBean 中，再将这些 javaBean 在封装到 List 集合中 |
+| [BeanListHandler](#BeanListHandler%20示例)   | 将结果集中每一条记录封装到指定的 javaBean 中，再将这些 javaBean 在封装到 List 集合中 |
 | ColumnListHandler                          | 将结果集中指定的列的字段值，封装到一个 List 集合中           |
 | KeyedHandler                               | 将结果集中每一条记录封装到 Map<String,Object\>，再将这个 map 集合做为另一个 Map 的 value，另一个 Map 集合的 key 是指定的字段的值 |
 | MapHandler                                 | 将结果集中第一条记录封装到了 Map<String,Object\> 集合中，key 就是字段名，value 就是字段值 |
@@ -5605,7 +5610,112 @@ res.close(); pstmt.close(); conn.close();
 
 - 操作繁琐处 Mybatis 都可自动完成
 
-## 测试数据
+---
+
+## API
+
+[Java API - 官方文档](https://mybatis.org/mybatis-3/zh/java-api.html)
+
+使用 MyBatis 的主要 Java 接口就是 SqlSession，它可以用来执行命令，获取映射器实例和管理事务
+
+SqlSessions 由 SqlSessionFactory 实例创建，SqlSessionFactory 对象包含创建 SqlSession 实例的各种方法  
+SqlSessionFactory 由 SqlSessionFactoryBuilder 创建，它可以从 XML、注解或 Java 配置代码来创建 SqlSessionFactory
+
+### [SqlSessionFactoryBuilder](https://javadoc.io/static/org.mybatis/mybatis/3.5.5/org/apache/ibatis/session/SqlSessionFactoryBuilder.html)
+
+SqlSessionFactoryBuilder 有五个 build() 方法，每一种都可以从不同的资源中创建 SqlSessionFactory 实例
+
+```java
+SqlSessionFactory build(InputStream inputStream) // 最常用的
+SqlSessionFactory build(InputStream inputStream, String environment)
+SqlSessionFactory build(InputStream inputStream, Properties properties)
+SqlSessionFactory build(InputStream inputStream, String env, Properties props)
+SqlSessionFactory build(Configuration config)
+```
+
+可选的参数是 environment 和 properties
+
+- **environment**
+
+  决定加载哪种环境，包括数据源 datasource 和事务管理器 transactionManager
+
+  > 若调用了带 environment 参数的 build 方法，那么 MyBatis 将使用该环境对应的配置  
+  > 若指定的环境无效，会收到错误  
+  > 若调用了不带 environment 参数的 build 方法，那就会使用默认的环境配置（如 default="development"）
+
+- **properties**
+
+  MyBatis 会加载提供的属性，并在配置中提供使用
+
+  > 属性加载遵循一定的加载顺序，详见：[properties](#properties)
+
+### [SqlSessionFactory](https://javadoc.io/static/org.mybatis/mybatis/3.5.5/org/apache/ibatis/session/SqlSessionFactory.html)
+
+获取 SqlSession 示例时，可以指定如下配置：
+
+- **事务处理**：要在 session 作用域中使用事务作用域，还是使用自动提交（auto-commit）
+- **数据库连接**：要 MyBatis 从已配置的数据源获取连接，还是使用自己提供的连接
+- **语句执行**：是否要 MyBatis 复用 PreparedStatement 和 批量更新语句（包括插入语句和删除语句）
+
+默认的 openSession() 方法没有参数：
+
+- 事务作用域会开启（不自动提交）
+- 由当前环境配置的 DataSource 实例中获取 Connection 对象
+- 事务隔离级别会使用驱动或数据源的默认设置
+- 预处理语句不会被复用，也不会批量处理更新
+
+openSession(boolean autoCommit)，参数为 true 代表开启自动提交（相当于关闭事务）
+
+详情见：https://mybatis.org/mybatis-3/zh/java-api.html#sqlsessionfactory
+
+### [SqlSession](https://javadoc.io/static/org.mybatis/mybatis/3.5.5/org/apache/ibatis/session/SqlSession.html)
+
+SqlSession 类包含了所有执行语句、提交、回滚事务、获取映射器实例的方法
+
+注意：对于打开的任何 session，都要保证它们被妥善关闭，使用 close() 方法
+
+详情见：https://mybatis.org/mybatis-3/zh/java-api.html#sqlsession-1
+
+#### 语句执行
+
+以下各个 insert、update、delete、select 方法都很强大，但也有些繁琐，而且它们并不符合类型安全（形参为 Object 类型）
+
+```java
+<T> T selectOne(String statement, Object parameter)
+<E> List<E> selectList(String statement, Object parameter)
+<T> Cursor<T> selectCursor(String statement, Object parameter)
+<K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey)
+int insert(String statement, Object parameter)
+int update(String statement, Object parameter)
+int delete(String statement, Object parameter)
+```
+
+#### 事务控制
+
+```java
+void commit()
+void commit(boolean force)
+void rollback()
+void rollback(boolean force)
+```
+
+#### 映射器
+
+使用映射器类来执行映射语句更为常见
+
+[映射器 - 官方文档](https://mybatis.org/mybatis-3/zh/java-api.html#%E4%BD%BF%E7%94%A8%E6%98%A0%E5%B0%84%E5%99%A8)
+
+```java
+<T> T getMapper(Class<T> type)
+```
+
+---
+
+## 基础步骤
+
+Mybatis 官方入门文档：https://mybatis.org/mybatis-3/zh/getting-started.html
+
+**测试数据**：
 
 创建名为 Mybatis 的数据库
 
@@ -5616,7 +5726,6 @@ CREATE DATABASE mybatis;
 USE mybatis;
     </code></pre>
 </details>
-
 新建 tb_user 数据表
 
 <details>
@@ -5638,7 +5747,6 @@ INSERT INTO tb_user VALUES (2, '李四', '234', '女', '天津');
 INSERT INTO tb_user VALUES (3, '王五', '11', '男', '西安');
     </code></pre>
 </details>
-
 新建 tb_brand 数据表
 
 <details>
@@ -5668,20 +5776,6 @@ VALUES ('三只松鼠', '三只松鼠股份有限公司', 5, '好吃不上火', 
        ('小米', '小米科技有限公司', 50, 'are you ok', 1);
     </code></pre>
 </details>
-
-## 基础步骤
-
-1. 创建 Maven 模块，导入依赖
-
-   注意：若导入了 logback 依赖，则需要在项目的 src\main\resources 目录下创建 logback.xml 配置文件
-
-2. 编写 MyBatis 核心配置文件 -> 替换连接信息，解决硬编码问题
-
-3. 编写 SQL 映射文件 -> 统一管理 SQL 语句，解决硬编码问题
-
-4. 创建包装类（包装数据库的返回结果）
-
-5. 创建 Mybatis 测试类
 
 ### 1.导入依赖
 
@@ -5721,9 +5815,11 @@ VALUES ('三只松鼠', '三只松鼠股份有限公司', 5, '好吃不上火', 
 
 > **注意**：
 > 
-> 若日期类型使用 JDK8 开始的 LocalDateTime，则需注意 Druid 的版本，如：1.2.8 已经支持。因为，需要 JDBC driver 支持 JDBC 4.2 API
+> 若日期类型使用 JDK8 开始的 LocalDateTime，则需注意 Druid 的版本，如：1.2.8 已支持该日期类型
 > 
-> 序列化 JSON 使用 Jackson 时，若要序列化 LocalDateTime，则还需导入 com.fasterxml.jackson.datatype 下的 jackson-datatype-jsr310
+> 因为，需要 JDBC driver 支持 JDBC 4.2 API
+> 
+> 序列化 JSON 使用 Jackson 时，若要序列化 LocalDateTime，还需导入 com.fasterxml.jackson.datatype 下的 jackson-datatype-jsr310
 > 
 > <details>
 >     <summary>展开 Jackson 相关依赖</summary>
@@ -5753,14 +5849,14 @@ VALUES ('三只松鼠', '三只松鼠股份有限公司', 5, '好吃不上火', 
 >     </code></pre>
 > </details>
 
-### 2.编写 MyBatis 核心配置文件
+### 2.核心配置
 
 Mybatis 官网有配置文件模板：https://mybatis.org/mybatis-3/zh/getting-started.html<br/>官方 xml 文件配置详解：https://mybatis.org/mybatis-3/zh/configuration.html
 
 配置简介跳转：[核心配置](#核心配置)
 
 文件示例命名：mybatis-config.xml 或 sqlMapConfig.xml  
-放入 src\main\resources 的根目录
+放到 src\main\resources 目录下
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -5768,6 +5864,8 @@ Mybatis 官网有配置文件模板：https://mybatis.org/mybatis-3/zh/getting-s
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+    <!-- 导入外部配置文件 -->
+    <properties resource="jdbc.properties"/>
     <!--
         environments：配置数据库连接环境信息，可配置多个 environment
         通过 default 属性值指向不同环境的 id，从而进行切换
@@ -5782,25 +5880,29 @@ Mybatis 官网有配置文件模板：https://mybatis.org/mybatis-3/zh/getting-s
                 - UNPOOLED 表示不使用数据库连接池
              -->
             <dataSource type="POOLED">
-                <!-- 数据库的连接信息，可以提取到一个 properties 文件中，用 <properties> 标签引入 -->
-                <property name="driver" value="com.mysql.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql:///mybatis?useSSL=false&amp;useServerPrepStmts=true"/>
-                <property name="username" value="root"/>
-                <property name="password" value="root"/>
+                <!-- 数据库的连接信息，提取到了一个 properties 文件中 -->
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
             </dataSource>
         </environment>
     </environments>
     
     <mappers>
-        <!-- 
-            加载 Mybatis 的映射文件，路径是相对于类的类路径（全路径）
-            此处因为 UserMapper.xml 和 核心配置文件在同一目录下，所以相对路径就是文件名
-        -->
-        <mapper resource="UserMapper.xml"/>
-        <!-- 可直接设置包 -->
-        <package name=""/>
+        <!-- 指定包，Mybatis 会获取该包下的映射文件 -->
+        <package name="com.domenic.mapper"/>
     </mappers>
 </configuration>
+```
+
+jdbc.properties：
+
+```properties
+jdbc.driver=com.mysql.jdbc.Driver
+jdbc.url=jdbc:mysql://localhost:3306/mybatis?useSSL=false&useServerPrepStmts=true
+jdbc.username=root
+jdbc.password=root
 ```
 
 **Tips**：
@@ -5816,6 +5918,8 @@ Mybatis 官网有配置文件模板：https://mybatis.org/mybatis-3/zh/getting-s
   
 - 可以使用 \<typeAlias\> 标签（在 \<configuration\> 标签下添加）
 
+  当配置了别名后，User 可代替 com.domenic.pojo.User，简化书写
+
   ```xml
   <typeAliases>
       <!-- alias 在使用时，不区分大小写 -->
@@ -5824,9 +5928,7 @@ Mybatis 官网有配置文件模板：https://mybatis.org/mybatis-3/zh/getting-s
   </typeAliases>
   ```
 
-  当这样配置时，User 可用在任何使用 com.domenic.pojo.User 的地方，简化书写
-
-  也可以指定一个包名，MyBatis 会在包名下搜索需要的 Java Bean
+  也可以指定一个包名，MyBatis 会为包下的所有 Java Bean 创建别名
 
   ```xml
   <typeAliases>
@@ -5839,14 +5941,56 @@ Mybatis 官网有配置文件模板：https://mybatis.org/mybatis-3/zh/getting-s
   </typeAliases>
   ```
 
-- 配置各个标签时，要遵循一定的顺序
+- 编写各个标签时，要遵循一定顺序，详见 [XML 配置](#XML%20配置)
 
-### 3.编写 SQL 映射文件
+### 3.包装类
+
+根据测试数据，这里创建 User 类
+
+> **Tip**：  
+> 成员变量的**数据类型推荐使用包装类**  
+> **因为**：若使用基本数据类型，如 int，默认值的 0，可能会与该字段值在数据库中的意义混淆  
+> **例**：若定义字段 judge，值为 0 时表示非，1 时表示真，那如果不给包装类中的 judge 成员变量赋值，Java 会赋默认值 0。而在数据库中，不赋值是 null，因此可能会产生问题
+
+```java
+public class User {
+    private Integer id;
+    private String username;
+    private String password;
+    private String gender;
+    private String addr;
+    ...
+}
+```
+
+### 4.非 Mapper 代理
+
+因为不使用 Mapper 代理映射  
+所以，直接在核心配置文件 mybatis-config.xml 中导入需要的 SQL 映射文件  
+之后，使用 namespace.statementId 的方式定位到特定的 SQL 语句
+
+**项目结构**：
+
+```ASCII
+src
+└── main
+    ├── java
+    │   └── com
+    │       └── domenic
+    │           ├── domain
+    │           │   ├── User.java
+    │           │   └── ...
+    │           └── Main.java
+    └── resources
+        ├── jdbc.properties
+        ├── mybatis-config.xml
+        └── UserMapper.xml
+```
+
+#### 1.SQL 映射文件
 
 文件示例命名：UserMapper.xml  
 放入 src\main\resources 目录
-
-编写完 SQL 映射文件后，需要在 Mybatis 核心配置文件中
 
 **定义的 SQL 语句，末尾建议不加分号**
 
@@ -5859,12 +6003,13 @@ Mybatis 官网有配置文件模板：https://mybatis.org/mybatis-3/zh/getting-s
     namespace: 名称空间
     可以通过名称空间，对 id 进行区分（类似 Java 的 package）
 -->
-<mapper namespace="test">
+<mapper namespace="user">
     <!--
         id 是这条 SQL 语句的唯一标识，不可重复
         resultType 是返回结果的类型（自动映射封装），值为封装实体类的全路径
+        若配置了 <typeAliases>，resultType 中的类型可以直接写别名 user
     -->
-    <select id="selectAll" resultType="com.domenic.pojo.User">
+    <select id="selectAll" resultType="user">
         SELECT * FROM tb_user
     </select>
 </mapper>
@@ -5874,7 +6019,7 @@ Mybatis 官网有配置文件模板：https://mybatis.org/mybatis-3/zh/getting-s
 
 - **参数占位符**
 
-  1. \#{}：会将其替换为 ?，可防止 [SQL 注入](#SQL 注入)
+  1. \#{}：会将其替换为 ?，可防止 [SQL 注入](#SQL%20注入)
   2. \${}：直接拼接 SQL，会存在 SQL 注入问题
   3. 使用时机：
      - 参数传递时：\#{}，相当于占位符
@@ -5892,7 +6037,7 @@ Mybatis 官网有配置文件模板：https://mybatis.org/mybatis-3/zh/getting-s
      \&quot;  \"  引号
 
      ```xml
-     <select id="selectById" resultType="com.domenic.pojo.Brand">
+     <select id="selectById" resultType="brand">
          SELECT * FROM tb_brand WHERE id &lt; #{id}
      </select>
      ```
@@ -5902,7 +6047,7 @@ Mybatis 官网有配置文件模板：https://mybatis.org/mybatis-3/zh/getting-s
      可在 CDATA 里面输入任意内容，无需特殊字符
 
      ```xml
-     <select id="selectById" resultType="com.domenic.pojo.Brand">
+     <select id="selectById" resultType="brand">
          <!-- 用 CDATA，把 '<' 字符当成纯文本 -->
          SELECT * FROM tb_brand WHERE id <![CDATA[ < ]]> #{id}
      </select>
@@ -5912,81 +6057,234 @@ Mybatis 官网有配置文件模板：https://mybatis.org/mybatis-3/zh/getting-s
 
   parameterType 属性（可以省略）
 
-### 4.创建包装类
+#### 2.导入映射
 
-根据测试数据，这里创建 User 类
+在 mybatis-config.xml 中导入 SQL 映射文件：
 
-> **Tip**：  
-> 成员变量的<u>数据类型推荐使用包装类</u>  
-> **因为**：若是基本数据类型，如 int，默认值的 0，可能会与该字段值在数据库里面的意义混淆  
-> **例**：若定义字段 Judge，值为 0 是为非，1 时为真，那若不给包装类里面的 judge 成员变量赋值，Java 则会赋默认值 0。而在数据库中，不赋值是 null，因此可能会产生问题
+```xml
+...
+<mappers>
+    <!--
+        加载 Mybatis 的映射文件，路径是相对于类的类路径（全路径）
+        此处因为 UserMapper.xml 和 核心配置文件在同一目录下，所以相对路径就是文件名
+    -->
+    <mapper resource="UserMapper.xml"/>
+</mappers>
+```
+
+#### 3.测试代码
+
+1. 通过 SqlSessionFactory 获取 SqlSession 对象
+2. 用 selectList 方法执行指定 id 的 SQL 语句
 
 ```java
-public class User {
-    private Integer id;
-    private String username;
-    private String password;
-    private String gender;
-    private String addr;
-    ...
+// 1.加载 mybatis 的核心配置文件，获取 SqlSessionFactory
+// 因为 mybatis-config.xml 在 resources 的根目录下，所以直接写文件名（相对路径）
+String resource = "mybatis-config.xml";
+InputStream inputStream = Resources.getResourceAsStream(resource);
+SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+// 2.获取 SqlSession 会话对象，用它来执行 SQL 语句
+SqlSession sqlSession = sqlSessionFactory.openSession();
+
+// 3.执行 SQL 语句
+// 指定，命名空间 user 下，id 为 selectAll 的 SQL 语句
+// 此处也存在硬编码问题，写死了 "user.selectAll"
+List<User> users = sqlSession.selectList("user.selectAll");
+users.forEach(System.out::println);
+
+// 4.释放资源
+sqlSession.close();
+```
+
+可以用 try-with-resource 简化第 2、3、4 步的书写
+
+```java
+// 2.获取 SqlSession 对象，用它来执行 SQL 语句
+try(SqlSession sqlSession = sqlSessionFactory.openSession()) {
+    // 3.执行 SQL 语句
+    List<User> users = sqlSession.selectList("user.selectAll");
+    users.forEach(System.out::println);
 }
 ```
 
-### 5.创建 Mybatis 测试类
+### 4.Mapper 代理映射
 
-Mybatis 官方入门文档：https://mybatis.org/mybatis-3/zh/getting-started.html
+> 若不使用 Mapper 代理映射，会存在**硬编码**的问题
+>
+> 用全限定名 “user.selectAll” 调用 Java 对象，依赖于字符串字面值，不方便后期维护
+>
+> ```java
+> List<User> users = sqlSession.selectList("user.selectAll");
+> ```
+>
 
-里面有提供 从 XML 构建 SqlSessionFactory 的方法（Building SqlSessionFactory from XML）
+Mapper 和用全限定名调用 Java 对象的方法类似  
+该命名可以直接映射到，在命名空间中同名的映射器类，并将已映射的 select 语句匹配到同名接口中，对应名称、参数、返回类型的方法
 
-1. 加载 XML 文件，并且获取工厂类
+只需编写 Mapper 接口和 SQL 映射配置文件，Mybatis 会根据接口定义创建接口的动态代理对象
 
-   XML 配置文件，程序默认会去 Maven 项目，标准项目结构的源代码目录下的，Resourses 目录中查找
+```java
+// 获得 Mapper 代理对象
+UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+```
 
-2. 通过工厂类获取 SqlSession 对象
+**优势**：
 
-3. 执行 SQL 语句
+- 它不依赖于字符串字面值，解决原生方式中的硬编码问题，会更安全一点
+- 若 IDE 有代码补全功能，那么代码补全可以辅助，快速选择到映射好的 SQL 语句
 
-4. 释放资源
+**使用要求**：
 
-**示例代码**：
+1. 定义与 SQL 映射文件同名的 Mapper 接口，并将 Mapper 接口和 SQL 映射文件放在同一目录下
+2. 设置 SQL 映射文件的 namespace 属性为 Mapper 接口的全限定名
+3. 在相应的 Mapper 接口中定义方法
+4. parameterType 在单个参数的情况下可以不写，因为 Mybatis 能自动识别，但返回值类型不能不写
 
-- **不用 Mapper 代理映射**
+项目结构：
 
-  ```java
-  // 1.加载 mybatis 的核心配置文件，获取 SqlSessionFactory
-  // 因为 mybatis-config.xml 在 resources 的根目录下，所以直接写文件名（相对路径）
-  String resource = "mybatis-config.xml";
-  InputStream inputStream = Resources.getResourceAsStream(resource);
-  SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-  
-  // 2.获取 SqlSession 会话对象，用它来执行 SQL 语句
-  SqlSession sqlSession = sqlSessionFactory.openSession();
-  
-  // 3.执行 SQL 语句
-  // 名称空间 test 下，id 为 selectAll 的 SQL 语句
-  // 此处也存在硬编码问题，写死了 "test.selectAll"
-  List<User> users = sqlSession.selectList("test.selectAll");
-  users.forEach(System.out::println);
-  
-  // 4.释放资源
-  sqlSession.close();
-  ```
+```ASCII
+src
+└── main
+    ├── java
+    │   └── com
+    │       └── domenic
+    │           └── mapper
+    │               └── UserMapper.java
+    └── resources
+        ├── com
+        │   └── domenic
+        │       └── mapper
+        │           └── UserMapper.xml
+        └── mybatis-config.xml
+```
 
-  可以用 try-with-resource 简化第 2、3、4 步的书写
+#### 1.SQL 映射文件
 
-  ```java
-  // 2.获取 SqlSession 对象，用它来执行 SQL 语句
-  try(SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      // 3.执行 SQL 语句
-      List<User> users = sqlSession.selectList("test.selectAll");
-      users.forEach(System.out::println);
-  }
-  ```
+1. 定义与 SQL 映射文件 **同名** 的 Mapper 接口，并将 Mapper 接口和 SQL 映射文件放在 **同一目录** 下
 
-- **使用 Mapper 代理映射（最常用）**
+   src 下的源代码目录 **main 中 java 和 resources 两个目录，在编译时，被视为同一个**  
+   也就是说，在编译后的 target/classes 目录中，UserMapper.java 和 UserMapper.xml 在同一目录 com/domenic/mapper 下，而 mybatis-config.xml 在 classes 根目录下
 
-  可以优化硬编码的问题，跳转[Mapper 代理](#Mapper 代理)
+   编译后的 target 目录：
 
+   ```ASCII
+   target
+   └── classes
+       ├── com
+       │   └── domenic
+       │       └── mapper
+       │           ├── UserMapper.java
+       │           └── UserMapper.xml
+       └── mybatis-config.xml
+   ```
+
+   注意：resources 下只能创建 directory，因此创建时，不能用 . 来做分隔符，而应该用 /
+
+2. 设置 SQL 映射文件的 namespace 属性为：**Mapper 接口的全限定名**
+
+   ```xml
+   <?xml version="1.0" encoding="UTF-8" ?>
+   <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+           "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   <!--
+       namespace: 名称空间
+       可以通过名称空间，进行 id 的区分（像 Java 的包一样）
+   -->
+   <!-- 修改名称空间值为：Mapper 接口的类名全称（全限定名） -->
+   <mapper namespace="com.domenic.mapper.UserMapper">
+       <!-- 查询所有，返回值为 User，且有多个 -->
+       <select id="selectAll" resultType="com.domenic.pojo.User">
+           SELECT * FROM tb_user
+       </select>
+       ...
+   </mapper>
+   ```
+
+   parameterType 在只有单个参数的情况下可以不写，因为 Mybatis 能自动识别，但 resultType 一定要写
+
+#### 2.Mapper 接口
+
+在 Mapper 接口中定义接口方法，方法名和 SQL 映射文件中 SQL 语句的 id 相同
+
+UserMapper 接口：
+
+```java
+public interface UserMapper {
+    // 查询所有，返回值是 List 集合
+    List<User> selectAll()
+}
+```
+
+若在 SQL 映射文件中，不写 parameterType 属性：
+
+- 只有一个参数，无需写 @Param 注解，如：@Param("map") Map\<String, Object> map
+- 有多个参数，那么每个参数前都要加 @Param 注解
+
+示例：
+
+```java
+List<NoticeModel> getList(
+    @Param("queryParam") QueryParam queryParam,
+    @Param("DeptIds") List<String> DeptIds,
+    @Param("str") String str,
+    @Param("map") Map map
+);
+```
+
+在 SQL 映射文件中，参数直接写入占位符 `#{}` 中  
+对象：`#{对象名.成员变量名}`  
+普通参数：`#{参数名}`
+
+对于 `${}`，当 parameterType 是基本数据类型或 String ，且参数只有一个时，参数名必须是 value，如：`${value}`
+
+#### 3.导入映射
+
+在 mybatis-config.xml 中导入 SQL 映射文件：
+
+```xml
+<mappers>
+    <!-- 加载 SQL 映射文件，路径是相对于类的类路径 -->
+    <mapper resource="com/domenic/mapper/UserMapper.xml"/>
+</mappers>
+```
+
+因为 Mapper 接口名称 和 SQL 映射文件名称 一致，并在同一目录下  
+所以能使用包扫描的方式简化 SQL 映射文件的加载
+
+Mybatis 核心配置文件中，加载 SQL 映射配置文件的配置修改为：
+
+```xml
+<mappers>
+    <!-- Mapper 代理，包扫描方式 -->
+    <package name="com.domenic.mapper"/>
+</mappers>
+```
+
+#### 4.测试代码
+
+1. 通过 SqlSessionFactory 获取 SqlSession 对象
+2. 用 getMapper 方法获取到对应的代理对象 mapper
+3. 调用 mapper 接口中的方法实现对数据库的操作
+
+```java
+// 1.加载 mybatis 的核心配置文件，获取 SqlSessionFactory
+// 因为 mybatis-config.xml 在 resources 的根目录下，所以直接写文件名（相对路径）
+String resource = "mybatis-config.xml";
+InputStream inputStream = Resources.getResourceAsStream(resource);
+SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+
+// 2.获取 SqlSession 对象，用它来执行 SQL 语句
+// try-with-resource 写法，可省略 sqlSession.close();
+try(SqlSession sqlSession = sqlSessionFactory.openSession()) {
+    // 先获取 UserMapper 接口的代理对象
+    UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+    // 3.执行 SQL 语句
+    // 通过 BrandMapper 中的方法，执行 SQL 映射文件中 id 为 selectAll 的 SQL 语句
+    List<User> users = userMapper.selectAll();
+    users.forEach(System.out::println);
+}
+```
 
 ---
 
@@ -6113,18 +6411,14 @@ MyBatis 可以用第三方的插件来对功能进行扩展
 
 ```xml
  <plugins>
- 
-     <!--配置分页插件-->
-     
      <!-- PageHelper 3.7.6 时的写法 -->
      <plugin interceptor="com.github.pagehelper.PageHelper">
          <!-- 指定 SQL 方言 -->
          <property name="dialect" value="mysql"/>
      </plugin>
-     
      <!-- PageHelper 5.2.0 时的写法 -->
      <plugin interceptor="com.github.pagehelper.PageInterceptor"/>
-     
+
  </plugins>
 ```
 
@@ -6139,316 +6433,6 @@ MyBatis 可以用第三方的插件来对功能进行扩展
    - POOLED：<br/>使用数据库连接池，这种数据源的实现利用 “池” 的概念将 JDBC 连接对象组织起来
    - UNPOOLED：<br/>不使用数据库连接池，这种数据源的实现在每次被请求时打开和关闭连接
    - JNDI：<br/>这个数据源实现是为了，能在如 EJB 或应用服务器这类容器中使用，容器可以集中或在外部配置数据源，然后放置一个 JNDI 上下文的数据源引用
-
----
-
-## API
-
-[Java API - 官方文档](https://mybatis.org/mybatis-3/zh/java-api.html)
-
-使用 MyBatis 的主要 Java 接口就是 SqlSession，它可以用来执行命令，获取映射器实例和管理事务
-
-SqlSessions 由 SqlSessionFactory 实例创建，SqlSessionFactory 对象包含创建 SqlSession 实例的各种方法  
-SqlSessionFactory 由 SqlSessionFactoryBuilder 创建，它可以从 XML、注解或 Java 配置代码来创建 SqlSessionFactory
-
-### [SqlSessionFactoryBuilder](https://javadoc.io/static/org.mybatis/mybatis/3.5.5/org/apache/ibatis/session/SqlSessionFactoryBuilder.html)
-
-SqlSessionFactoryBuilder 有五个 build() 方法，每一种都可以从不同的资源中创建 SqlSessionFactory 实例
-
-```java
-SqlSessionFactory build(InputStream inputStream) // 最常用的
-SqlSessionFactory build(InputStream inputStream, String environment)
-SqlSessionFactory build(InputStream inputStream, Properties properties)
-SqlSessionFactory build(InputStream inputStream, String env, Properties props)
-SqlSessionFactory build(Configuration config)
-```
-
-可选的参数是 environment 和 properties
-
-- **environment**
-
-  决定加载哪种环境，包括数据源 datasource 和事务管理器 transactionManager
-
-  > 若调用了带 environment 参数的 build 方法，那么 MyBatis 将使用该环境对应的配置  
-  > 若指定的环境无效，会收到错误  
-  > 若调用了不带 environment 参数的 build 方法，那就会使用默认的环境配置（如 default="development"）
-
-- **properties**
-
-  MyBatis 会加载提供的属性，并在配置中提供使用
-
-  > 属性加载遵循一定的加载顺序，详见：[properties](#properties)
-
-### [SqlSessionFactory](https://javadoc.io/static/org.mybatis/mybatis/3.5.5/org/apache/ibatis/session/SqlSessionFactory.html)
-
-获取 SqlSession 示例时，可以指定如下配置：
-
-- **事务处理**：要在 session 作用域中使用事务作用域，还是使用自动提交（auto-commit）
-- **数据库连接**：要 MyBatis 从已配置的数据源获取连接，还是使用自己提供的连接
-- **语句执行**：是否要 MyBatis 复用 PreparedStatement 和 批量更新语句（包括插入语句和删除语句）
-
-默认的 openSession() 方法没有参数：
-
-- 事务作用域会开启（不自动提交）
-- 由当前环境配置的 DataSource 实例中获取 Connection 对象
-- 事务隔离级别会使用驱动或数据源的默认设置
-- 预处理语句不会被复用，也不会批量处理更新
-
-openSession(boolean autoCommit)，参数为 true 代表开启自动提交（相当于关闭事务）
-
-详情见：https://mybatis.org/mybatis-3/zh/java-api.html#sqlsessionfactory
-
-### [SqlSession](https://javadoc.io/static/org.mybatis/mybatis/3.5.5/org/apache/ibatis/session/SqlSession.html)
-
-SqlSession 类包含了所有执行语句、提交、回滚事务、获取映射器实例的方法
-
-注意：对于打开的任何 session，都要保证它们被妥善关闭，使用 close() 方法
-
-详情见：https://mybatis.org/mybatis-3/zh/java-api.html#sqlsession-1
-
-#### 语句执行
-
-以下各个 insert、update、delete、select 方法都很强大，但也有些繁琐，而且它们并不符合类型安全（形参为 Object 类型）
-
-```java
-<T> T selectOne(String statement, Object parameter)
-<E> List<E> selectList(String statement, Object parameter)
-<T> Cursor<T> selectCursor(String statement, Object parameter)
-<K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey)
-int insert(String statement, Object parameter)
-int update(String statement, Object parameter)
-int delete(String statement, Object parameter)
-```
-
-#### 事务控制
-
-```java
-void commit()
-void commit(boolean force)
-void rollback()
-void rollback(boolean force)
-```
-
-#### 映射器
-
-使用映射器类来执行映射语句更为常见
-
-[映射器 - 官方文档](https://mybatis.org/mybatis-3/zh/java-api.html#%E4%BD%BF%E7%94%A8%E6%98%A0%E5%B0%84%E5%99%A8)
-
-```java
-<T> T getMapper(Class<T> type)
-```
-
----
-
-## Mapper 代理
-
-### 概述
-
-前面的基本使用方式的代码，它也存在硬编码的问题：
-
-```java
-List<User> users = sqlSession.selectList("test.selectAll");
-```
-
-以上这种方式用全限定名 “test.selectAll” 调用 Java 对象的方法，依赖于字符串字面值，也不方便后期维护
-
-Mapper 和用全限定名调用 Java 对象的方法类似，这样，该命名就可以直接映射到在命名空间中同名的映射器类，并将已映射的 select 语句匹配到对应名称、参数和返回类型的方法
-
-只需编写 Mapper 接口和 SQL 映射配置文件，Mybatis 会根据接口定义创建接口的动态代理对象
-
-```java
-// 获得 Mapper 代理对象
-UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-```
-
-**优势**：
-
-- 它不依赖于字符串字面值，解决原生方式中的硬编码问题，会更安全一点
-- 若 IDE 有代码补全功能，那么代码补全可以辅助，快速选择到映射好的 SQL 语句
-
-### 使用要求
-
-**四个要求**：
-
-1. 定义与 SQL 映射文件同名的 Mapper 接口，并将 Mapper 接口和 SQL 映射文件放在同一目录下
-2. 设置 SQL 映射文件的 namespace 属性为：Mapper 接口的全限定名
-3. 在相应的 Mapper 接口中定义方法
-4. parameterType 在单个参数的情况下可以不写，因为 Mybatis 能自动识别，但返回值类型不能不写
-
-**详情**：
-
-1. **定义与 SQL 映射文件 <u>同名</u> 的 Mapper 接口，并将 Mapper 接口和 SQL 映射文件放在 <u>同一目录</u> 下**
-
-   - 例：如下的 Maven 项目
-
-     ```ASCII
-     maven-project
-     ├── pom.xml
-     └── src
-         └── main
-             ├── java
-             │   └── com
-             │       └── domenic
-             │           └── demo.java
-             └── resources
-                 ├── com
-                 |   └── domenic
-                 |       └── demo.xml
-                 └── res.xml
-     ```
-
-     src 下的源代码目录 main 中 <u>java 和 resources 两个目录，在编译时，被视为同一个</u>  
-     也就是说，在编译后的 target/classes 目录下，demo.java 和 demo.xml 在同一目录 com/domenic 下，而 res.xml 在 classes 根目录下
-
-     编译后的 target 目录：
-
-     ```ASCII
-     target
-     └── classes
-         ├── com
-         |   └── domenic
-         |       ├── demo.java
-         |       └── demo.xml
-         └── res.xml
-     ```
-
-   - 因此，Mapper 接口和 SQL 映射文件需放在同一目录下，就是 Mapper 接口文件在 java 包下的目录结构和 SQL 映射文件在 resources 下的目录结构要一致
-
-     **Tip**：resources 下只能创建 directory，不可用 . 来做分隔符，而应该用 /
-
-2. **设置 SQL 映射文件的 namespace 属性为：<u>Mapper 接口的全限定名</u>**
-
-   ```xml
-   <?xml version="1.0" encoding="UTF-8" ?>
-   <!DOCTYPE mapper
-           PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-           "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-   <!--
-       namespace: 名称空间
-       可以通过名称空间，进行 id 的区分（像 Java 的包一样）
-   -->
-   <!-- 修改名称空间值为：Mapper 接口的类名全称（全限定名） -->
-   <mapper namespace="com.domenic.mapper.UserMapper">
-       ...
-   </mapper>
-   ```
-
-3. **在 Mapper 接口中定义方法，方法名就是 SQL 映射文件中，SQL 语句的 id**
-
-   该示例使用测试数据，结果用 User 类来封装，Mapper 接口定义为 UserMapper
-
-   例：SQL 映射文件中的内容：
-
-   ```xml
-   <?xml version="1.0" encoding="UTF-8" ?>
-   <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-           "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-   <!-- 以下配置 UserMapper 中方法的 SQL 映射 -->
-   <mapper namespace="com.domenic.mapper.UserMapper">
-       <!-- 查询所有，返回值为 User，且有多个 -->
-       <select id="selectAll" resultType="com.domenic.pojo.User">
-           SELECT * FROM tb_user
-       </select>
-       ...
-   </mapper>
-   ```
-
-   userMapper 接口中的内容：
-
-   ```java
-   public interface UserMapper {
-       // 查询所有，返回值是集合，存储 User 对象
-       List<User> selectAll()
-   }
-   ```
-
-   **注意**：因为 SQL 映射文件 UserMapper.xml 的路径变了，MyBatis 核心配置文件 mybatis-config.xml 中的 mapper 路径也要改
-
-   ```xml
-   <!-- 加载 SQL 映射文件，路径是相对于类的类路径 -->
-   <mapper resource="com/domenic/mapper/UserMapper.xml"/>
-   ```
-
-   > **Tip**：
-   >
-   > 若 Mapper 接口名称和 SQL 映射文件名称<u>一致</u>，并在<u>同一目录</u>下  
-   > 则可使用<u>包扫描</u>的方式简化 SQL 映射文件的加载  
-   > 就是扫描包下所有的配置文件，并加载
-   >
-   > Mybatis 核心配置文件中，加载 SQL 映射配置文件的配置修改为：
-   >
-   > ```xml
-   > <mappers>
-   >  <!-- 传统加载 SQL 映射文件方式 -->
-   >  <!-- <mapper resource="com/domenic/mapper/UserMapper.xml"/> -->
-   > 
-   >  <!-- Mapper 代理，包扫描方式 -->
-   >  <package name="com.domenic.mapper"/>
-   > </mappers>
-   > ```
-
-4. **parameterType 在单个参数的情况下可以不写，因为 Mybatis 能自动识别，但返回值类型不能不写**
-
-   Mybatis 自动识别入参对象，传入单个 map 或单个对象，无需写 @Param 注解，如：@Param("map") Map\<String, Object> map
-
-   若 mapper 接口中有多个参数，那么每个参数都要加 @Param 注解
-
-   使用注解来传入多个参数：
-
-   ```java
-   List<NoticeModel> getList(
-       @Param("queryParam") QueryParam queryParam,
-       @Param("DeptIds") List<String> DeptIds,
-       @Param("str") String str,
-       @Param("map") Map map
-   );
-   ```
-
-   在 SQL 映射文件中，可以直接代入参数占位符 `#{}` 中  
-   如：对象的使用：`#{queryParam.name}` 对象.成员变量名  
-   普通参数的使用：`#{str}`
-   
-   对于 `${}`，当 parameterType 是基本数据类型或 String ，且参数只有一个时，参数名必须是 value，如：`${value}`
-
-**Mapper 代理测试代码**
-
-通过 SqlSessionFactory 获取 SqlSession 对象，再通过 getMapper 方法获取到对应的代理对象 mapper，最后通过调用 mapper 接口中的方法实现对数据库的操作
-
-```java
-// 1.加载 mybatis 的核心配置文件，获取 SqlSessionFactory
-// 因为 mybatis-config.xml 在 resources 的根目录下，所以直接写文件名（相对路径）
-String resource = "mybatis-config.xml";
-InputStream inputStream = Resources.getResourceAsStream(resource);
-SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-
-// 2.获取 SqlSession 对象，用它来执行 SQL 语句
-// try-with-resource 写法，可省略 sqlSession.close();
-try(SqlSession sqlSession = sqlSessionFactory.openSession()) {
-    // 先获取 UserMapper 接口的代理对象
-    UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
-    // 3.执行 SQL 语句
-    // 通过 BrandMapper 中的方法，执行 SQL 映射文件中 id 为 selectAll 的 SQL 语句
-    List<User> users = userMapper.selectAll();
-    users.forEach(System.out::println);
-}
-```
-
-### \#{} 和 \${}
-
-动态 SQL 是 MyBatis 的主要特性之一，mapper 中定义的参数传到 XML 中后，在查询之前 MyBatis 会对其进行动态解析
-
-两种支持动态 SQL 的语法：\#{} 以及 \${}
-
-**\#{}**：表示一个占位符号
-
-- \#{} 可以实现 preparedStatement 向占位符中设置值，自动进行 Java 类型和 JDBC 类型转换，\#{} 能有效防止 SQL 注入<br/>MyBatis 在处理 \#{} 时，会将 SQL 中的 \#{} 替换为 ? 号，使用 PreparedStatement 的 set 方法来赋值
-- 若 SQL 语句中只有一个参数，\#{} 中的参数名随便写<br/>若 SQL 语句中有多个参数，此时参数名应为 和当前表关联的实体类的属性名 或 Map 集合的关键字，不可随便写
-
-**\${}**：表示 SQL 原样拼接
-
-- \${} 将传入的数据直接拼接生成到 SQL 中（在 JDBC 不支持使用占位符的地方，都能使用 \${}），但会有 SQL 注入问题<br/>MyBatis 在处理 \${} 时，就是把 \${} 替换为变量的值
-- 若传入参数名称明确，则直接填入参数名，如：`${userName}`<br/>若传入参数名称不明确，且只有一个参数，则只能使用 value 指代，如：`${value}`
 
 ---
 
@@ -6531,7 +6515,23 @@ try(SqlSession sqlSession = sqlSessionFactory.openSession()) {
 
 ---
 
-## SQL 映射进阶
+## SQL 映射
+
+### \#{} 和 \${}
+
+动态 SQL 是 MyBatis 的主要特性之一，mapper 中定义的参数传到 XML 中后，在查询之前 MyBatis 会对其进行动态解析
+
+两种支持动态 SQL 的语法：\#{} 以及 \${}
+
+**\#{}**：表示一个占位符号
+
+- \#{} 可以实现 preparedStatement 向占位符中设置值，自动进行 Java 类型和 JDBC 类型转换，\#{} 能有效防止 SQL 注入<br/>MyBatis 在处理 \#{} 时，会将 SQL 中的 \#{} 替换为 ? 号，使用 PreparedStatement 的 set 方法来赋值
+- 若 SQL 语句中只有一个参数，\#{} 中的参数名随便写<br/>若 SQL 语句中有多个参数，此时参数名应为 和当前表关联的实体类的属性名 或 Map 集合的关键字，不可随便写
+
+**\${}**：表示 SQL 原样拼接
+
+- \${} 将传入的数据直接拼接生成到 SQL 中（在 JDBC 不支持使用占位符的地方，都能使用 \${}），但会有 SQL 注入问题<br/>MyBatis 在处理 \${} 时，就是把 \${} 替换为变量的值
+- 若传入参数名称明确，则直接填入参数名，如：`${userName}`<br/>若传入参数名称不明确，且只有一个参数，则只能使用 value 指代，如：`${value}`
 
 ### 字段名映射
 
@@ -6606,7 +6606,7 @@ brandName 和 companyName 属性值为 null，因为 Mybatis 无法自动匹配�
   ```xml
   <select id="selectAll" resultType="com.domenic.pojo.Brand">
       SELECT
-          <include refid="brand_column" />
+          <include refid="brand_column"/>
       FROM tb_brand
   </select>
   ```
@@ -6648,7 +6648,7 @@ brandName 和 companyName 属性值为 null，因为 Mybatis 无法自动匹配�
     type：映射的类型，支持别名 typeAliases
 -->
 <resultMap id="brandResultMap" type="com.domenic.pojo.Brand">
-    <id column="id" property="brandId" />
+    <id column="id" property="brandId"/>
     <result column="brand_name" property="brandName"/>
     <result column="company_name" property="companyName"/>
 </resultMap>

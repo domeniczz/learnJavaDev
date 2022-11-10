@@ -248,15 +248,15 @@ That’s because we have to recalculate each previous term to solve each term.
 For example, to solve fib(6), we have to calculate fib(5), fib(4)... which may have been calculated before
 
 ```mermaid
-graph TB
+flowchart TB
     C("fib(4)") --> F("fib(3)")
-    C("fib(4)") --> G("fib(2)")
-    F("fib(3)") --> A("fib(2)")
-    F("fib(3)") --> B("fib(1)")
-    G("fib(2)") --> H("fib(1)")
-    G("fib(2)") --> I("fib(0)")
-    A("fib(2)") --> J("fib(1)")
-    A("fib(2)") --> K("fib(0)")
+    C --> G("fib(2)")
+    F --> A("fib(2)")
+    F --> B("fib(1)")
+    G --> H("fib(1)")
+    G --> I("fib(0)")
+    A --> J("fib(1)")
+    A --> K("fib(0)")
 ```
 
 **Memoization**:
