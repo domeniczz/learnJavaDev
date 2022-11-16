@@ -71,8 +71,6 @@ Spring 是轻代码而重配置的框架，配置比较繁重，可能影响开�
 
 下图包含了 Spring 框架的所有模块，它们满足一切企业级应用开发的需求，在开发过程中可以根据需求有选择性地使用所需要的模块
 
-[Spring 模块 - c.biancheng.net](http://c.biancheng.net/view/4242.html)
-
 <img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/Spring/Spring_概述_体系结构_图示.png" width="600rem" style="border-radius:.4rem" float="left" alt="Spring_概述_体系结构_图示"/><div style="clear:both"></div>
 
 ---
@@ -113,10 +111,7 @@ ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.x
 
 - **xsi:schemaLocation** - 为配置的命名空间指定 .xsd 规范文件
 
-  <div>
-      <p>http://www.springframework.org/schema/beans - 表示命名空间<br/>
-         http://www.springframework.org/schema/beans/spring-beans.xsd - 表示对应的约束文件</p>
-  </div>
+<p>http://www.springframework.org/schema/beans - 表示命名空间<br/>http://www.springframework.org/schema/beans/spring-beans.xsd - 表示对应的约束文件</p>
 
 ### context
 
@@ -3864,6 +3859,102 @@ public void addAttributes(Model model) {
 @ModelAttribute("name") String name, @ModelAttribute("msg") String msg
 ```
 
+#### RESTful
+
+##### @RestController
+
+等价于 @Controller + @ResponseBody，使用该注解类后，相当于该类下每个方法都注解了 @ResponseBody
+
+##### @...Mapping
+
+RESTful 请求行为：GET、POST、PUT、DELETE、PATCH  
+每个行为都有对应的 Mapping，可以省略 RequestMapping 中的 method 属性
+
+```java
+// @RequestMapping(value = "/user/{id}/{name}", method = RequestMethod.GET)
+@GetMapping(value = "/user/{id}/{name}")
+```
+
+##### @PathVariable
+
+参数：value、name、required
+
+required 的值默认为 true，就是请求强制携带该参数
+
+###### 多参数
+
+匹配参数名和占位符 `{}` 中的变量名，若相同，则可以不传参数
+
+```java
+@GetMapping("/user/{id}/{name}")
+@ResponseBody
+public String getmethod(@PathVariable("id") Integer personId, 
+                        @PathVariable("name") String username) {
+    return "ID: " + personId;
+}
+```
+
+用 **Map 集合** 来封装多个路径参数，以 key-value 形式
+
+```java
+@GetMapping("/user/{id}/{name}")
+@ResponseBody
+public String getMethod(@PathVariable Map<String, String> pathVarsMap) {
+    String id = pathVarsMap.get("id");
+    String name = pathVarsMap.get("name");
+    if (id != null && name != null) { return "ID: " + id + " name: " + name; }
+    return "Missing Parameters";
+}
+```
+
+```
+http://localhost:8080/.../user/1/domenic
+---
+{id=1, name=domenic}
+```
+
+###### 多路径
+
+...Mapping 注解中可以指定多个请求路径，都由该方法处理
+
+```java
+@GetMapping(value = {"/user", "/user/{id}"})
+@ResponseBody
+public String getMethod(@PathVariable(required = false) String id) {
+    return "ID: " + id;
+}
+```
+
+- required = true（默认），若未传参数，也没有解决，则报 404 错误
+- required = false，若未传参数，则 id 值为 null
+
+用 [**Optional 类**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html) 来区分有无参数
+
+```java
+@GetMapping(value = {"/user", "/user/{id}"})
+@ResponseBody
+public String getMethod(@PathVariable Optional<String> id) {
+    // 若 id 有值就返回
+    if (id.isPresent()) { return "ID: " + id.get(); }
+    return "ID missing";
+}
+```
+
+用 **Map 集合** 来接收参数
+
+```java
+@GetMapping(value = {"/user", "/user/{id}"})
+@ResponseBody
+public String getMethod(@PathVariable Map<String, String> pathVarsMap) {
+    String id = pathVarsMap.get("id");
+    if (id != null)
+    ...
+}
+```
+
+> 当路径变量字符串中包含 `.` 时，多参数处理会出错。因为 Spring 会把最后一个 `.` 之后的字符串当成文件扩展名  
+> 解决方案：https://www.baeldung.com/spring-mvc-pathvariable-dot
+
 ### 响应
 
 #### @ResponseBody
@@ -3975,102 +4066,6 @@ SpringMVC 将存放在 model 中的对应数据**同步**到 HttpSession 中
       }
   }
   ```
-
-
-### RESTful
-
-#### @RestController
-
-等价于 @Controller + @ResponseBody，使用该注解类后，相当于该类下每个方法都注解了 @ResponseBody
-
-#### @...Mapping
-
-RESTful 请求行为：GET、POST、PUT、DELETE、PATCH  
-每个行为都有对应的 Mapping，可以省略 RequestMapping 中的 method 属性
-
-```java
-// @RequestMapping(value = "/user/{id}/{name}", method = RequestMethod.GET)
-@GetMapping(value = "/user/{id}/{name}")
-```
-
-#### @PathVariable
-
-参数：value、name、required  
-required 的值默认为 true，就是请求强制携带该参数
-
-##### 多参数
-
-匹配参数名和占位符 `{}` 中的变量名，若相同，则可以不传参数
-
-```java
-@GetMapping("/user/{id}/{name}")
-@ResponseBody
-public String getmethod(@PathVariable("id") Integer personId, 
-                        @PathVariable("name") String username) {
-    return "ID: " + personId;
-}
-```
-
-用 **Map 集合** 来封装多个路径参数，以 key-value 形式
-
-```java
-@GetMapping("/user/{id}/{name}")
-@ResponseBody
-public String getMethod(@PathVariable Map<String, String> pathVarsMap) {
-    String id = pathVarsMap.get("id");
-    String name = pathVarsMap.get("name");
-    if (id != null && name != null) { return "ID: " + id + " name: " + name; }
-    return "Missing Parameters";
-}
-```
-
-```
-http://localhost:8080/.../user/1/domenic
----
-{id=1, name=domenic}
-```
-
-##### 多路径
-
-...Mapping 注解中可以指定多个请求路径，都由该方法处理
-
-```java
-@GetMapping(value = {"/user", "/user/{id}"})
-@ResponseBody
-public String getMethod(@PathVariable(required = false) String id) {
-    return "ID: " + id;
-}
-```
-
-- required = true（默认），若未传参数，也没有解决，则报 404 错误
-- required = false，若未传参数，则 id 值为 null
-
-用 [**Optional 类**](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Optional.html) 来区分有无参数
-
-```java
-@GetMapping(value = {"/user", "/user/{id}"})
-@ResponseBody
-public String getMethod(@PathVariable Optional<String> id) {
-    // 若 id 有值就返回
-    if (id.isPresent()) { return "ID: " + id.get(); }
-    return "ID missing";
-}
-```
-
-用 **Map 集合** 来接收参数
-
-```java
-@GetMapping(value = {"/user", "/user/{id}"})
-@ResponseBody
-public String getMethod(@PathVariable Map<String, String> pathVarsMap) {
-    String id = pathVarsMap.get("id");
-    if (id != null)
-    ...
-}
-```
-
-> 当路径变量字符串中包含 `.` 时，多参数处理会出错。因为 Spring 会把最后一个 `.` 之后的字符串当成文件扩展名  
-> 解决方案：https://www.baeldung.com/spring-mvc-pathvariable-dot
 
 ### 配置
 
@@ -4333,58 +4328,6 @@ public class UserController {
     <input type="text" name="userMap['u2'].id" placeholder="编号">
     <input type="text" name="userMap['u2'].username" placeholder="姓名"><br/>
     <input type="submit" value="复杂类型提交">
-</form>
-```
-
-#### 自定义类型转换器
-
-类型转换器：
-
-实现 Converter\<source,target\> 接口，重写 convert 方法
-
-```java
-public class DateConverter implements Converter<String, LocalDate> {
-    @Override
-    // 将 String 转换为 LocalDate 实例
-    public LocalDate convert(String dateStr) {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return LocalDate.parse(dateStr, dtf);
-    }
-}
-```
-
-在 spring-mvc.xml 中配置转换器：
-
-```xml
-<mvc:annotation-driven conversion-service="conversionService"/>
-
-<!-- 自定义转换器配置 -->
-<bean id="conversionService"
-      class="org.springframework.context.support.ConversionServiceFactoryBean">
-    <property name="converters">
-        <set>
-            <bean class="com.domenic.converter.DateConverter"/>
-        </set>
-    </property>
-</bean>
-```
-
-Controller 处理请求：
-
-```java
-@RequestMapping("/converterParam")
-public String converterParam(LocalDate date) {
-    System.out.println(date);
-    return "/WEB-INF/pages/start.html";
-}
-```
-
-前端页面：
-
-```html
-<form th:action="@{/quick/queryParam}" method="post">
-    日期：
-    <input type="date" name="date" placeholder="日期"><br/>
 </form>
 ```
 
@@ -4819,6 +4762,246 @@ public String testApplication(HttpSession session){
 
 ## 增强
 
+### 类型转换器
+
+#### Converter
+
+> 实现类型转换逻辑的 Converter SPI(Service provider interface) 简单且强类型
+>
+> ```java
+> public interface Converter<S, T> {
+>     T convert(S source);
+> }
+> ```
+
+**自定义转换器**：
+
+只需实现 Converter\<source,target\> 接口，重写 convert 方法
+
+```java
+public class StringToEmployeeConverter implements Converter<String, Employee> {
+    @Override
+    public Employee convert(String from) {
+        String[] data = from.split(",");
+        return new Employee(Integer.valueOf(data[0]),Double.parseDouble(data[1]));
+    }
+}
+```
+
+**注册转换器**：
+
+- 方式一：自定义类型转换器
+
+  ```java
+  @Configuration
+  public class WebConfig implements WebMvcConfigurer {
+      @Override
+      public void addFormatters(FormatterRegistry registry) {
+          registry.addConverter(new StringToEmployeeConverter());
+      }
+  }
+  ```
+
+- 方式二：mvc 核心配置类
+
+  ```xml
+  <mvc:annotation-driven conversion-service="conversionService"/>
+  
+  <!-- 自定义转换器配置 -->
+  <bean id="conversionService"
+        class="org.springframework.context.support.ConversionServiceFactoryBean">
+      <property name="converters">
+          <set>
+              <bean class="com.domenic.converter.StringToEmployeeConverter"/>
+          </set>
+      </property>
+  </bean>
+  ```
+
+**使用**：
+
+隐式类型转换
+
+Controller 处理请求：
+
+```java
+@GetMapping("/string-to-employee")
+@ResponseBody
+public ResponseEntity<Object> getStringToEmployee(
+    @RequestParam("employee") Employee employee) {
+    return ResponseEntity.ok(employee);
+}
+```
+
+请求：http://localhost:8080/string-to-employee?employee=1001,3000
+
+结果：{"id":1001,"salary":3000.0}
+
+#### ConverterFactory
+
+> It centralize the conversion logic for an entire class hierarchy
+>
+> ```java
+> public interface ConverterFactory<S, R> {
+>     <T extends R> Converter<S, T> getConverter(Class<T> targetType);
+> }
+> ```
+>
+> S is the type you are converting from
+>
+> R is the base type defining the **range** of classes you can convert to
+
+对于为枚举类 Enum 创建转换器特别有用
+
+```java
+public enum Versions {
+    ALPHA(0), BETA(1), RELEASE(2);
+
+    int cnt;
+    Versions(int cnt) {
+        this.cnt = cnt;
+    }
+    public int getCnt() {
+        return cnt;
+    }
+}
+```
+
+**自定义工厂**：
+
+在 ConverterFactory 实现类的内部，创建一个 Converter 类的实现类，实现类型转换
+
+```java
+@Component
+public class StringToEnumConverterFactory implements ConverterFactory<String, Enum> {
+    /*
+     * Converter 接口的实现类
+     * 使用泛型，足够通用，可以按需为任何 Enum 类型生成转换器
+     */
+    private static class StringToEnumConverter<T extends Enum>
+        implements Converter<String, T> {
+
+        private final Class<T> enumType;
+
+        public StringToEnumConverter(Class<T> enumType) {
+            this.enumType = enumType;
+        }
+
+        public T convert(String source) {
+            // 从类型为 enumType 的 Enum 类中，返回 name = source.trim() 的常量
+            return (T) Enum.valueOf(this.enumType, source.trim());
+        }
+    }
+
+    @Override
+    // 返回类型转换类的实例
+    public <T extends Enum> Converter<String, T> getConverter(Class<T> targetType) {
+        return new StringToEnumConverter(targetType);
+    }
+}
+```
+
+**注册工厂类**：
+
+```java
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverterFactory(new StringToEnumConverterFactory());
+    }
+}
+```
+
+**使用**：
+
+```java
+@GetMapping("/string-to-enum")
+@ResponseBody
+public ResponseEntity<Object> getStringToEnum(
+    @RequestParam("ver") Versions ver) {
+    return ResponseEntity.ok(ver.getCnt());
+}
+```
+
+请求：http://localhost:8080/string-to-enum?ver=ALPHA
+
+结果：0
+
+#### GenericConverter
+
+> GenericConverter 提供了更大的灵活性来创建一个更通用的转换器，但代价是失去了一些类型安全
+>
+> 它支持多种源类型到目标类型的转换
+>
+> ```java
+> public interface GenericConverter {
+>     public Set<ConvertiblePair> getConvertibleTypes();
+>     Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType);
+> }
+> ```
+
+比如将 Integer, Double, String 转换为 BigDecimal，可以只写一个 GenericConverter 实现类，而不是三个 Converter 实现类
+
+**自定义转换器**：
+
+```java
+public class GenericPetConverter
+    implements GenericConverter {
+
+    @Override
+    public Set<GenericConverter.ConvertiblePair> getConvertibleTypes () {
+        return Collections.singleton(new ConvertiblePair(String.class, Pet.class));
+    }
+
+    @Override
+    public Object convert (
+        Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
+        // 若源数据类型是 Pet，就直接返回
+        if (sourceType.getType() == Pet.class) {
+            return source;
+        }
+        // 若源数据类型是 String，执行转换逻辑
+        if(sourceType.getType() == String.class) {
+            assert source != null;
+            String s = (String) source;
+            if (StringUtils.hasLength(s)) {
+                String[] split = s.split("-");
+                return new Pet(split[0], Integer.parseInt(split[1]));
+            }
+        }
+        return null;
+    }
+}
+```
+
+**注册转换器**：
+
+```java
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new GenericPetConverter());
+    }
+}
+```
+
+**使用**：
+
+```java
+@GetMapping("/string-to-pet")
+@ResponseBody
+public ResponseEntity<Object> getStringToPet(
+    @RequestParam("pet") Pet pet) {
+    return ResponseEntity.ok(pet);
+}
+```
+
+请求：http://localhost:8080/string-to-pet?pet=Ragdoll-3
+
+结果：{"name":"Ragdoll","age":3}
+
 ### 异常处理
 
 Java 有两种异常处理方式：
@@ -4989,6 +5172,7 @@ SpringMVC 的拦截器 Interceptor 类似于 Servlet 开发中的过滤器 Filte
 
 
 
+
 **多拦截器执行顺序**：
 
 - **若 preHandler 都返回 true**
@@ -5112,6 +5296,7 @@ public class MyInterceptor implements HandlerInterceptor {
         </tr>
     </tbody>
 </table>
+
 **三大组件对比**：
 
 <table style="width:60rem">
@@ -5150,6 +5335,7 @@ public class MyInterceptor implements HandlerInterceptor {
         </tr>
     </tbody>
 </table>
+
 应用场景的区别：
 
 - **过滤器**
@@ -5176,7 +5362,7 @@ public class MyInterceptor implements HandlerInterceptor {
 
 ---
 
-## SpringMVC 框架详解
+## MVC 框架详解
 
 ### SpringMVC 组件
 
@@ -5255,13 +5441,17 @@ public class MyInterceptor implements HandlerInterceptor {
 
 DispatcherServlet 本质上是个 Servlet，遵循 Servlet 的生命周期。所以，宏观上是 Servlet 生命周期来进行调度
 
+**继承（extends）链**：
+
 ```mermaid
 flowchart LR
-    A(DispatcherServlet) -- 继承 --> B(FrameworkServlet);
-    B -- 继承 --> C(HttpServletBean);
-    C -- 继承 --> D(HttpServlet);
-    D -- 继承 --> E(GenericServlet);
-    E -- 实现 --> F[Servlet];
+  A("&lt;&lt;Interface&gt;&gt;<br/>DispatcherServlet"):::sclass --> B("&lt;&lt;Abstract&gt;&gt;<br/>FrameworkServlet"):::aclass
+  B --> C("&lt;&lt;Abstract&gt;&gt;<br/>HttpServletBean"):::aclass
+  C --> D("&lt;&lt;Abstract&gt;&gt;<br/>HttpServlet"):::aclass
+  D --> E("&lt;&lt;Abstract&gt;&gt;<br/>GenericServlet"):::aclass
+  E --> F["&lt;&lt;Abstract&gt;&gt;<br/>Servlet"]:::aclass
+  classDef sclass fill:#7eabd0;
+  classDef aclass fill:#8BA270;
 ```
 
 请求会先到达 FrameworkServlet 中的 doGet、doPost、doPut、doDelete 方法  
@@ -5269,31 +5459,18 @@ flowchart LR
 
 ```mermaid
 flowchart
-
   subgraph FrameworkServlet
-
     B("doGet")
-
     C("doPost")
-
     D("doPut")
-
     E("doDelete")
-
   end
-
   subgraph DispatcherServlet
-
     B --> F("doService")
-
     C --> F
-
     D --> F
-
     E --> F
-
     F --> G("doDispatch")
-
   end
 ```
 
@@ -5301,12 +5478,24 @@ DispatcherServlet 中的执行过程：
 
 获取请求 --> 执行 --> doService() --> doDispatch() --> processDispatchResult() --> (视图渲染：render())
 
-### 处理器映射器
+### 工作原理
+
+#### 处理器映射
 
 在 DispatcherServlet 的 doDispatch 方法中，会获取匹配的 Handler 对象，该对象封装在 HandlerExecutionChain 中
 
 ```java
-/* 获取执行链的方法 */
+protected void doDispatch(...) {
+    ...
+    // 获取执行链
+    mappedHandler = this.getHandler(processedRequest);
+    ...
+}
+```
+
+DispatcherServlet 中获取执行链的方法：
+
+```java
 protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
     if (this.handlerMappings != null) {
         Iterator var2 = this.handlerMappings.iterator();
@@ -5314,6 +5503,7 @@ protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Ex
         while(var2.hasNext()) {
             HandlerMapping mapping = (HandlerMapping)var2.next();
             // 获取对应的 Handler
+            // 调用的 getHandler 是对应类型的处理器映射器中的方法
             HandlerExecutionChain handler = mapping.getHandler(request);
             if (handler != null) {
                 return handler;
@@ -5324,18 +5514,932 @@ protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Ex
 }
 ```
 
-HandlerMapping 接口：  
-用于定义请求和处理程序对象之间的映射关系，也就是返回一个 HandlerExecutionChain 对象  
+**HandlerMapping 接口**：  
+用于定义 Request 和 Handler 之间的映射关系  
+就是返回一个 HandlerExecutionChain 对象  
 若返回为 null，就表示该 HandlerMapping 不能找到请求的映射关系
 
-以下五个处理器映射器，用来获取合适的 Handler  
-实现了 HandlerMapping 接口，继承了 AbstractHandlerMapping 类
+以下为 5 种处理器映射器，用来获取合适的 Handler：
 
-- RequestMappingHandlerMapping - 处理访问控制器方法的 HandlerMapping
-- WelcomePageHandlerMapping - 处理访问欢迎页的 HandlerMapping
+它们**实现了 HandlerMapping 接口，继承了 AbstractHandlerMapping 抽象类**
+
+- **RequestMappingHandlerMapping** - 处理访问控制器方法的 HandlerMapping
+- **WelcomePageHandlerMapping** - 处理访问欢迎页的 HandlerMapping
 - BeanNameUrlHandlerMapping
 - SimpleUrlHandlerMapping
 - RouterFunctionMapping
+
+```mermaid
+flowchart BT
+  A("&lt;&lt;Abstract&gt;&gt;<br/>AbstractHandlerMapping"):::aclass -."implement".-> I("&lt;&lt;Interface&gt;&gt;<br/>HandlerMapping") 
+  D("WelcomPageHandlerMapping"):::sclass --"extends"--> B("&lt;&lt;Abstract&gt;&gt;<br/>AbstractUrlHandlerMapping"):::aclass --"extends"--> A
+  F("RequestMappingHandlerMapping"):::sclass --"extends"--> E("&lt;&lt;Abstract&gt;&gt;<br/>RequestMappingInfoHandlerMapping"):::aclass --"extends"--> C("&lt;&lt;Abstract&gt;&gt;<br/>AbstractHandlerMethodMapping"):::aclass --"extends"--> A
+  classDef sclass fill:#7eabd0;
+  classDef aclass fill:#8BA270;
+```
+
+**以访问控制器方法为例**：
+
+> 以 GET 方法访问 /user 对应的控制器方法，以下为匹配 Handler 的流程
+
+1. DispatcherServlet 调用到 RequestMappingHandlerMapping 的 **getHandler** 方法
+
+   ```java
+   protected HandlerExecutionChain getHandler(...) {
+       ...
+       HandlerExecutionChain handler = mapping.getHandler(request);
+       ...
+   }
+   ```
+
+2. getHandler 方法调用到 AbstractHandlerMethodMapping 抽象类下的 **getHandlerInternal**
+
+   - mappingRegistry - 记录所有的请求路径，如：{/hello}、{GET /user}、{POST /user}、{/error}...
+
+   ```java
+   protected HandlerMethod getHandlerInternal(HttpServletRequest request) throws Exception {
+       String lookupPath = this.initLookupPath(request);  // 获取请求路径，如 /user
+       this.mappingRegistry.acquireReadLock();  // 获取锁，保证并发场景下的安全性
+   
+       HandlerMethod var4;
+       try {
+           // 处理 Hanlder 的核心方法
+           HandlerMethod handlerMethod = this.lookupHandlerMethod(lookupPath, request);
+           var4 = handlerMethod != null ? handlerMethod.createWithResolvedBean() : null;
+       } finally {
+           this.mappingRegistry.releaseReadLock();
+       }
+   
+       return var4;
+   }
+   ```
+
+3. 进入 **lookupHandlerMethod** 方法
+
+   - directPathMatches - 记录所有初步匹配的 handler，如：{GET /user}、{POST /user}、{PUT /user}...
+   - matches - 记录最匹配的 handler，{GET /user}。若最匹配的 Handler 有多个，则报错
+   - bestMatch - 记录最匹配的 hanlder  
+     其中 handlerMethod 属性记录了 handler 方法，如：com.domenic.controller.UserController#getUser(String)
+
+   ```java
+   protected HandlerMethod lookupHandlerMethod(String lookupPath, HttpServletRequest request) throws Exception {
+       List<AbstractHandlerMethodMapping<T>.Match> matches = new ArrayList();
+       List<T> directPathMatches = this.mappingRegistry.getMappingsByDirectPath(lookupPath);
+       if (directPathMatches != null) {
+           // 获取最匹配的 Handler，放入 matches 中
+           this.addMatchingMappings(directPathMatches, matches, request);
+       }
+       ...
+       // 若最匹配的 Handler 只有一个，就放入 bestMatch 中
+       AbstractHandlerMethodMapping<T>.Match bestMatch = (AbstractHandlerMethodMapping.Match)matches.get(0);
+       ...
+       request.setAttribute(BEST_MATCHING_HANDLER_ATTRIBUTE, bestMatch.getHandlerMethod());
+       this.handleMatch(bestMatch.mapping, lookupPath, request);
+       // 
+       return bestMatch.getHandlerMethod();
+   }
+   ```
+
+#### 请求参数解析
+
+##### 执行原理
+
+请求会被 DispatcherServlet 拦截，其中的 doDispatch 方法处理请求
+
+```java
+protected void doDispatch(...) {
+    ...
+    // 获取执行链
+    mappedHandler = this.getHandler(processedRequest);
+    ...
+    // 获取合适的 HandlerAdapter
+    HandlerAdapter ha = this.getHandlerAdapter(mappedHandler.getHandler());
+    ...
+    // 调用 HandlerAdapter 的 handle 方法，返回值为 ModelAndView
+    mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
+    ...
+}
+```
+
+DispatcherServlet 中获取匹配的 HandlerAdapter
+
+```java
+protected HandlerAdapter getHandlerAdapter(Object handler) throws ServletException {
+    if (this.handlerAdapters != null) {
+        Iterator var2 = this.handlerAdapters.iterator();
+        // 循环遍历 List<HandlerAdapter>
+        while(var2.hasNext()) {
+            HandlerAdapter adapter = (HandlerAdapter)var2.next();
+            // 返回可以处理 Handler 的 Adapter
+            if (adapter.supports(handler)) {
+                return adapter;
+            }
+        }
+    }
+    throw new ServletException("No adapter for handler ...");
+}
+```
+
+**HandlerAdapter 接口**：  
+DispatcherServlet 可通过该接口访问所有的 Adapter
+
+**以下为四种处理器适配器**：
+
+它们实现了 HandlerAdapter 接口
+
+- **RequestMappingHandlerAdapter**
+- HandlerFunctionAdapter
+- HttpRequestHandlerAdapter
+- SimpleControllerHandlerAdapter
+
+```mermaid
+flowchart RL
+  B("RequestMappingHandlerAdapter"):::sclass --"extends"--> A("&lt;&lt;Abstract&gt;&gt;<br/>AbstractHandlerMethodAdapter"):::aclass -."implement".-> I("&lt;&lt;Interface&gt;&gt;<br/>HandlerAdapter")
+  C("HandlerFunctionAdapter"):::sclass -."implement".-> I
+  D("HttpRequestHandlerAdapter"):::sclass -."implement".-> I
+  E("SimpleControllerHandlerAdapter"):::sclass -."implement".-> I
+  classDef sclass fill:#7eabd0;
+  classDef aclass fill:#8BA270;
+```
+
+**以如下控制器方法为例**：
+
+```java
+@RequestMapping("user/{userId}/num/{num}")
+public @ResponseBody String testParam(
+    @PathVariable("userId") String userId, 
+    @PathVariable("num") Integer num, 
+    @RequestParam("username") String username) { ... }
+```
+
+请求：http://localhost:8080/user/1001/num/321?username=domenic
+
+以下为请求链接中的参数，被解析的流程
+
+1. DispatcherServlet 调用到 RequestMappingHandlerAdapter 的 **handle** 方法
+
+   ```java
+   protected void doDispatch(...) {
+       ...
+       // 调用 HandlerAdapter ha 的 handle 方法
+       mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
+       ...
+   }
+   ```
+
+2. handle 方法调用到 RequestMappingHandlerAdapter 类下的 **handleInternal**
+
+   ```java
+   protected ModelAndView handleInternal(...) {
+       ...
+       // 执行 Handler 方法，获取 ModelAndView 返回值
+       mav = this.invokeHandlerMethod(request, response, handlerMethod);
+       ...
+   }
+   ```
+
+3. 进入 **invokeHandlerMethod** 方法
+
+   - **argumentResolvers** - 参数解析器，用来解析前台发送的请求参数
+
+     都实现了 HandlerMethodArgumentResolver 接口
+
+     参数解析器：
+
+     - **RequestParam**MethodArgumentResolver
+     - **PathVariable**MethodArgumentResolver
+     - **RequestHeader**MethodArgumentResolver
+     - **Map**MethodProcessor
+     - ...
+
+   - **returnValueHandlers** - 返回值处理器
+
+     都实现了 HandlerMethodReturnValueHandler 接口
+
+     返回值解析器：
+   
+     - **ModelAndView**MethodReturnValueHandler
+     - **RequestResponseBody**MethodProcessor
+     - **ViewName**MethodReturnValueHandler
+     - **HttpEntity**MethodProcessor
+     - ...
+
+   ```java
+   protected ModelAndView invokeHandlerMethod(...) {
+       ...
+       if (this.argumentResolvers != null) {
+           // 设置参数解析器
+           invocableMethod.setHandlerMethodArgumentResolvers(this.argumentResolvers);
+       }
+       if (this.returnValueHandlers != null) {
+           // 设置返回值处理器
+           invocableMethod.setHandlerMethodReturnValueHandlers(this.returnValueHandlers);
+       }
+       ...
+       // 进入 invokeAndHandle 方法
+       invocableMethod.invokeAndHandle(webRequest, mavContainer, new Object[0]);
+       ...
+   }
+   ```
+
+4. 解析前台传递的参数
+
+   ```mermaid
+   classDiagram
+     direction LR
+     class ServletInvocableHandlerMethod {
+       + invokeAndHandle()
+     }
+     class InvocableHandlerMethod {
+       Object[] args
+       + invokeForRequest()
+       # getMethodArgumentValues()
+     }
+     class HandlerMethodArgumentResolverComposite {
+       + supportsParameter()
+       + resolveArgument()
+       - getArgumentResolver()
+     }
+     ServletInvocableHandlerMethod --> InvocableHandlerMethod : invoke
+     InvocableHandlerMethod --> HandlerMethodArgumentResolverComposite : invoke
+   ```
+
+   ServletInvocableHandlerMethod 的 **invokeAndHandle** 方法，调用了父类 InvocableHandlerMethod 的 **invokeForRequest** 方法  
+   invokeForRequest 又调用本类的 **getMethodArgumentValues** 方法获取所有参数
+
+   ```java
+   protected Object[] getMethodArgumentValues(...) {
+       // 获取 Handler 方法有几个参数
+       MethodParameter[] parameters = this.getMethodParameters();
+       if (ObjectUtils.isEmpty(parameters)) {
+           return EMPTY_ARGS;
+       } else {
+           // args 存放所有解析完毕的参数
+           Object[] args = new Object[parameters.length];
+           // 循环，解析 Handler 方法的每一个参数
+           for(int i = 0; i < parameters.length; ++i) {
+               ...
+               if (args[i] == null) {
+                   if (!this.resolvers.supportsParameter(parameter)) {
+                       throw new IllegalStateException(...);
+                   }
+                   args[i] = this.resolvers.resolveArgument(...);
+                   ...
+               }
+           }
+           return args;
+       }
+   }
+   ```
+
+   getMethodArgumentValues 方法返回 `args`，记录了请求参数：
+
+   - 0 = "1001"
+   - 1 = 321
+   - 2 = "domenic"
+
+   **HandlerMethodArgumentResolverComposite** 类：
+
+   - supportsParameter 方法  
+     通过 iterator 迭代遍历，找到合适的 参数解析器 来解析对应的参数
+   - resolveArgument 方法  
+     使用匹配的 参数解析器，解析参数
+
+   ```java
+   public boolean supportsParameter(MethodParameter parameter) {
+       // 调用 getArgumentResolver 来寻找匹配的解析器
+       return this.getArgumentResolver(parameter) != null;
+   }
+   
+   public Object resolveArgument(...) {
+       // 获取与 parameter 匹配的解析器
+       HandlerMethodArgumentResolver resolver = this.getArgumentResolver(parameter);
+       ...
+       // 调用该解析器对参数进行解析
+       return resolver.resolveArgument(...);
+   }
+   ```
+
+**调用链总结**：
+
+```mermaid
+classDiagram
+  direction LR
+  class DispatcherServlet {
+    # doDispatch()
+  }
+  class RequestMappingHandlerAdapter {
+    # handleInternal()
+    # invokeHandlerMethod()
+  }
+  class ServletInvocableHandlerMethod {
+    + invokeAndHandle()
+  }
+  class InvocableHandlerMethod {
+    Object[] args
+    + invokeForRequest()
+    # getMethodArgumentValues()
+  }
+  class HandlerMethodArgumentResolverComposite {
+    + supportsParameter()
+    + resolveArgument()
+    - getArgumentResolver()
+  }
+  DispatcherServlet --> RequestMappingHandlerAdapter : invoke
+  RequestMappingHandlerAdapter --> ServletInvocableHandlerMethod : invoke
+  ServletInvocableHandlerMethod --> InvocableHandlerMethod : invoke
+  InvocableHandlerMethod --> HandlerMethodArgumentResolverComposite : invoke
+```
+
+##### Map & Model
+
+```java
+@RequestMapping("/test")
+public String test(Map<String,Object> map, Model model) {
+    // map 和 model 中设置的值，会被放入 request 域中
+    map.put("name", "domenic");
+    model.addAttribute("gender", "male");
+    return "forward:/success";
+}
+@RequestMapping("/success")
+public @ResponseBody String success(HttpServletRequest req) {
+    req.getAttribute("name"));
+    req.getAttribute("gender"));
+    return "finish";
+}
+```
+
+请求：http://localhost:8080/test
+
+> 请求到达以后，被 DispatcherServlet 拦截解析，步骤与[请求参数解析](#请求参数解析)中描述的一致
+
+通过 **HandlerMethodArgumentResolverComposite** 类的 supportsParameter 匹配解析器
+
+- Map 类型参数的解析器为 MapMethodProcessor
+- Model 类型参数的解析器为 ModelMethodProcessor
+
+调用对应解析器中的 resolveArgument 方法来解析参数
+
+Map 和 Model 都会被包装进 **BindingAwareModelMap**（HashMap 类型对象），存入 ModelAndViewContainer 中
+
+**将值放入 request 域**：
+
+1. ServletInvocableHandlerMethod 类中的 **invokeAndHandle** 方法，调用 handleReturnValue 去处理返回值  
+   将 View 放入 **ModelAndViewContainer** 中
+
+2. 处理器适配器 RequestMappingHandlerAdapter 的 invokeHandlerMethod 方法  
+   从 ModelAndViewContainer 中获取到 **ModelAndView** 并返回
+
+   此时的 ModelAndView：
+
+   - view = "forward:/success"
+   - model = {ModelMap}
+     - 0 = {LinkedHashMap} "name" -> "domenic"
+     - 1 = {LinkedHashMap} "gender" -> "male"
+
+3. 前端控制器 DispatcherServlet 在 doDispatch 中，调用 **processDispatchResult**  
+   进行 **render** 操作，解析 View，将 model 的数据放入 request 域中
+
+##### pojo
+
+```java
+@PostMapping("/test")
+public @ResponseBody Person test(Person person){
+    return person;
+}
+```
+
+> 请求到达以后，被 DispatcherServlet 拦截解析，步骤与[请求参数解析](#请求参数解析)中描述的一致
+
+通过 **HandlerMethodArgumentResolverComposite** 类的 supportsParameter 匹配解析器
+
+- pojo 类型参数的解析器为 ModelAttributeMethodProcessor
+
+调用对应解析器中的 resolveArgument 方法来解析参数
+
+**resolveArgument 解析请求参数**：
+
+1. 调用 **createAttribute** 方法，创建一个空对象
+
+2. 调用 **createBinder** 方法，初始化数据类型转换器
+
+3. 调用 **bindRequestParameters** 方法，通过数据类型转换器，将数据绑定到 pojo 的属性中
+
+   bindRequestParameters 是 ServletModelAttributeMethodProcessor 中的方法
+
+   底层转换原理是，遍历所有转换器，使用合适的进行类型转换
+
+##### 原生 Servlet
+
+```java
+@RequestMapping("/test")
+public String test(HttpServletRequest request){
+    String name = request.getParameter("name");
+    ...
+}
+```
+
+请求：http://localhost:8080/test?name=domenic
+
+> 请求到达以后，被 DispatcherServlet 拦截解析，步骤与[请求参数解析](#请求参数解析)中描述的一致
+
+通过 **HandlerMethodArgumentResolverComposite** 类的 supportsParameter 匹配到的解析器
+
+- 原生 Servlet 获取参数，匹配的解析器为 ServletRequestMethodArgumentResolver
+
+调用该解析器中的 resolveArgument 方法来解析参数
+
+该方法中会获取 HttpServletRequest 类型的 request 对象，因此可以直接使用原生 Servlet
+
+#### 类型转换
+
+有三个关于类型转换的接口：Converter\<S,T\>，ConverterFactory\<S, R\>，GenericConverter
+
+自定义类型转换器示例：
+
+```java
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        // 自定义 String --> Pet 的类型转换器
+        registry.addConverter(new Converter<String, Pet>() {
+            @Override
+            public Pet convert(String source) {
+                // 就是根据 "-" 分隔 String，填入 Pet 的两个属性中
+                if(StringUtils.hasLength(source)){
+                    String[] split = source.split("-");
+                    return new Pet(split[0], Integer.parseInt(split[1]));
+                }
+                return null;
+            }
+        });
+    }
+}
+```
+
+<details>
+    <summary>测试代码示例</summary>
+    <pre><code>
+    @PostMapping("/saveUser")
+    @ResponseBody
+    public Person saveUser(Person person) {
+        return person;
+    }&#10;
+    &lt;form action="/saveUser" method="post"&gt;
+        姓名：&lt;input name="userName" value="domenic"/&gt; &lt;br/&gt;
+        年龄：&lt;input name="age" value="18"/&gt; &lt;br/&gt;
+        生日：&lt;input name="birth" value="2019/12/10"/&gt; &lt;br/&gt;
+        宠物：&lt;input name="pet" value="橘猫-3"/&gt;&lt;br/&gt;
+        &lt;input type="submit" value="保存"/&gt;
+    &lt;/form&gt;&#10;
+    @Data
+    public class Person {&#10;
+        private String userName;&#10;
+        @DateTimeFormat(pattern="yyyy/MM/dd")
+        private LocalDate birth;&#10;
+        private Integer age;&#10;
+        private Pet pet;
+    }&#10;
+    @Data
+    public class Pet {&#10;
+        private String name;&#10;
+    	private Integer age;
+    }
+    </code></pre>
+</details>
+
+表单发送 POST 请求：http://localhost:8080/saveUser
+
+> 请求到达以后，被 DispatcherServlet 拦截解析，步骤与[请求参数解析](#请求参数解析)中描述的一致
+
+通过 **HandlerMethodArgumentResolverComposite** 类的 supportsParameter 匹配解析器
+
+- pojo 类型参数的解析器为 ModelAttributeMethodProcessor
+
+调用对应解析器中的 resolveArgument 方法来解析参数
+
+**resolveArgument 解析请求参数**：
+
+1. 调用 **createAttribute** 方法，创建一个空对象
+
+2. 调用 **createBinder** 方法，初始化所有的类型转换器，包括自定义的
+
+3. 调用 **bindRequestParameters** 方法，通过数据类型转换器，将数据绑定到 pojo 的属性中
+
+   bindRequestParameters 是 ServletModelAttributeMethodProcessor 中的方法
+
+   参数 `mpvs` 记录了前端传递的 pojo 属性键值对
+
+   ```mermaid
+   classDiagram
+     direction LR
+     class ServletRequestDataBinder {
+       MutablePropertyValues mpvs
+       + bind()
+     }
+     class WebDataBinder {
+       # doBind(mpvs)
+     }
+     class DataBinder {
+       # doBind(mpvs)
+       # checkAllowedFields(mvps)
+       # checkRequiredFields(mvps)
+       # applyPropertyValues(mvps)
+     }
+     ServletRequestDataBinder --> WebDataBinder : invoke
+     WebDataBinder --> DataBinder : invoke
+   ```
+
+4. DataBinder 类中的 applyPropertyValues 方法负责对属性进行转换和赋值
+
+   该方法调用 setPropertyValues 方法  
+   最终到 AbstractNestablePropertyAccessor 类中  
+   执行 processLocalProperty 或 processKeyedProperty 进行类型转换和赋值
+
+   ```mermaid
+   classDiagram
+     direction LR
+     class PropertyAccessor {
+       setPropertyValues()
+     }
+     <<Interface>> PropertyAccessor
+     class AbstractPropertyAccessor {
+       + setPropertyValues()
+     }
+     <<Abstract>> AbstractPropertyAccessor
+     class AbstractNestablePropertyAccessor {
+       # setPropertyValue()
+       - processKeyedProperty()
+       - processLocalProperty()
+       - convertIfNecessary()
+     }
+     <<Abstract>> AbstractNestablePropertyAccessor
+     PropertyAccessor <|.. AbstractPropertyAccessor : implement
+     AbstractPropertyAccessor <|-- AbstractNestablePropertyAccessor : extends
+   ```
+
+5. convertIfNecessary 是类型转换方法  
+   processLocalProperty -\> convertForProperty -\> convertIfNecessary  
+   processKeyedProperty -\> convertIfNecessary
+
+   该方法会调用到 TypeConverterDelegate 类的 convertIfNecessary 方法：
+
+   ```java
+   public <T> T convertIfNecessary(...) {
+       ...
+       // 判断是否支持转换
+       if (conversionService.canConvert(sourceTypeDesc, typeDescriptor)) {
+           // 执行 convert 方法，进行类型转换
+           return conversionService.convert(newValue, sourceTypeDesc, typeDescriptor);
+       }
+       ...
+   }
+   ```
+
+   ```mermaid
+   classDiagram
+     direction LR
+     class TypeConverterDelegate {
+       + convertIfNecessary()
+     }
+     class ConversionService {
+       canConvert()
+       convert()
+     }
+     <<interface>> ConversionService
+     class GenericConversionService {
+       + canConvert()
+       + convert()
+     }
+     class ConversionUtils {
+       + invokeConverter()
+     }
+     <<abstract>> ConversionUtils
+     TypeConverterDelegate --> ConversionService : invoke
+     ConversionService <|.. GenericConversionService : implement
+     GenericConversionService --> ConversionUtils : invoke
+   ```
+
+   最终，进入 ConversionUtils 的 invokeConverter 方法，真正调用执行类型转换的 Converter
+
+#### 返回值处理
+
+请求会被 DispatcherServlet 拦截并处理  
+在 ServletInvocableHandlerMethod 类的 invokeAndHandle 方法中，会获取到处理完的请求参数  
+之后就进行返回值处理
+
+```mermaid
+classDiagram
+  direction LR
+  class DispatcherServlet {
+    # doDispatch()
+  }
+  class RequestMappingHandlerAdapter {
+    # handleInternal()
+    # invokeHandlerMethod()
+  }
+  class ServletInvocableHandlerMethod {
+    + invokeAndHandle()
+  }
+  DispatcherServlet --> RequestMappingHandlerAdapter : invoke
+  RequestMappingHandlerAdapter --> ServletInvocableHandlerMethod : invoke
+```
+
+
+
+**以如下控制器方法为例**：
+
+```java
+@PostMapping("/saveUser")
+public @ResponseBody Person saveUser(Person person) { return person; }
+```
+
+以下是返回值处理的过程
+
+1. 在 RequestMappingHandlerAdapter 类中的 invokeHandlerMethod 中，会设置 请求参数解析器 和 返回值处理器
+
+   - **returnValueHandlers** - 返回值处理器
+
+     都实现了 HandlerMethodReturnValueHandler 接口
+
+     返回值解析器：
+
+     - **ModelAndView**MethodReturnValueHandler
+     - **RequestResponseBody**MethodProcessor
+     - **ViewName**MethodReturnValueHandler
+     - **HttpEntity**MethodProcessor
+     - ...
+
+2. 进入 **invokeAndHandle** 方法
+
+   ```java
+   public void invokeAndHandle(...) {
+       // 获取到处理完毕的请求参数
+       Object returnValue = this.invokeForRequest(webRequest, mavContainer, providedArgs);
+       ...
+       // 处理返回值
+       this.returnValueHandlers.handleReturnValue(...);
+       ...
+   }
+   ```
+
+3. 调用 HandlerMethodReturnValueHandlerComposite 类的 handleReturnValue 方法
+
+   ```java
+   public void handleReturnValue(...) {
+       // 获取合适的返回值处理器
+       HandlerMethodReturnValueHandler handler = this.selectHandler(returnValue, returnType);
+       ...
+       // 进行返回值的处理
+       handler.handleReturnValue(...);
+   }
+   ```
+
+   因为有 @ResponseBody 注解，因此使用 **RequestResponseBody**MethodProcessor 的 **handleReturnValue** 方法处理返回值
+
+4. handleReturnValue 方法调用 **writeWithMessageConverters** 方法
+
+   - **MediaType** - 就是返回信息的媒体类型
+   
+   - **acceptableTypes** - 客户端能接受服务器响应的内容类型（请求头中的 "Accept" 信息）
+     
+     "Accept" 中支持的内容类型，有优先级，前面的先进行匹配
+     
+     - "text/html"
+     - "application/xhtml+xml"
+     - "image/avif"
+     - ...
+     
+   - **producibleTypes** - 服务器能响应给客户端的类型
+     
+     循环遍历 MessageConverter，判断转换器是否支持对响应数据进行媒体类型的支持
+     
+     - "application/json"
+     - ...
+     
+   - **mediaTypesToUse** - 服务器和客户端匹配的内容类型
+   
+   该方法执行步骤：
+   
+   1. 循环遍历，寻找匹配的 acceptableTypes 和 producibleTypes
+   
+   2. 循环遍历，确定[消息转换器](#消息转换器)（HttpMessageConverter\<T\> 接口的实现类）
+   
+      MappingJackson2HttpMessageConverter 消息转换器，将 pojo 转换为需要的类型（如 json 串）
+   
+      转换之后，将数据以字节数组的形式写出到客户端
+   
+   3. 调用 write() 将信息写入响应中
+   
+   ```java
+   protected <T> void writeWithMessageConverters() {
+       ...
+       // 获取客户端可以接收的内容类型（调用 resolveMediaTypes 方法）
+       List acceptableTypes = this.getAcceptableMediaTypes(request);
+       ...
+       // 获取服务器端可以处理的内容类型
+       List<MediaType> producibleTypes = this.getProducibleMediaTypes(request, valueType, (Type)targetType);
+       ...
+       // 之后会循环遍历，调用 canWrite() 判断哪个 MessageConverter 支持
+       // 然后执行 write() 将内容写入响应
+   }
+   ```
+   
+5. 进入 AbstractGenericHttpMessageConverter 类中的 write 方法  
+   该方法会调用 AbstractJackson2HttpMessageConverter 类中的 writeInternal 方法，通过 Jackson 依赖将 pojo 转换为需要的类型
+
+**调用链总结**：
+
+```mermaid
+classDiagram
+  direction LR
+  class ServletInvocableHandlerMethod {
+    + invokeAndHandle()
+  }
+  class HandlerMethodReturnValueHandlerComposite {
+    + handleReturnValue()
+  }
+  class HandlerMethodReturnValueHandler {
+    handleReturnValue()
+  }
+  <<interface>> HandlerMethodReturnValueHandler
+  class RequestResponseBodyMethodProcessor {
+    + handleReturnValue()
+  }
+  ServletInvocableHandlerMethod --> HandlerMethodReturnValueHandlerComposite : invoke
+  HandlerMethodReturnValueHandlerComposite --> HandlerMethodReturnValueHandler : invoke
+  HandlerMethodReturnValueHandler <|.. RequestResponseBodyMethodProcessor : implement
+```
+
+```mermaid
+classDiagram
+  direction LR
+  class RequestResponseBodyMethodProcessor {
+    + handleReturnValue()
+  }
+  class AbstractMessageConverterMethodProcessor {
+    # writeWithMessageConverters()
+  }
+  <<abstract>> AbstractMessageConverterMethodProcessor
+  class GenericHttpMessageConverter {
+    write()
+  }
+  <<interface>> GenericHttpMessageConverter
+  class AbstractGenericHttpMessageConverter {
+    + write()
+  }
+  class AbstractJackson2HttpMessageConverter {
+    # writeInternal()
+  }
+  class HttpMessageConverter {
+    canRead()
+    read()
+    canWrite()
+    write()
+  }
+  <<interface>> HttpMessageConverter
+  <<abstract>> AbstractJackson2HttpMessageConverter
+  RequestResponseBodyMethodProcessor --> AbstractMessageConverterMethodProcessor : invoke
+  AbstractMessageConverterMethodProcessor --> GenericHttpMessageConverter : invoke
+  HttpMessageConverter <|-- GenericHttpMessageConverter : extends
+  GenericHttpMessageConverter <|.. AbstractGenericHttpMessageConverter : implement
+  AbstractGenericHttpMessageConverter --> AbstractJackson2HttpMessageConverter : invoke
+```
+
+#### 内容协商
+
+AbstractMessageConverterMethodProcessor 中执行内容 类型转换 和 写入请求 的方法
+
+```java
+protected <T> void writeWithMessageConverters() {
+    ...
+    // 获取客户端可以接收的内容类型（调用 resolveMediaTypes 方法）
+    List acceptableTypes = this.getAcceptableMediaTypes(request);
+    ...
+    // 获取服务器端可以处理的内容类型
+    List<MediaType> producibleTypes = this.getProducibleMediaTypes(request, valueType, (Type)targetType);
+    ...
+}
+```
+
+writeWithMessageConverters 方法会调用 resolveMediaType，通过内容协商来决定 MediaType  
+ContentNegotiationManager 类的 resolveMediaType 方法，会通过 ContentNegotiateStrategy 接口调用对应的内容协商策略类
+
+```mermaid
+classDiagram
+  direction LR
+  class AbstractMessageConverterMethodProcessor {
+    # writeWithMessageConverters()
+    - getAcceptableMediaTypes()
+  }
+  <<abstract>> AbstractMessageConverterMethodProcessor
+  class ContentNegotiationManager {
+    + resolveMediaTypes()
+  }
+  class ContentNegotiationStrategy {
+    resolveMediaTypes()
+  }
+  <<interface>> ContentNegotiationStrategy
+  AbstractMessageConverterMethodProcessor --> ContentNegotiationManager : invoke
+  ContentNegotiationStrategy <|.. ContentNegotiationManager : implement
+```
+
+**内容协商策略类的结构**：
+
+```mermaid
+flowchart BT
+  A("HeaderContentNegotiationStrategy"):::sclass -."implement".-> I("&lt;&lt;Interface&gt;&gt;<br/>contentNegotiationStrategy")
+  C("ParameterContentNegotiationStrategy"):::sclass --"extends"--> B("&lt;&lt;Abstract&gt;&gt;<br/>AbstractMappingContentNegotiationStrategy"):::aclass -."implement".-> I
+  Z("...") -."implement".-> I
+  classDef sclass fill:#7eabd0;
+  classDef aclass fill:#8BA270;
+```
+
+- **基于请求头的内容协商**：
+
+  可以根据客户端**请求头中的 "Accept" 要求**，响应不同类型的内容
+
+  ```mermaid
+  flowchart LR
+    A("ContentNegotiationManager<br/>+resolveMediaType()") --"invoke"--> B("HeaderContentNegotiationStrategy")
+  ```
+
+  比如，服务端返回 XML 类型数据
+
+  导入 Jackson 依赖：
+
+  ```xml
+  <!-- Jackson XML 转换 -->
+  <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-xml</artifactId>
+  </dependency>
+  ```
+
+  控制器方法：
+
+  ```java
+  @RequestMapping("/test/xml")
+  public @ResponseBody Person responseXML() {
+      return new Person(...);
+  }
+  ```
+
+  若请求头的 "Accept" 是：
+
+  text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,\*/\*;q=0.8,application/signed-exchange;v=b3;q=0.9
+
+  那根据 "Accept" 中支持的内容类型的优先级（前面的先匹配），服务端会返回 XML 类型数据
+
+- **基于请求参数的内容协商**：
+
+  可以根据客户端**请求参数中的 format 值**，响应不同类型的内容
+  
+  ```mermaid
+  flowchart LR
+    A("ContentNegotiationManager<br/>+resolveMediaType()") --"invoke"--> B("ParameterContentNegotiationStrategy")
+  ```
+  
+  配置中开启基于请求参数的内容协商
+  
+  ```yml
+  spring:
+    mvc:
+      contentnegotiation:
+        favor-parameter: true
+  ```
+  
+  控制器方法：
+  
+  ```java
+  @RequestMapping("/test")
+  public @ResponseBody Person responseXML() {
+      return new Person(...);
+  }
+  ```
+  
+  请求：http://localhost:8080/test?format=xml，响应 XML 类型
+  
+  请求：http://localhost:8080/test?format=json，响应 JSON 类型
+
+#### 消息转换器
+
+```mermaid
+flowchart BT
+  A("&lt;&lt;Interface&gt;&gt;<br/>GenericHttpMessageConverter") -."implement".-> I("&lt;&lt;Interface&gt;&gt;<br/>HttpMessageConverter")
+  B("&lt;&lt;Abstract&gt;&gt;<br/>AbstractHttpMessageConverter"):::aclass -."implement".-> I
+  C("&lt;&lt;Abstract&gt;&gt;<br/>AbstractGenericHttpMessageConverter"):::aclass --"extends"--> B
+  C -."implement".-> A
+  D("&lt;&lt;Abstract&gt;&gt;<br/>AbstractJackson2HttpMessageConverter"):::aclass --"extends"--> C
+  E("MappingJackson2HttpMessageConverter"):::sclass --"extends"--> D
+  F("MappingJackson2XmlHttpMessageConverter"):::sclass --"extends"--> D
+  classDef sclass fill:#7eabd0;
+  classDef aclass fill:#8BA270;
+```
+
+
+
 
 ---
 
@@ -5343,7 +6447,7 @@ HandlerMapping 接口：
 
 SSM = Spring + SpringMVC + MyBatis
 
-SSM 框架思路是由 Spring 框架作为基干，整合 SpringMVC 和 Mybatis
+SSM 整合思路：以 Spring 框架为基干，整合 SpringMVC 和 Mybatis
 
 ## 整合 Mybatis
 
@@ -5364,7 +6468,7 @@ SSM 框架思路是由 Spring 框架作为基干，整合 SpringMVC 和 Mybatis
 
 Spring 整合 Mybatis 需要的依赖：
 
-**注意**：若日期类型使用 JDK8 开始的 LocalDateTime，则需注意 Druid 的版本，如：1.2.8 已经支持。因为，需要 JDBC driver 支持 JDBC 4.2 API
+**注意**：若日期类型使用 JDK 8 开始的 LocalDateTime，则需注意 Druid 的版本，如：1.2.8 已经支持。因为，需要 JDBC driver 支持 JDBC 4.2 API
 
 ```xml
 <!-- Spring 整合 Mybatis 所需的依赖 -->
@@ -6062,7 +7166,7 @@ Once we split a huge application into small microservices, there will inevitably
 
 Explicit build support is provided for the following build tools：
 
-<table style="width:30rem">
+<table style="width:22rem">
     <thead>
         <tr style="text-align:left">
             <th width=45%>Build Tool</th>
@@ -6085,7 +7189,7 @@ Explicit build support is provided for the following build tools：
 
 Spring Boot supports the following embedded servlet containers：
 
-<table style="width:30rem">
+<table style="width:22rem">
     <thead>
         <tr style="text-align:left">
             <th width=45%>Name</th>
@@ -6179,6 +7283,8 @@ You can also deploy Spring Boot applications to any servlet 3.1+ compatible cont
   > ```
 
 - **实体类**：
+
+  注意：若属性的数据类型为 LocalDateTime，则需要自定义类型转换格式
 
   ```java
   @Component  // 声明为组件
@@ -6987,7 +8093,7 @@ public class MyController {
 
 ### 工作原理
 
-[SpringMVC 框架详解](#SpringMVC%20框架详解)，包含组件介绍、执行流程、处理器映射器
+[SpringMVC 框架详解](#MVC%20框架详解)，包含组件介绍、执行流程、处理器映射器
 
 #### 静态资源映射
 
@@ -7085,9 +8191,13 @@ protected void doFilterInternal(...) ... {
 
 #### 处理器映射器
 
-详见：[SpringMVC 框架详解](#SpringMVC%20框架详解) -> 处理器映射器
+详见：[SpringMVC 框架详解](#MVC%20框架详解) -> 工作原理 -> 处理器映射器
 
 从接收一个 Controller 请求，到执行对应的控制器方法，SpringBoot 通过控制器方法映射，来查找对应的控制器方法
 
 DispatcherServlet 中的 doDispatch 方法，会获取到 HandlerExecutionChain
+
+#### 请求参数解析
+
+详见：[SpringMVC 框架详解](#MVC%20框架详解) -> 工作原理 -> 请求参数解析
 

@@ -128,21 +128,24 @@ charset 是 character set 的简写，即**字符集**
 
 ```mermaid
 flowchart BT
-    subgraph Unicode
-        F(UTF-8 编码) --> E(Unicode 字符集)
-        G(UTF-16 编码) --> E
-        H(UTF-32 编码) --> E
-    end
-    subgraph ASCII
-        A(ASCII 编码) --> B(ASCII 字符集)
-    end
-    subgraph GBK
-        C(GBK 编码) --> D(GBK 字符集)
-    end
-    classDef invisible fill-opacity:0,stroke-opacity:0
-    class ASCII invisible
-    class GBK invisible
-    class Unicode invisible
+  subgraph Unicode
+  direction BT
+    F(UTF-8 编码) --> E(Unicode 字符集)
+    G(UTF-16 编码) --> E
+    H(UTF-32 编码) --> E
+  end
+  subgraph ASCII
+  direction BT
+    A(ASCII 编码) --> B(ASCII 字符集)
+  end
+  subgraph GBK
+  direction BT
+    C(GBK 编码) --> D(GBK 字符集)
+  end
+  classDef invisible fill-opacity:0,stroke-opacity:0
+  class ASCII invisible
+  class GBK invisible
+  class Unicode invisible
 ```
 
 **常见的编码表**
@@ -955,7 +958,7 @@ List<Integer> lt1 = Arrays.asList(10, 30, 20, 50, 45); // 数组转换为集合
 
 1. 使用引用数据类型定义的变量叫做引用型变量，简称为 “引用”
 2. 引用变量主要用于记录对象在堆区中的内存地址信息，便于下次访问
-3. Person p = new Person();  p.name = "Domenic"
+3. Person p = new Person();  p.name = "Domenic";
 3. System.out.println 打印引用变量的时候，**Java 会自动调用 toString() 方法**，可以直接打印
 
 #### 成员变量
@@ -980,7 +983,7 @@ List<Integer> lt1 = Arrays.asList(10, 30, 20, 50, 45); // 数组转换为集合
 
 #### 参数
 
-##### 可变长参数
+**长度可变参数**
 
 1. 语法：返回值类型 方法名(参数的类型... 参数名)
 2. 调用可变参数方法，可给出**零到任意多个**参数  
@@ -1125,7 +1128,7 @@ package：
 
 ---
 
-### 继承和 static
+### 继承
 
 #### 继承
 
@@ -1179,46 +1182,7 @@ package：
 
    而静态的与指向的对象无关，所以静态的重写没有太大的意义
 
-#### static 关键字
-
-1. 静态的类型存储在[方法区](#方法区)中
-
-1. static 关键字修饰成员变量表示静态，**隶属于类层级**，随着类加载而加载，被所有对象共享
-
-3. static 关键字修饰的成员可用 <u>引用.</u> 的方式访问，但**推荐用 <u>类名.</u> 的方式访问**
-
-   就是不要用 <u>this.</u> 或者 <u>对象名.</u> 的方式访问静态成员
-
-   **原因**：静态变量可以用引用访问，但在执行过程中，**引用所指向的对象并没有参与**。如果是空引用访问实例变量，程序一定会发生空指针异常，但是如果用空引用访问静态变量，程序并没有发生空指针异常，所以通过引用访问静态变量实际上还是直接通过类访问的
-
-3. 注意事项
-
-   1. 在非静态成员方法中既能访问非静态的成员又能访问静态的成员
-
-   2. 在**静态成员方法**中**只能访问静态成员**不能访问非静态成员
-
-      所以静态成员方法中不能使用 this 关键字
-   
-      **原因**：静态成员方法在类产生的时候就存在了，非静态的要 new 出对象才会出现
-   
-   3. 在开发中 <u>只有隶属于类层级并被所有对象共享的内容</u> 才可以使用 static 关键字修饰（不可滥用）
-
-> **注意**：避免通过一个类的对象引用，访问此类的静态变量或静态方法，无谓增加编译器解析成本，应该用类名直接访问
->
-> ```java
-> public class Test {
->        public static int a = 0;
->        public void setA() {
->            this.a = 1; // 不推荐，增加解析成本
->            Test.a = 1; // 推荐
->        }
-> }
-> ```
->
-> 增加解析成本：先通过引用访问对象，再通过对象访问类元数据，最后再访问静态成员，绕了一圈
-
-
-#### 构造块和静态代码块
+### 构造块
 
 当需要在执行[构造方法体](#构造函数)之前做一些准备工作时，可以使用代码块  
 构造代码块的出现就是为了<u>提取构造函数的共同量</u>，减少各个构造函数的代码
@@ -1229,7 +1193,7 @@ package：
 
    之后调用该对象，不会执行构造块
 
-3. 静态代码块：使用 static 关键字修饰的构造块 static { ... }
+3. 静态代码块：使用 [static 关键字](#static)修饰的构造块 static { ... }
 
 4. 静态代码块在类加载时执行一次（有且只有一次）
 
@@ -1268,6 +1232,45 @@ static {
     PRE_URL = prop.getProperty("preURL");
 }
 ```
+
+#### static
+
+1. 静态的类型存储在[方法区](#方法区)中
+
+1. static 关键字修饰成员变量表示静态，**隶属于类层级**，随着类加载而加载，被所有对象共享
+
+3. static 关键字修饰的成员可用 <u>引用.</u> 的方式访问，但**推荐用 <u>类名.</u> 的方式访问**
+
+   就是不要用 <u>this.</u> 或者 <u>对象名.</u> 的方式访问静态成员
+
+   **原因**：静态变量可以用引用访问，但在执行过程中，**引用所指向的对象并没有参与**。如果是空引用访问实例变量，程序一定会发生空指针异常，但是如果用空引用访问静态变量，程序并没有发生空指针异常，所以通过引用访问静态变量实际上还是直接通过类访问的
+
+3. 注意事项
+
+   1. 在非静态成员方法中既能访问非静态的成员又能访问静态的成员
+
+   2. 在**静态成员方法**中**只能访问静态成员**不能访问非静态成员
+
+      所以静态成员方法中不能使用 this 关键字
+   
+      **原因**：静态成员方法在类产生的时候就存在了，非静态的要 new 出对象才会出现
+   
+   3. 在开发中 <u>只有隶属于类层级并被所有对象共享的内容</u> 才可以使用 static 关键字修饰（不可滥用）
+
+> **注意**：避免通过一个类的对象引用，访问此类的静态变量或静态方法，无谓增加编译器解析成本，应该用类名直接访问
+>
+> ```java
+> public class Test {
+>        public static int a = 0;
+>        public void setA() {
+>            this.a = 1; // 不推荐，增加解析成本
+>            Test.a = 1; // 推荐
+>        }
+> }
+> ```
+>
+> 增加解析成本：先通过引用访问对象，再通过对象访问类元数据，最后再访问静态成员，绕了一圈
+
 
 #### 单例模式
 
@@ -1320,7 +1323,7 @@ public class Singleton {
 
 ---
 
-### 多态和抽象
+### 抽象
 
 #### 多态
 
@@ -1533,13 +1536,34 @@ at.show();                                      // 编译阶段调用父类版�
       private void prShow() { ... }       // 实现类无法访问
       ```
 
-| 名称               | 关键字     | 关系   |
-| ------------------ | ---------- | ------ |
-| 类和类间的关系     | extends    | 单继承 |
-| 类和接口间的关系   | implements | 多实现 |
-| 接口和接口间的关系 | extends    | 多继承 | 
+<table style="width:26rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width=45%>名称</th>
+            <th width=33%>关键字</th>
+            <th width=22%>关系</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>类和类间的关系</td>
+            <td>extends</td>
+            <td>单继承</td>
+        </tr>
+        <tr>
+            <td>类和接口间的关系</td>
+            <td>implements</td>
+            <td>多实现</td>
+        </tr>
+        <tr>
+            <td>接口和接口间的关系</td>
+            <td>extends</td>
+            <td>多继承</td>
+        </tr>
+    </tbody>
+</table>
 
-#### 抽象类和接口的区别
+#### 抽象类和接口区别
 
 **概念**：
 
@@ -1674,7 +1698,7 @@ at.show();                                      // 编译阶段调用父类版�
 
 1. 局部内部类只能在该方法体的内部可以使用，在方法体内部直接创建对象
 
-2. 局部内部类不能使用[访问控制符](#访问控制)和[static 关键字](#static 关键字)修饰符
+2. 局部内部类不能使用 [访问控制符](#访问控制) 和 [static 关键字](#static 关键字)
 
 3. 局部内部类可<u>使用该类所在方法的局部变量，但<b>必须是 final 类型</b></u>
 
@@ -2012,18 +2036,56 @@ javadoc 工具提取文档注释生成 API 文档时，**默认不包括注解�
 
 @Target 用于指定被修饰的注解能用于哪些元素的修饰
 
-| 值                          | 含义                                   |
-| --------------------------- | -------------------------------------- |
-| ElementType.ANNOTATION_TYPE | 可以给一个注解进行注解                 |
-| ElementType.CONSTRUCTOR     | 可以给构造方法进行注解                 |
-| ElementType.FIELD           | 可以给属性进行注解                     |
-| ElementType.LOCAL_VARIABLE  | 可以给局部变量进行注解                 |
-| ElementType.METHOD          | 可以给方法进行注解                     |
-| ElementType.PACKAGE         | 可以给一个包进行注解                   |
-| ElementType.PARAMETER       | 可以给一个方法内的参数进行注解         |
-| ElementType.TYPE            | 可以给类型进行注解，比如类、接口、枚举 |
-| ElementType.TYPE_PARAMETER  | 可以写在类型变量的声明语句中，如：泛型 |
-| ElementType.TYPE_USE        | 可以写在使用类型的任何语句中           |
+<table style="width:45rem">
+    <thead>
+        <tr style="text-align:left">
+            <th>值</th>
+            <th>含义</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>ElementType.ANNOTATION_TYPE</td>
+            <td>可以给一个注解进行注解</td>
+        </tr>
+        <tr>
+            <td>ElementType.CONSTRUCTOR</td>
+            <td>可以给构造方法进行注解</td>
+        </tr>
+        <tr>
+            <td>ElementType.FIELD</td>
+            <td>可以给属性进行注解</td>
+        </tr>
+        <tr>
+            <td>ElementType.LOCAL_VARIABLE</td>
+            <td>可以给局部变量进行注解</td>
+        </tr>
+        <tr>
+            <td>ElementType.METHOD</td>
+            <td>可以给方法进行注解</td>
+        </tr>
+        <tr>
+            <td>ElementType.PACKAGE</td>
+            <td>可以给一个包进行注解</td>
+        </tr>
+        <tr>
+            <td>ElementType.PARAMETER</td>
+            <td>可以给一个方法内的参数进行注解</td>
+        </tr>
+        <tr>
+            <td>ElementType.TYPE</td>
+            <td>可以给类型进行注解，比如类、接口、枚举</td>
+        </tr>
+        <tr>
+            <td>ElementType.TYPE_PARAMETER</td>
+            <td>可以写在类型变量的声明语句中，如：泛型</td>
+        </tr>
+        <tr>
+            <td>ElementType.TYPE_USE</td>
+            <td>可以写在使用类型的任何语句中</td>
+        </tr>
+    </tbody>
+</table>
 
 ##### @Inherited
 
@@ -2082,18 +2144,56 @@ public @interface ManTypes {
 
 #### 预置注解
 
-| 预置注解          | 含义                                                   |
-| ----------------- | ------------------------------------------------------ |
-| @author           | 标明开发该类模块的作者，多个作者之间使用，分割         |
-| @version          | 标明该类模块的版本                                     |
-| @see              | 参考转向，比如参考的代码或者链接                       |
-| @since            | 从哪个版本开始增加的                                   |
-| @param            | 对方法中某参数的说明，若没有参数就不能写               |
-| @return           | 对方法返回值的说明，若方法的返回值类型是 void 就不能写 |
-| @exception        | 对方法可能抛出的异常进行说明                           |
-| @Override         | 限定重写父类方法, 该注解只能用于方法                   |
-| @Deprecated       | 用于表示所修饰的元素（类，方法等）已过时               |
-| @SuppressWarnings | 抑制编译器警告                                         |
+<table style="width:45rem">
+    <thead>
+        <tr style="text-align:left">
+            <th>预置注解</th>
+            <th>含义</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@author</td>
+            <td>标明开发该类模块的作者，多个作者之间使用，分割</td>
+        </tr>
+        <tr>
+            <td>@version</td>
+            <td>标明该类模块的版本</td>
+        </tr>
+        <tr>
+            <td>@see</td>
+            <td>参考转向，比如参考的代码或者链接</td>
+        </tr>
+        <tr>
+            <td>@since</td>
+            <td>从哪个版本开始增加的</td>
+        </tr>
+        <tr>
+            <td>@param</td>
+            <td>对方法中某参数的说明，若没有参数就不能写</td>
+        </tr>
+        <tr>
+            <td>@return</td>
+            <td>对方法返回值的说明，若方法的返回值类型是 void 就不能写</td>
+        </tr>
+        <tr>
+            <td>@exception</td>
+            <td>对方法可能抛出的异常进行说明</td>
+        </tr>
+        <tr>
+            <td>@Override</td>
+            <td>限定重写父类方法, 该注解只能用于方法</td>
+        </tr>
+        <tr>
+            <td>@Deprecated</td>
+            <td>用于表示所修饰的元素（类，方法等）已过时</td>
+        </tr>
+        <tr>
+            <td>@SuppressWarnings</td>
+            <td>抑制编译器警告</td>
+        </tr>
+    </tbodyh
+</table>
 
 #### 注解的解析
 
@@ -2556,10 +2656,10 @@ java.lang.Object 类是 Java 语言中类层次结构的根类，定义了 “�
 | 方法声明                   | 功能介绍                                                     |
 | -------------------------- | ------------------------------------------------------------ |
 | Object()                   | 使用无参方式构造对象                                         |
-| boolean equals(Object obj) | 该方法形参类型是 Object，意味着传入参数可以是任意类型（多态）<br/>用于判断调用对象是否与参数对象相等<br/>**默认**比较两个对象的**地址**是否相等，与 == 运算符的结果一致<br/>若希望比较两个对象的内容，则需重写该方法<br/>若该方法被重写后，则应该重写 hashCode 方法来保证结果的一致性 |
+| boolean equals(Object obj) | 该方法形参类型是 Object，意味着传入参数可以是任意类型（多态）<br/>用于判断调用对象是否与参数对象相等<br/>**默认**比较两个对象的地址是否相等，与 == 运算符的结果一致<br/>若希望比较两个对象的内容，则需重写该方法<br/>若该方法被重写后，则应该重写 hashCode 方法来保证结果的一致性 |
 | int hashCode()             | 用于获取调用对象的哈希码值（内存地址的编号）<br/>若两个对象调用 equals 方法相等，则各自调用该方法的结果必须相同<br/>若两个调用对象 equals 方法不相等，则各自调用该方法的结果应该不相同<br/>为了使得该方法与 equals 方法保持一致，需要重写该方法 |
-| String toString()          | 用于获取调用对象的字符串形式<br/>该方法默认返回的字符串为：包名.类名@\<哈希码值的十六进制\><br/>为了返回更有意义的数据，需要重写该方法<br/>使用 print 或 println 打印<u>引用或字符串拼接引用</u>时，都会<u>自动</u>调用该方法 |
-| Class\<?\> getClass()        | 用于返回调用对象执行时的 Class 实例（也就是对应的 Class 类型），[反射机制](#反射机制)使用 |
+| String toString()          | 用于获取调用对象的字符串形式<br/>该方法默认返回的字符串为：包名.类名@&lt;哈希码值的十六进制&gt;<br/>为了返回更有意义的数据，需要重写该方法<br/>print 或 println 打印引用或字符串拼接引用时，会自动调用该方法 |
+| Class&lt;?&gt; getClass()  | 用于返回调用对象执行时的 Class 实例（也就是对应的 Class 类型） |
 
 #### equals
 
@@ -2649,11 +2749,28 @@ public int hashCode() {
 
 #### 静态成员变量
 
-| 变量                   | 说明             |
-| -------------------- | ----- |
-| static PrintStream err | “标准” 错误输出流 |
-| static InputStream in | “标准” 输入流 |
-| static PrintStream out | “标准” 输出流 |
+<table style="width:30rem">
+    <thead>
+        <tr style="text-align:left">
+            <th>变量</th>
+            <th>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>static PrintStream err</td>
+            <td>“标准” 错误输出流</td>
+        </tr>
+        <tr>
+            <td>static InputStream in</td>
+            <td>“标准” 输入流</td>
+        </tr>
+        <tr>
+            <td>static PrintStream out</td>
+            <td>“标准” 输出流</td>
+        </tr>
+    </tbody>
+</table>
 
 #### 成员方法
 
@@ -2777,12 +2894,12 @@ Integer.TYPE 和 int.class 是相等的，因为 TYPE 表示该包装类对应�
 | boolean equals(Object obj)             | 比较调用对象与参数指定对象的内容是否相等 |
 | String toString()                      | 获取表示此对象值的 String 对象           |
 
-| <span style="color:#c88fff">静态方法</span>                          | 功能                                                         |
+| <span style="color:#c88fff">静态方法</span>                  | 功能                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| static Integer valueOf(int i 或 String str)                  | 根据参数指定整数数据获取 Integer 类型对象                    |
+| static Integer valueOf(int i / String str)                   | 根据参数指定整数数据获取 Integer 类型对象                    |
 | static int parseInt(String s)                                | 将字符串类型转换为 int 类型并返回                            |
 | static String toString(int i)                                | 获取表示给定整数的 String 对象                               |
-| static String toBinaryString(int i) / toHexString(int i) / toOctalString(int i) | 获取给定整数的二、十六、八进制 String 对象<br/>返回描述调用对象数值的字符串形式 |
+| static String toBinaryString(int i)<br/>/ toHexString(int i)<br/>/ toOctalString(int i) | 将整数转换为 2/16/8 进制 String 对象<br/>返回描述调用对象数值的字符串形式 |
 
 ##### 装箱和拆箱
 
@@ -2885,11 +3002,11 @@ Double 没用提供自动装箱池
 | boolean equals(Object obj)           | 比较调用对象与参数指定对象的内容是否相等 |
 | String toString()                    | 获取表示此对象值的 String 对象           |
 
-| <span style="color:#c88fff">静态方法</span>                          | 功能                                          |
+| <span style="color:#c88fff">静态方法</span>                  | 功能                                          |
 | ------------------------------------------------------------ | --------------------------------------------- |
 | static Character valueOf(char c)                             | 根据参数指定 char 数据获取 Character 类型对象 |
-| static boolean isUpperCase(char ch) / isLowerCase(char ch) / isDigit(char ch) | 判断参数字符是否为大 / 小写 / 数字            |
-| static char toUpperCase(char ch) / toLowerCase(char ch)      | 将参数指定字符转换为大 / 小写字符             |
+| static boolean isUpperCase(char ch)<br/>/ isLowerCase(char ch)<br/>/ isDigit(char ch) | 判断参数字符是否为大 / 小写 / 数字            |
+| static char toUpperCase(char ch)<br/>/ toLowerCase(char ch)  | 将参数指定字符转换为大 / 小写字符             |
 
 **自动装拆箱**
 
@@ -3053,10 +3170,10 @@ String userName = new String(name.getBytes("ISO-8859-1"),"utf-8");
 
 | 方法声明                                                     | 功能                                                         |
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
-| int indexOf(int ch) / indexOf(int ch, int fromIndex)         | 返回参数 ch 指定字符第一次出现的下标，正向查找<br/>ch 是字符（Unicode 编码）<br/>fromIndex 是从左向右的起始位置，包含该位置<br/>**若没找到则返回 -1** |
-| int indexOf(String str) / int indexOf(String str, int fromIndex) | 返回参数 str 指定字符串第一次出现的下标<br/>（字符串中第一个字符的下标） |
-| int lastIndexOf(int ch) / int lastIndexOf(int ch, int fromIndex) | 返回参数 ch 指定的字符最后出现的索引<br/>fromIndex 是从右向左的起始位置（反向），包含该位置 |
-| int lastIndexOf(String str) / int lastIndexOf(String str, int fromIndex) | 返回参数 str 指定字符串最后出现的索引位置                    |
+| int indexOf(int ch)<br/>/ indexOf(int ch, int fromIndex)     | 返回参数 ch 指定字符第一次出现的下标，正向查找<br/>ch 是字符（Unicode 编码）<br/>fromIndex 是从左向右的起始位置，包含该位置<br/>**若没找到则返回 -1** |
+| int indexOf(String str)<br/>/ int indexOf(String str, int fromIndex) | 返回参数 str 指定字符串第一次出现的下标<br/>（字符串中第一个字符的下标） |
+| int lastIndexOf(int ch)<br/>/ int lastIndexOf(int ch, int fromIndex) | 返回参数 ch 指定的字符最后出现的索引<br/>fromIndex 是从右向左的起始位置（反向），包含该位置 |
+| int lastIndexOf(String str)<br/>/ int lastIndexOf(String str, int fromIndex) | 返回参数 str 指定字符串最后出现的索引位置                    |
 
 #### 内存原理
 
@@ -3473,8 +3590,10 @@ public class DateTimeFormatterTest {
 
 **概述**：
 
-- java.util.Iterator 接口，用于描述迭代器对象，可以**遍历**[Collection 集合](#Collection 集合（重点）)中的所有元素
-- <u>java.util.Collection 接口继承自 Iterator 接口</u>，所有实现 Collection 接口的实现类都可以使用该迭代器对象
+- java.util.Iterator 接口，用于描述迭代器对象
+- java.lang.[Iterable](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Iterable.html) 接口中的 iterator() 可以返回一个可迭代的 Iterator 对象
+
+> 例：java.util.Collection 接口就继承了 Iterator 接口，所有 [Collection 集合](#Collection 集合（重点）)的实现类都可以使用该迭代器对象
 
 **常用方法**
 
@@ -6709,7 +6828,7 @@ Age 为默认值 0，打印结果为 Person{name='zhangfei', age=0}
 
    直接创建对象
 
-\- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- \- 
+---
 
 - java.lang.Class 类是一个特殊类，它用于表示 JVM 运行时类或接口的信息
 
@@ -6788,7 +6907,7 @@ public class ClassTest {
 }
 ```
 
-（2）动态构造对象（过时）
+（2）动态构造对象（写法已过时）
 
 ```java
 // 把要创建对象的类写在 a.txt 里面，读取出来创建

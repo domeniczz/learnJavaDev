@@ -6181,6 +6181,35 @@ src
 
    注意：resources 下只能创建 directory，因此创建时，不能用 . 来做分隔符，而应该用 /
 
+   > SQL 映射文件也可以与 Mapper 接口放在一起，就是在 java 目录下  
+   > 不过，需要在 pom 中添加资源插件
+   >
+   > ```xml
+   > <plugin>
+   >     <artifactId>maven-resources-plugin</artifactId>
+   >     <version>3.0.2</version>
+   >     <configuration>
+   >         ...
+   >     </configuration>
+   > </plugin>
+   > ```
+   >
+   > ```xml
+   > <build>
+   >     <resources>
+   >         <resource>
+   >             <directory>src/main/resources</directory>
+   >             <includes>
+   >                 <include>**/*.properties</include>
+   >                 <include>**/*.yml</include>
+   >                 <include>**/*.xml</include>
+   >                 <filtering>true</filtering>
+   >             </includes>
+   >         </resource>
+   >     </resources>
+   > </build>
+   > ```
+
 2. 设置 SQL 映射文件的 namespace 属性为：**Mapper 接口的全限定名**
 
    ```xml
