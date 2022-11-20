@@ -496,7 +496,7 @@ Spring 核心配置文件命名示例：applicationContext.xml
     - **\<set\>**
     - **\<props\>**
 
-- **\<import>**：
+- **\<import\>**：
 
   - **resource**  
     导入的配置文件的路径
@@ -534,7 +534,7 @@ Spring 核心配置文件命名示例：applicationContext.xml
 
 4. **包扫描**
 
-   spring 扫描 package 及其子包，自动管理其中的所有组件，也就不需要一个个用 \<bean> 配置了
+   spring 扫描 package 及其子包，自动管理其中的所有组件，也就不需要一个个用 \<bean\> 配置了
 
    ```xml
    <context:component-scan base-package="com.domenic.controller"/>
@@ -1027,7 +1027,7 @@ public class test {&#10;
 
 #### IOC 注解
 
-Spring 常用注解主要是替代 \<bean> 配置
+Spring 常用注解主要是替代 \<bean\> 配置
 
 <table style="width:60rem">
     <thead>
@@ -1137,10 +1137,11 @@ JDK11 及以后完全移除了 javax 扩展包，导致无法使用 @Resource �
         </tr>
         <tr>
             <td>@Bean</td>
-            <td>将标识的方法的返回值作为 Bean 进行管理若注解未设置 value<br/>则 Bean 的 id 为方法的方法名若注解设置了 value，则 id 为 value 的值</td>
+            <td>将标识的方法的返回值作为 Bean 进行管理<br/>若注解未设置 value，则 Bean 的 id 为方法名<br/>若注解设置了 value，则 id 为 value 的值</td>
         </tr>
     </tbody>
 </table>
+
 
 通过如下代码加载核心配置类：
 
@@ -1346,7 +1347,7 @@ public void destroy(){
 
 ##### 核心配置类
 
-<table style="width:45rem">
+<table style="width:40rem">
     <thead>
         <tr style="text-align:left">
             <th width=30%>注解</th>
@@ -1376,8 +1377,6 @@ public void destroy(){
         </tr>
     </tbody>
 </table>
-
-
 
 示例命名：SpringConfig.java
 
@@ -2026,7 +2025,7 @@ http://www.springframework.org/schema/aop/spring-aop.xsd
 <aop:通知类型 method="通知类中的方法名" pointcut="切点表达式"/>
 ```
 
-<table style="width:50rem">
+<table style="width:45rem">
     <thead>
         <tr style="text-align:left">
             <th width=20%>类型</th>
@@ -2181,7 +2180,7 @@ public void testTransfer() throws Exception {
 
 注解语法：@通知注解("切点表达式")
 
-<table style="width:50rem">
+<table style="width:45rem">
     <thead>
         <tr style="text-align:left">
             <th width=20%>类型</th>
@@ -2336,7 +2335,7 @@ public void testTransfer() throws Exception {
 
 ### 概述
 
-Spring 对数据库的操作在 JDBC 上做了封装，用 Spring 的注入功能，可以把 DataSource 注册到 JdbcTemplate 中
+Spring 对数据库的操作**在 JDBC 上做了封装**，用 Spring 的注入功能，可以把 DataSource 注册到 JdbcTemplate 中
 
 **JdbcTemplate 是 Spring JDBC 支持类的中心类**，负责创建和释放资源，如：创建和关闭连接对象等
 
@@ -2442,6 +2441,7 @@ TransactionDefinition 接口提供**事务的定义信息**：事务隔离级别
         </tr>
     </tbody>
 </table>
+
 
 * timeout（超时时间）：默认值是 -1，没有超时限制；若有，以秒为单位进行设置
 * read-only（是否只读）：查询时建议设置为只读
@@ -2820,7 +2820,7 @@ web.xml：
 > 若不指定 contextConfigLocation，SpringMVC 核心配置文件的默认位置和名称：
 >
 > - 位置：/WEB-INF/
-> - 名称：\<servlet-name\>-servlet.xml，当前配置下的默认配置文件名：dispatcherServlet-servlet.xml
+> - 名称：\<servlet-name\>\-servlet.xml，当前配置下的默认配置文件名：dispatcherServlet-servlet.xml
 
 spring-mvc.xml：
 
@@ -2849,6 +2849,11 @@ spring-mvc.xml：
 ```
 
 ### 静态资源访问
+
+> 默认情况下，静态资源存放路径：
+>
+> 1. classpath 中名为 /static（或 /public 或 /resources 或 /META-INF/resources）的目录
+> 2. ServletContext 的根目录（/webapp）
 
 若 SpringMVC 的前端控制器 DispatcherServlet 的 url-pattern 配置的是 /（缺省）  
 加载静态资源时，会被 DispatcherServlet 处理，而不会执行 Tomcat 内置的 DefaultServlet 处理  
@@ -2930,6 +2935,8 @@ Tomcat 8.5 以上的版本，GET 请求的乱码问题已经解决，但 POST �
 ## HTTP 状态码
 
 spring-web 包下有个枚举类 [HttpStatus](https://www.javadoc.io/static/org.springframework/spring-web/5.3.23/org/springframework/http/HttpStatus.html)，列举了请求状态码
+
+4xx 类型是客户端错误；5xx 类型是服务端错误
 
 <table style="width:60rem">
     <thead>
@@ -3055,9 +3062,14 @@ spring-web 包下有个枚举类 [HttpStatus](https://www.javadoc.io/static/org.
             <td>错误提示(消息)</td>
             <td>接口未实现</td>
         </tr>
+        <tr>
+            <td>502</td>
+            <td>GET,POST,PUT,DELETE,PATCH</td>
+            <td>错误提示(消息)</td>
+            <td>服务器在充当网关或代理时，从上游服务器收到无效响应</td>
+        </tr>
     </tbody>
 </table>
-
 
 ---
 
@@ -3065,11 +3077,11 @@ spring-web 包下有个枚举类 [HttpStatus](https://www.javadoc.io/static/org.
 
 该配置文件，主要用来配置 Listener、Filter、Servlet 等
 
-三者的执行顺序：Listener --> Filter --> Servlet
+三者的执行顺序：Listener --\> Filter --\> Servlet
 
 ### 加载顺序
 
-ServletContext --> context-param（无顺序）--> listener（无顺序）--> filter（配置顺序）--> servlet（load-on-startup 优先级）
+ServletContext --\> context-param（无顺序）--\> listener（无顺序）--\> filter（配置顺序）--\> servlet（load-on-startup 优先级）
 
 详细加载过程：
 
@@ -3227,7 +3239,7 @@ ServletContext --> context-param（无顺序）--> listener（无顺序）--> fi
 
   指定 Spring IOC 容器需要读取的非 Web 层 Bean（如 DAO、Service）的 XML 配置文件路径。可指定多个 XML 文件路径，用逗号、冒号等来分隔
 
-  若没有指定 "contextConfigLocation" 参数，则会在 /WEB-INF/ 下查找 "\<servlet-name\>-servlet.xml" 这样的文件加载
+  若没有指定 "contextConfigLocation" 参数，则会在 /WEB-INF/ 下查找 "\<servlet-name\>\-servlet.xml" 这样的文件加载
 
 - **ContextLoaderListerner 监听器**：
 
@@ -3348,8 +3360,6 @@ REST 的行为是通过 HTTP 表示操作的方法来定义的：GET、POST、PU
         </tr>
     </tbody>
 </table>
-
-
 RESTful 相关注解，前往：SpringMVC -\> 注解 -\> RESTful
 
 ### 使用
@@ -3394,7 +3404,7 @@ HiddenHttpMethodFilter 过滤器可以将 **POST** 请求转换为 **PUT**、**D
 使用要求：
 
 1. 当前请求的请求方式必须为 POST
-2. 当前请求必须传输请求参数 \_method，value 为最终的请求方式
+2. 当前请求必须传输请求参数 `_method`，value 为最终的请求方式
 
 ```xml
 <!-- 浏览器发送 POST 请求 -->
@@ -3557,7 +3567,7 @@ public ModelAndView getEmployee(ModelAndView mv) {
 示例，删除一条数据：
 
 删除操作和更新操作类似，但是需要把请求方法改为 DELETE  
-思路：点击删除按钮时，动态修改一个 form 表单的 action 值，加上待删除数据的 id，并提交该表单，表单中带有 \_method 参数
+思路：点击删除按钮时，动态修改一个 form 表单的 action 值，加上待删除数据的 id，并提交该表单，表单中带有 `_method` 参数
 
 ```html
 <!-- 作用：提交 _method 参数，使 SpringMVC 将请求方式解析为 DELETE -->
@@ -3768,7 +3778,7 @@ public class UserController {
 
 > @RequestBody 与 @RequestParam 可同时用；@RequestBody 只能有一个，而 @RequestParam 可以有多个
 
-自动封装参数，底层是通过 Setter 方法给封装类的属性赋值的，因此要求请求体中参数 key 的名称和属性名称要一致
+自动封装参数，底层是通过 Setter 方法给实体类的属性赋值的，因此要求请求体中参数 key 的名称和属性名称要一致
 
 ```java
 @RequestMapping(value = "/ajaxRequestBody")
@@ -3915,7 +3925,7 @@ http://localhost:8080/.../user/1/domenic
 
 ###### 多路径
 
-...Mapping 注解中可以指定多个请求路径，都由该方法处理
+\.\.\.Mapping 注解中可以指定多个请求路径，都由该方法处理
 
 ```java
 @GetMapping(value = {"/user", "/user/{id}"})
@@ -4013,7 +4023,7 @@ SpringMVC 将存放在 model 中的对应数据**同步**到 HttpSession 中
 
 - **示例一**：
 
-  访问 .../forward  
+  访问 \.\.\./forward  
   通过 `model.addAttribute` 向 model 中设置数据，session 中就会同步 username  
   之后转发到控制方法 user()，取出数据 username
 
@@ -4041,7 +4051,7 @@ SpringMVC 将存放在 model 中的对应数据**同步**到 HttpSession 中
   
 - **示例二**：
 
-  访问 .../visit  
+  访问 \.\.\./visit  
   通过 `@ModelAttribute` 注解方法，来添加 model 属性  
   Spring MVC 在调用任何请求处理方法之前，总会先调用该方法
 
@@ -4270,7 +4280,7 @@ public String simpleParam(Integer id, String username) {
 
 #### 复杂类型
 
-定义封装类 QueryVo 和 User ：
+定义实体类 QueryVo 和 User ：
 
 ```java
 // QueryVo 中包含了多种类型
@@ -4296,7 +4306,7 @@ Controller 处理请求：
 @RequestMapping(value = "/quick")
 public class UserController {
     @RequestMapping("/queryParam")
-    // 只要前端参数的 name 和 封装类中的属性名一致，就可以自动封装
+    // 只要前端参数的 name 和 实体类中的属性名 一致，就可以自动封装
     public String queryParam(QueryVo queryVo) {
         System.out.println(queryVo);
         return "/WEB-INF/pages/start.html";
@@ -4743,7 +4753,7 @@ public String testSession(HttpSession session){
 > 若想在 IntelliJ IDEA 中重启服务器或重部署项目后，Session 数据不丢失：
 >
 > 1. 开启 Session 的钝化和活化：  
->    Run/Debug Configuration --> Tomcat Server Settings --> Preserve sessions across restarts and redeploys
+>    Run/Debug Configuration --\> Tomcat Server Settings --\> Preserve sessions across restarts and redeploys
 > 2. Session 中数据若是实体类对象，还需实现 Serializable 接口
 
 #### Application 域
@@ -4764,6 +4774,8 @@ public String testApplication(HttpSession session){
 
 ### 类型转换器
 
+类型转换器的作用，是将**请求中的数据**，**转换为控制方法中对应的形参的类型**
+
 #### Converter
 
 > 实现类型转换逻辑的 Converter SPI(Service provider interface) 简单且强类型
@@ -4774,7 +4786,7 @@ public String testApplication(HttpSession session){
 > }
 > ```
 
-**自定义转换器**：
+**自定义类型转换器**：
 
 只需实现 Converter\<source,target\> 接口，重写 convert 方法
 
@@ -4788,7 +4800,7 @@ public class StringToEmployeeConverter implements Converter<String, Employee> {
 }
 ```
 
-**注册转换器**：
+**注册类型转换器**：
 
 - 方式一：自定义类型转换器
 
@@ -4867,7 +4879,7 @@ public enum Versions {
 }
 ```
 
-**自定义工厂**：
+**自定义类型转换工厂**：
 
 在 ConverterFactory 实现类的内部，创建一个 Converter 类的实现类，实现类型转换
 
@@ -4901,7 +4913,7 @@ public class StringToEnumConverterFactory implements ConverterFactory<String, En
 }
 ```
 
-**注册工厂类**：
+**注册类型转换工厂**：
 
 ```java
 @Configuration
@@ -4943,7 +4955,7 @@ public ResponseEntity<Object> getStringToEnum(
 
 比如将 Integer, Double, String 转换为 BigDecimal，可以只写一个 GenericConverter 实现类，而不是三个 Converter 实现类
 
-**自定义转换器**：
+**自定义类型转换器**：
 
 ```java
 public class GenericPetConverter
@@ -4975,7 +4987,7 @@ public class GenericPetConverter
 }
 ```
 
-**注册转换器**：
+**注册类型转换器**：
 
 ```java
 @Configuration
@@ -5001,6 +5013,125 @@ public ResponseEntity<Object> getStringToPet(
 请求：http://localhost:8080/string-to-pet?pet=Ragdoll-3
 
 结果：{"name":"Ragdoll","age":3}
+
+### 消息转换器
+
+消息转换器的作用，就是**将控制器方法返回的内容**（如 Person）**转换为客户端可以接收的媒体内容类型**（如 JSON、XML）
+
+```java
+@RequestMapping("/test")
+@ResponseBody
+public Person responseXML() { 
+    return new Person("Domenic", LocalDate.now(), 18);
+}
+```
+
+告知服务端，客户端可接收的媒体内容类型的方式：
+
+1. 请求头中的 "Accept"
+2. 请求参数 format 的值
+
+#### 自定义转换器
+
+```java
+public class MyMessageConverter implements HttpMessageConverter<Person> {
+    /* 是否支持读方法（因为是响应数据，此方法可忽略）*/
+    @Override
+    public boolean canRead(Class<?> aClass, MediaType mediaType) {
+        return false;
+    }
+    /* 读方法（因为是响应数据，此方法可忽略）*/
+    @Override
+    public Person read(Class<? extends Person> aClass, HttpInputMessage httpInputMessage)
+            throws IOException, HttpMessageNotReadableException {
+        return null;
+    }
+    /* 
+     * 服务器要统计所有能够写出的媒体类型
+     * 该方法，获取此消息内容转换器支持的媒体类型
+     */
+    @Override
+    public List<MediaType> getSupportedMediaTypes() {
+        // 将自定义的媒体类型放入集合中
+        return MediaType.parseMediaTypes("application/custom");
+    }
+    /* 判断此转换器是否支持对指定的数据类型进行写出 */
+    @Override
+    public boolean canWrite(Class<?> aClass, MediaType mediaType) {
+        return aClass.isAssignableFrom(Person.class);
+    }
+    /* 自定义响应数据的格式类型 */
+    @Override
+    public void write(Person person, MediaType mediaType, HttpOutputMessage httpOutputMessage)
+            throws IOException, HttpMessageNotWritableException {
+        // 拼接响应内容
+        String data = person.getUserName() + "--" + person.getAge() + "--" + person.getBirth();
+        // 获取响应体
+        OutputStream body = httpOutputMessage.getBody();
+        // 将内容转换为字节数组，写入响应体
+        body.write(data.getBytes());
+    }
+}
+```
+
+#### 基于请求头
+
+注册消息转换器：
+
+```java
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        // 将自定义的转换器加入 converters 集合
+        converters.add(new MyMessageConverter());
+    }
+}
+```
+
+若无其他的配置，则根据请求头中的 "Accept" 来决定响应的媒体内容类型
+
+请求：
+
+http://localhost:8080/test
+
+Accept: application/custom
+
+响应：
+
+Domenic\-\-18\-\-2050\-5\-16
+
+#### 基于请求参数
+
+自定义基于请求参数的，内容协商策略
+
+默认优先支持基于参数的内容协商策略，此时基于请求头的内容协商策略会失效  
+若同时也想支持基于请求头的内容协商策略，也可以将这种策略添加进来
+
+```java
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+        Map<String, MediaType> map = new HashMap<>();
+        map.put("json", MediaType.APPLICATION_JSON);
+        map.put("xml", MediaType.APPLICATION_XML);
+        // 让框架知道可以支持 application/custom 类型
+        map.put("custom", MediaType.parseMediaType("application/custom"));
+        // 基于请求参数的内容协商策略
+        ParameterContentNegotiationStrategy parameterCNS = 
+            new ParameterContentNegotiationStrategy(map);
+        // 基于请求头的内容协商策略
+        HeaderContentNegotiationStrategy headerContentNegotiationStrategy = 
+            new HeaderContentNegotiationStrategy();
+        // 指定支持哪些内容协商策略
+        configurer.strategies(Arrays.asList(parameterContentNegotiationStrategy, headerContentNegotiationStrategy));
+    }
+}
+```
+
+请求：http://localhost:8080/test?format=custom
+
+响应：Domenic\-\-18\-\-2050\-5\-16
 
 ### 异常处理
 
@@ -5137,6 +5268,87 @@ public class MyExceptionResolver implements HandlerExceptionResolver {
 </error-page>
 ```
 
+#### 自定义响应内容
+
+若出现异常，会向客户端返回 异常页面 或 异常 JSON 数据
+
+##### 返回页面
+
+- **默认异常页面**：
+
+  <h1 style="text-align:left">Whitelabel Error Page</h1><p style="text-align:left">This application has no explicit mapping for /error, so you are seeing this as a fallback.</p><div style="text-align:left">Sun Nov 20 14:01:39 CST 2050</div><div>There was an unexpected error (type=Not Found, status=404).</div><div style="text-align:left;margin-bottom:1rem">No message available</div>
+
+- **自定义异常页面**：
+
+  将自定义的异常页面 HTML，放入静态资源存放路径中
+
+  1. classpath 中名为 /static（或 /public 或 /resources 或 /META-INF/resources）的目录
+  2. ServletContext 的根目录（/webapp）
+
+  例：将 404.html 放入 /src/main/resources/static 中，当遇到 404 错误时，会返回自定义的 404.html 页面
+
+  也可以定义 4xx.html 和 5xx.html 页面来指代所有 4 和 5 开头的错误
+  
+- **Thymeleaf**：
+
+  若添加了 Thymeleaf 依赖，/error 文件夹要放在 /src/main/resources/templates 下
+
+  可以添加 4xx.html 和 5xx.html 来修改异常页面
+
+  若没有自定义异常页面，则采用默认的异常页面
+
+##### 返回 JSON
+
+- **默认 JSON**：
+
+  ```json
+  {
+      "timestamp": "2050-11-20T06:00:38.569+00:00",
+      "status": 404,
+      "error": "Not Found",
+      "message": "No message available",
+      "path": "/domenic"
+  }
+  ```
+
+- **自定义 JSON**：
+
+  方式一：
+
+  在配置类中，用 @Bean 注入 IOC 容器
+
+  ```java
+  @Configuration
+  public class MyConfig implements WebMvcConfigurer {
+      @Bean
+      public ErrorAttributes customErrorAttributes() {
+          return new DefaultErrorAttributes() {
+              @Override
+              public Map<String, Object> getErrorAttributes(
+                      WebRequest webReq, ErrorAttributeOptions options) {
+                  final Map<String, Object> errAttrs = super.getErrorAttributes(webReq, options);
+                  errAttrs.put("message", "Custom error");
+                  errAttrs.put("error", super.getError(webReq));
+                  return errAttrs;
+              }
+          };
+      }
+  }
+  ```
+
+  方式二：
+
+  自定义类继承 DefaultErrorAttributes，用 @Component 注入 IOC 容器
+
+  ```java
+  @Component
+  public class CustomErrorAttribute extends DefaultErrorAttributes {
+      @Override
+      public Map<String, Object> getErrorAttributes(
+              WebRequest webReq, ErrorAttributeOptions options) { ... }
+  }
+  ```
+
 ### 拦截器
 
 #### 概述
@@ -5157,7 +5369,7 @@ SpringMVC 的拦截器 Interceptor 类似于 Servlet 开发中的过滤器 Filte
     <tbody>
         <tr>
             <td>preHandler</td>
-            <td>方法将在请求处理前被调用<br/>方法返回 true 表示会继续调用下一个 Interceptor 的 preHandler（若没有就执行目标方法）；<br/>方法返回 false 表示请求结束，后续的 Interceptor 和 Controller 都不会执行</td>
+            <td>方法将在请求处理前被调用<br/>方法返回 true 表示会继续调用下一个 Interceptor 的 preHandler（若没有就执行目标方法）<br/>方法返回 false 表示请求结束，后续的 Interceptor 和 Controller 都不会执行</td>
         </tr>
         <tr>
             <td>postHandler</td>
@@ -5170,9 +5382,6 @@ SpringMVC 的拦截器 Interceptor 类似于 Servlet 开发中的过滤器 Filte
     </tbody>
 </table>
 
-
-
-
 **多拦截器执行顺序**：
 
 - **若 preHandler 都返回 true**
@@ -5181,12 +5390,12 @@ SpringMVC 的拦截器 Interceptor 类似于 Servlet 开发中的过滤器 Filte
   postHandler、afterCompletion 会按配置的反序
 
   示例：  
-  First -> preHandle  
-  Second -> preHandle  
-  Second -> postHandle  
-  First -> postHandle  
-  Second -> afterCompletion  
-  First -> afterCompletion
+  First -\> preHandle  
+  Second -\> preHandle  
+  Second -\> postHandle  
+  First -\> postHandle  
+  Second -\> afterCompletion  
+  First -\> afterCompletion
 
 - **若有一个 preHandler 返回 false**
 
@@ -5195,9 +5404,9 @@ SpringMVC 的拦截器 Interceptor 类似于 Servlet 开发中的过滤器 Filte
   当前返回 false 的拦截器的 afterCompletion 会按配置的反序执行
 
   示例：  
-  First -> preHandle（返回 false）  
-  Second -> preHandle  
-  First -> afterCompletion
+  First -\> preHandle（返回 false）  
+  Second -\> preHandle  
+  First -\> afterCompletion
 
 #### 示例
 
@@ -5205,58 +5414,69 @@ SpringMVC 的拦截器 Interceptor 类似于 Servlet 开发中的过滤器 Filte
 ```java
 public class MyInterceptor implements HandlerInterceptor {
     @Override
-    /* 目标方法执行之前 */
-    public boolean preHandle(HttpServletRequest req, HttpServletResponse resp, 
-                             Object handler) throws Exception {
-        ...
-    }
-    
+    /* 目标方法执行之前，若放行则返回 true */
+    public boolean preHandle(
+        HttpServletRequest req, HttpServletResponse resp, 
+        Object handler) throws Exception { ... }
+
     @Override
     /* 目标方法执行完后，视图对象返回之前 */
-    public void postHandle(HttpServletRequest req, HttpServletResponse resp, 
-                           Object handler, ModelAndView mv) throws Exception {
-        ...
-    }
-    
+    public void postHandle(
+        HttpServletRequest req, HttpServletResponse resp, 
+        Object handler, ModelAndView mv) throws Exception { ... }
+
     @Override
     /* 整个流程执行完毕后 */
-    public void afterCompletion(HttpServletRequest req, HttpServletResponse resp, 
-                                Object handler, Exception e) throws Exception {
-        ...
-    }
+    public void afterCompletion(
+        HttpServletRequest req, HttpServletResponse resp, 
+        Object handler, Exception e) throws Exception { ... }
 }
 ```
 
-在核心配置文件中配置拦截器
+- **在核心配置文件中配置**
 
-- 可以用 \<bean\>、\<ref\> 标签来配置拦截器，\<ref\> 就是引用已经创建的 bean  
-  这两个标签配置的拦截器，默认对 DispatcherServlet 处理的所有请求进行拦截
-- \<mvc:mapping\> 配置拦截请求路径
-- \<mvc:exclude-mapping\> 配置排除的请求路径
-- path 属性：
-  - /\* 表示上下文路径下，只有一层目录的请求路径
-  - /\*\* 表示多层目录的请求路径，也就是所有
+  - 可以用 \<bean\>、\<ref\> 标签来配置拦截器，\<ref\> 就是引用已经创建的 bean  
+    这两个标签配置的拦截器，默认对 DispatcherServlet 处理的所有请求进行拦截
+  - \<mvc:mapping\> 配置拦截请求路径
+  - \<mvc:exclude-mapping\> 配置排除的请求路径
+  - path 属性：
+    - /\* 表示上下文路径下，只有一层目录的请求路径
+    - /\*\* 表示多层目录的请求路径，也就是所有
 
-```xml
-<mvc:interceptors>
-    <mvc:interceptor>
-        <mvc:mapping path="/**"/>
-        <mvc:exclude-mapping path="/abc"/>
-        <bean class="com.domenic.interceptor.MyInterceptor"/>
-        <!-- <ref bean="OneInterceptor"/> -->
-    </mvc:interceptor>
-    
-    <!-- 可配置多个拦截器，形成一个拦截器链，按顺序执行 -->
-    <mvc:interceptor>
-        <mvc:mapping path="/**"/>
-        <bean class="com.domenic.interceptor.SecondInterceptor"/>
-    </mvc:interceptor>
-</mvc:interceptors>
-```
+  ```xml
+  <mvc:interceptors>
+      <mvc:interceptor>
+          <mvc:mapping path="/**"/>
+          <mvc:exclude-mapping path="/abc"/>
+          <bean class="com.domenic.interceptor.MyInterceptor"/>
+          <!-- <ref bean="OneInterceptor"/> -->
+      </mvc:interceptor>
+      
+      <!-- 可配置多个拦截器，形成一个拦截器链，按顺序执行 -->
+      <mvc:interceptor>
+          <mvc:mapping path="/**"/>
+          <bean class="com.domenic.interceptor.SecondInterceptor"/>
+      </mvc:interceptor>
+  </mvc:interceptors>
+  ```
+
+- **在自定义配置类中配置**
+
+  ```java
+  @Configuration
+  public class MyConfig implements WebMvcConfigurer {
+      @Override
+      public void addInterceptors(InterceptorRegistry registry) {
+          InterceptorRegistration reg = registry.addInterceptor(new MyInterceptor());
+          reg.addPathPatterns("/**")
+              .excludePathPatterns("/abc", "/js/**", "/css/**");
+      }
+  }
+  ```
 
 ### 服务器三大组件
 
-执行顺序：监听器 --> 过滤器 --> 拦截器
+执行顺序：监听器 --\> 过滤器 --\> 拦截器
 
 **过滤器 \& 拦截器**：
 
@@ -5271,12 +5491,12 @@ public class MyInterceptor implements HandlerInterceptor {
     <tbody>
         <tr>
             <td>使用范围</td>
-            <td>Servlet 规范中的一部分，依赖于 Tomcat 等容器，只能在 Web 工程中使用</td>
+            <td>Servlet 规范中的一部分<br/>依赖于 Tomcat 等容器，只能在 Web 工程中使用</td>
             <td>Spring 框架的组件，由 Spring 容器管理，可以单独使用</td>
         </tr>
         <tr>
             <td>拦截范围</td>
-            <td>对所有进入容器的请求起作用，url-pattern 配置为 /* 后，会拦截所有要访问的资源</td>
+            <td>对所有进入容器的请求起作用<br/>url-pattern 配置为 /* 后，会拦截所有要访问的资源</td>
             <td>只会拦截控制器方法的访问，不拦截 html css js jsp image</td>
         </tr>
         <tr>
@@ -5376,7 +5596,7 @@ public class MyInterceptor implements HandlerInterceptor {
    SpringMVC 根据请求的 url、method 等信息查找匹配的 Handler（控制器方法）
 
 3. **处理器适配器**：HandlerAdapter
-   通过 HandlerAdapter 对处理器进行执行，这是[适配器模式](https://www.runoob.com/design-pattern/adapter-pattern.html)的应用，通过扩展适配器可以对更多类型的处理器进行执行
+   通过 HandlerAdapter 来执行处理器，这是[适配器模式](https://www.runoob.com/design-pattern/adapter-pattern.html)的应用，通过扩展适配器可以对更多类型的处理器进行执行
 
 4. **处理器**：Handler【**由使用者编写**】
    开发中要编写的具体业务控制器。由 DispatcherServlet 把用户请求转发到 Handler，Handler 对具体的用户请求进行处理
@@ -5476,16 +5696,16 @@ flowchart
 
 DispatcherServlet 中的执行过程：
 
-获取请求 --> 执行 --> doService() --> doDispatch() --> processDispatchResult() --> (视图渲染：render())
+获取请求 --\> 执行 --\> doService() --\> doDispatch() --\> processDispatchResult() --\> (视图渲染：render())
 
 ### 工作原理
 
-#### 处理器映射
+#### 处理器映射器
 
 在 DispatcherServlet 的 doDispatch 方法中，会获取匹配的 Handler 对象，该对象封装在 HandlerExecutionChain 中
 
 ```java
-protected void doDispatch(...) {
+protected void doDispatch(...) throws... {
     ...
     // 获取执行链
     mappedHandler = this.getHandler(processedRequest);
@@ -5496,7 +5716,7 @@ protected void doDispatch(...) {
 DispatcherServlet 中获取执行链的方法：
 
 ```java
-protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+protected HandlerExecutionChain getHandler(HttpServletRequest request) throws... {
     if (this.handlerMappings != null) {
         Iterator var2 = this.handlerMappings.iterator();
         // 循环遍历 List<HandlerMapping>
@@ -5519,9 +5739,9 @@ protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Ex
 就是返回一个 HandlerExecutionChain 对象  
 若返回为 null，就表示该 HandlerMapping 不能找到请求的映射关系
 
-以下为 5 种处理器映射器，用来获取合适的 Handler：
+以下为 5 种**处理器映射器**，用来获取合适的 Handler：
 
-它们**实现了 HandlerMapping 接口，继承了 AbstractHandlerMapping 抽象类**
+它们实现了 HandlerMapping 接口，继承了 AbstractHandlerMapping 抽象类
 
 - **RequestMappingHandlerMapping** - 处理访问控制器方法的 HandlerMapping
 - **WelcomePageHandlerMapping** - 处理访问欢迎页的 HandlerMapping
@@ -5545,7 +5765,7 @@ flowchart BT
 1. DispatcherServlet 调用到 RequestMappingHandlerMapping 的 **getHandler** 方法
 
    ```java
-   protected HandlerExecutionChain getHandler(...) {
+   protected HandlerExecutionChain getHandler(...) throws... {
        ...
        HandlerExecutionChain handler = mapping.getHandler(request);
        ...
@@ -5557,7 +5777,7 @@ flowchart BT
    - mappingRegistry - 记录所有的请求路径，如：{/hello}、{GET /user}、{POST /user}、{/error}...
 
    ```java
-   protected HandlerMethod getHandlerInternal(HttpServletRequest request) throws Exception {
+   protected HandlerMethod getHandlerInternal(HttpServletRequest request) throws... {
        String lookupPath = this.initLookupPath(request);  // 获取请求路径，如 /user
        this.mappingRegistry.acquireReadLock();  // 获取锁，保证并发场景下的安全性
    
@@ -5579,10 +5799,11 @@ flowchart BT
    - directPathMatches - 记录所有初步匹配的 handler，如：{GET /user}、{POST /user}、{PUT /user}...
    - matches - 记录最匹配的 handler，{GET /user}。若最匹配的 Handler 有多个，则报错
    - bestMatch - 记录最匹配的 hanlder  
-     其中 handlerMethod 属性记录了 handler 方法，如：com.domenic.controller.UserController#getUser(String)
+     其中 handlerMethod 属性记录了 handler 方法，如：com.domenic.controller.UserController\#getUser(String)
 
    ```java
-   protected HandlerMethod lookupHandlerMethod(String lookupPath, HttpServletRequest request) throws Exception {
+   protected HandlerMethod lookupHandlerMethod(
+           String lookupPath, HttpServletRequest request) throws... {
        List<AbstractHandlerMethodMapping<T>.Match> matches = new ArrayList();
        List<T> directPathMatches = this.mappingRegistry.getMappingsByDirectPath(lookupPath);
        if (directPathMatches != null) {
@@ -5591,7 +5812,8 @@ flowchart BT
        }
        ...
        // 若最匹配的 Handler 只有一个，就放入 bestMatch 中
-       AbstractHandlerMethodMapping<T>.Match bestMatch = (AbstractHandlerMethodMapping.Match)matches.get(0);
+       AbstractHandlerMethodMapping<T>.Match bestMatch = 
+           (AbstractHandlerMethodMapping.Match)matches.get(0);
        ...
        request.setAttribute(BEST_MATCHING_HANDLER_ATTRIBUTE, bestMatch.getHandlerMethod());
        this.handleMatch(bestMatch.mapping, lookupPath, request);
@@ -5600,19 +5822,17 @@ flowchart BT
    }
    ```
 
-#### 请求参数解析
-
-##### 执行原理
+#### 处理器适配器
 
 请求会被 DispatcherServlet 拦截，其中的 doDispatch 方法处理请求
 
 ```java
-protected void doDispatch(...) {
+protected void doDispatch(...) throws... {
     ...
     // 获取执行链
     mappedHandler = this.getHandler(processedRequest);
     ...
-    // 获取合适的 HandlerAdapter
+    // 获取支持该 handler 的 HandlerAdapter
     HandlerAdapter ha = this.getHandlerAdapter(mappedHandler.getHandler());
     ...
     // 调用 HandlerAdapter 的 handle 方法，返回值为 ModelAndView
@@ -5624,7 +5844,7 @@ protected void doDispatch(...) {
 DispatcherServlet 中获取匹配的 HandlerAdapter
 
 ```java
-protected HandlerAdapter getHandlerAdapter(Object handler) throws ServletException {
+protected HandlerAdapter getHandlerAdapter(Object handler) throws... {
     if (this.handlerAdapters != null) {
         Iterator var2 = this.handlerAdapters.iterator();
         // 循环遍历 List<HandlerAdapter>
@@ -5641,7 +5861,7 @@ protected HandlerAdapter getHandlerAdapter(Object handler) throws ServletExcepti
 ```
 
 **HandlerAdapter 接口**：  
-DispatcherServlet 可通过该接口访问所有的 Adapter
+DispatcherServlet 可通过该接口访问所有的 Adapter，再使用合适的 HandlerAdapter 来执行处理器
 
 **以下为四种处理器适配器**：
 
@@ -5662,7 +5882,26 @@ flowchart RL
   classDef aclass fill:#8BA270;
 ```
 
-**以如下控制器方法为例**：
+#### 请求参数解析
+
+##### 执行原理
+
+**参数解析器**：
+
+所有参数解析器，都直接或间接实现了 HandlerMethodArgumentResolver 接口
+
+以下为部分解析器的类层级结构：
+
+```mermaid
+flowchart BT
+  A("PathVariableMapMethodArgumentResolver") -."implement".-> I("&lt;&lt;Interface&gt;&gt;<br/>HandlerMethodReturnValueHandler")
+  C("RequestHeaderMethodArgumentResolver") --"extends"--> B("&lt;&lt;Abstract&gt;&gt;<br/>AbstractNamedValueMethodArgumentResolver") -."implement".-> I
+  D("RequestParamMethodArgumentResolver") --"extends"--> B
+  E("ModelMethodProcessor") -."implement".-> I
+  F("...") -."implement".-> I
+```
+
+**以此控制器方法为例**：
 
 ```java
 @RequestMapping("user/{userId}/num/{num}")
@@ -5674,12 +5913,12 @@ public @ResponseBody String testParam(
 
 请求：http://localhost:8080/user/1001/num/321?username=domenic
 
-以下为请求链接中的参数，被解析的流程
+以下为请求链接中的参数，被解析的流程：
 
 1. DispatcherServlet 调用到 RequestMappingHandlerAdapter 的 **handle** 方法
 
    ```java
-   protected void doDispatch(...) {
+   protected void doDispatch(...) throws... {
        ...
        // 调用 HandlerAdapter ha 的 handle 方法
        mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
@@ -5687,12 +5926,14 @@ public @ResponseBody String testParam(
    }
    ```
 
-2. handle 方法调用到 RequestMappingHandlerAdapter 类下的 **handleInternal**
+2. handle 方法又会调用到 RequestMappingHandlerAdapter 类下的 **handleInternal**
 
    ```java
-   protected ModelAndView handleInternal(...) {
+   protected ModelAndView handleInternal(...) throws... {
+       // 检查是否支持该请求
+       this.checkRequest(request);
        ...
-       // 执行 Handler 方法，获取 ModelAndView 返回值
+       // 执行 Handler 方法，获取 Handler 执行完后的 ModelAndView 返回值
        mav = this.invokeHandlerMethod(request, response, handlerMethod);
        ...
    }
@@ -5714,18 +5955,8 @@ public @ResponseBody String testParam(
 
    - **returnValueHandlers** - 返回值处理器
 
-     都实现了 HandlerMethodReturnValueHandler 接口
-
-     返回值解析器：
-   
-     - **ModelAndView**MethodReturnValueHandler
-     - **RequestResponseBody**MethodProcessor
-     - **ViewName**MethodReturnValueHandler
-     - **HttpEntity**MethodProcessor
-     - ...
-
    ```java
-   protected ModelAndView invokeHandlerMethod(...) {
+   protected ModelAndView invokeHandlerMethod(...) throws... {
        ...
        if (this.argumentResolvers != null) {
            // 设置参数解析器
@@ -5741,7 +5972,7 @@ public @ResponseBody String testParam(
        ...
    }
    ```
-
+   
 4. 解析前台传递的参数
 
    ```mermaid
@@ -5768,7 +5999,7 @@ public @ResponseBody String testParam(
    invokeForRequest 又调用本类的 **getMethodArgumentValues** 方法获取所有参数
 
    ```java
-   protected Object[] getMethodArgumentValues(...) {
+   protected Object[] getMethodArgumentValues(...) throws... {
        // 获取 Handler 方法有几个参数
        MethodParameter[] parameters = this.getMethodParameters();
        if (ObjectUtils.isEmpty(parameters)) {
@@ -5811,7 +6042,7 @@ public @ResponseBody String testParam(
        return this.getArgumentResolver(parameter) != null;
    }
    
-   public Object resolveArgument(...) {
+   public Object resolveArgument(...) throws... {
        // 获取与 parameter 匹配的解析器
        HandlerMethodArgumentResolver resolver = this.getArgumentResolver(parameter);
        ...
@@ -5839,6 +6070,7 @@ classDiagram
     Object[] args
     + invokeForRequest()
     # getMethodArgumentValues()
+    # doInvoke()
   }
   class HandlerMethodArgumentResolverComposite {
     + supportsParameter()
@@ -5894,8 +6126,8 @@ Map 和 Model 都会被包装进 **BindingAwareModelMap**（HashMap 类型对象
 
    - view = "forward:/success"
    - model = {ModelMap}
-     - 0 = {LinkedHashMap} "name" -> "domenic"
-     - 1 = {LinkedHashMap} "gender" -> "male"
+     - 0 = {LinkedHashMap} "name" -\> "domenic"
+     - 1 = {LinkedHashMap} "gender" -\> "male"
 
 3. 前端控制器 DispatcherServlet 在 doDispatch 中，调用 **processDispatchResult**  
    进行 **render** 操作，解析 View，将 model 的数据放入 request 域中
@@ -5967,7 +6199,7 @@ public class WebConfig implements WebMvcConfigurer {
             @Override
             public Pet convert(String source) {
                 // 就是根据 "-" 分隔 String，填入 Pet 的两个属性中
-                if(StringUtils.hasLength(source)){
+                if(StringUtils.hasLength(source)) {
                     String[] split = source.split("-");
                     return new Pet(split[0], Integer.parseInt(split[1]));
                 }
@@ -6013,7 +6245,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 > 请求到达以后，被 DispatcherServlet 拦截解析，步骤与[请求参数解析](#请求参数解析)中描述的一致
 
-通过 **HandlerMethodArgumentResolverComposite** 类的 supportsParameter 匹配解析器
+调用 **HandlerMethodArgumentResolverComposite** 类的 supportsParameter 匹配解析器
 
 - pojo 类型参数的解析器为 ModelAttributeMethodProcessor
 
@@ -6086,7 +6318,7 @@ public class WebConfig implements WebMvcConfigurer {
    该方法会调用到 TypeConverterDelegate 类的 convertIfNecessary 方法：
 
    ```java
-   public <T> T convertIfNecessary(...) {
+   public <T> T convertIfNecessary(...) throws... {
        ...
        // 判断是否支持转换
        if (conversionService.canConvert(sourceTypeDesc, typeDescriptor)) {
@@ -6126,8 +6358,8 @@ public class WebConfig implements WebMvcConfigurer {
 #### 返回值处理
 
 请求会被 DispatcherServlet 拦截并处理  
-在 ServletInvocableHandlerMethod 类的 invokeAndHandle 方法中，会获取到处理完的请求参数  
-之后就进行返回值处理
+在 ServletInvocableHandlerMethod 类的 invokeAndHandle 方法中，会获取到处理完的请求参数 `invokeForRequest`  
+之后就进行返回值处理 `handleReturnValue`
 
 ```mermaid
 classDiagram
@@ -6142,22 +6374,42 @@ classDiagram
   class ServletInvocableHandlerMethod {
     + invokeAndHandle()
   }
+  class InvocableHandlerMethod {
+    + invokeForRequest()
+  }
+  class HandlerMethodReturnValueHandlerComposite {
+    + handleReturnValue()
+  }
   DispatcherServlet --> RequestMappingHandlerAdapter : invoke
   RequestMappingHandlerAdapter --> ServletInvocableHandlerMethod : invoke
+  ServletInvocableHandlerMethod --> InvocableHandlerMethod : invoke
+  ServletInvocableHandlerMethod --> HandlerMethodReturnValueHandlerComposite : invoke
 ```
 
+**返回值处理器**：
 
+所有返回值处理器，都直接或间接实现了 HandlerMethodReturnValueHandler 接口
 
-**以如下控制器方法为例**：
+以下为部分处理器的类层级结构：
+
+```mermaid
+flowchart BT
+  A("ViewNameMethodReturnValueHandler") -."implement".-> I("&lt;&lt;Interface&gt;&gt;<br/>HandlerMethodReturnValueHandler")
+  C("RequestResponseBodyMethodProcessor") --"extends"--> B("&lt;&lt;Abstract&gt;&gt;<br/>AbstractMessageConverterMethodProcessor") -."implement".-> I
+  D("ModelMethodProcessor") -."implement".-> I
+  E("...") -."implement".-> I
+```
+
+**以此控制器方法为例**：
 
 ```java
 @PostMapping("/saveUser")
 public @ResponseBody Person saveUser(Person person) { return person; }
 ```
 
-以下是返回值处理的过程
+以下是返回值处理的流程：
 
-1. 在 RequestMappingHandlerAdapter 类中的 invokeHandlerMethod 中，会设置 请求参数解析器 和 返回值处理器
+1. **RequestMappingHandlerAdapter** 类中的 invokeHandlerMethod 方法，会设置 请求参数解析器 和 返回值处理器
 
    - **returnValueHandlers** - 返回值处理器
 
@@ -6173,13 +6425,16 @@ public @ResponseBody Person saveUser(Person person) { return person; }
 
 2. 进入 **invokeAndHandle** 方法
 
+   调用 invokeForRequest 进行请求参数解析，并且执行 Handler，最后获取到 Handler 的返回值  
+   调用 handleReturnValue 进行返回值处理，类型转换，并写入响应中
+
    ```java
-   public void invokeAndHandle(...) {
-       // 获取到处理完毕的请求参数
+   public void invokeAndHandle(...) throws... {
+       // 获取 Handler 方法执行完的返回值
        Object returnValue = this.invokeForRequest(webRequest, mavContainer, providedArgs);
        ...
        // 处理返回值
-       this.returnValueHandlers.handleReturnValue(...);
+       this.returnValueHandlers.handleReturnValue(returnValue, ...);
        ...
    }
    ```
@@ -6187,12 +6442,12 @@ public @ResponseBody Person saveUser(Person person) { return person; }
 3. 调用 HandlerMethodReturnValueHandlerComposite 类的 handleReturnValue 方法
 
    ```java
-   public void handleReturnValue(...) {
+   public void handleReturnValue(...) throws... {
        // 获取合适的返回值处理器
        HandlerMethodReturnValueHandler handler = this.selectHandler(returnValue, returnType);
        ...
        // 进行返回值的处理
-       handler.handleReturnValue(...);
+       handler.handleReturnValue(returnValue, ...);
    }
    ```
 
@@ -6201,8 +6456,8 @@ public @ResponseBody Person saveUser(Person person) { return person; }
 4. handleReturnValue 方法调用 **writeWithMessageConverters** 方法
 
    - **MediaType** - 就是返回信息的媒体类型
-   
-   - **acceptableTypes** - 客户端能接受服务器响应的内容类型（请求头中的 "Accept" 信息）
+
+   - **acceptableTypes** - 客户端能接受服务器响应的内容类型（就是请求头中的 "Accept" 信息）
      
      "Accept" 中支持的内容类型，有优先级，前面的先进行匹配
      
@@ -6213,27 +6468,28 @@ public @ResponseBody Person saveUser(Person person) { return person; }
      
    - **producibleTypes** - 服务器能响应给客户端的类型
      
-     循环遍历 MessageConverter，判断转换器是否支持对响应数据进行媒体类型的支持
+     循环遍历 MessageConverter，判断转换器是否支持对响应数据进行媒体类型的支持  
+     若支持，则调用该转换器的 getSupportedMediaTypes 方法，获取支持的媒体类型
      
      - "application/json"
      - ...
      
    - **mediaTypesToUse** - 服务器和客户端匹配的内容类型
-   
+
    该方法执行步骤：
-   
+
    1. 循环遍历，寻找匹配的 acceptableTypes 和 producibleTypes
-   
+
    2. 循环遍历，确定[消息转换器](#消息转换器)（HttpMessageConverter\<T\> 接口的实现类）
-   
-      MappingJackson2HttpMessageConverter 消息转换器，将 pojo 转换为需要的类型（如 json 串）
-   
+
+      **MappingJackson2**HttpMessageConverter 消息转换器，将 pojo 转换为需要的类型（如 json 串）
+
       转换之后，将数据以字节数组的形式写出到客户端
-   
+
    3. 调用 write() 将信息写入响应中
-   
+
    ```java
-   protected <T> void writeWithMessageConverters() {
+   protected <T> void writeWithMessageConverters() throws... {
        ...
        // 获取客户端可以接收的内容类型（调用 resolveMediaTypes 方法）
        List acceptableTypes = this.getAcceptableMediaTypes(request);
@@ -6241,13 +6497,13 @@ public @ResponseBody Person saveUser(Person person) { return person; }
        // 获取服务器端可以处理的内容类型
        List<MediaType> producibleTypes = this.getProducibleMediaTypes(request, valueType, (Type)targetType);
        ...
-       // 之后会循环遍历，调用 canWrite() 判断哪个 MessageConverter 支持
+       // 之后会循环遍历，调用 canWrite() 判断哪个 MessageConverter 支持对指定的数据类型进行写出
        // 然后执行 write() 将内容写入响应
    }
    ```
-   
-5. 进入 AbstractGenericHttpMessageConverter 类中的 write 方法  
-   该方法会调用 AbstractJackson2HttpMessageConverter 类中的 writeInternal 方法，通过 Jackson 依赖将 pojo 转换为需要的类型
+
+5. 进入 **AbstractGeneric**HttpMessageConverter 类中的 write 方法  
+   该方法会调用 **AbstractJackson2**HttpMessageConverter 类中的 writeInternal 方法，通过 Jackson 依赖将 pojo 转换为需要的类型
 
 **调用链总结**：
 
@@ -6309,10 +6565,10 @@ classDiagram
 
 #### 内容协商
 
-AbstractMessageConverterMethodProcessor 中执行内容 类型转换 和 写入请求 的方法
+AbstractMessageConverterMethodProcessor 中执行 消息内容类型转换 和 写入响应 的方法
 
 ```java
-protected <T> void writeWithMessageConverters() {
+protected <T> void writeWithMessageConverters() throws... {
     ...
     // 获取客户端可以接收的内容类型（调用 resolveMediaTypes 方法）
     List acceptableTypes = this.getAcceptableMediaTypes(request);
@@ -6323,8 +6579,8 @@ protected <T> void writeWithMessageConverters() {
 }
 ```
 
-writeWithMessageConverters 方法会调用 resolveMediaType，通过内容协商来决定 MediaType  
-ContentNegotiationManager 类的 resolveMediaType 方法，会通过 ContentNegotiateStrategy 接口调用对应的内容协商策略类
+writeWithMessageConverters 方法会用 getAcceptableMediaTypes 调用 resolveMediaTypes，通过内容协商来决定 MediaType  
+ContentNegotiationManager 类的 resolveMediaTypes 方法，会通过 ContentNegotiateStrategy 接口调用对应的内容协商策略类
 
 ```mermaid
 classDiagram
@@ -6345,7 +6601,7 @@ classDiagram
   ContentNegotiationStrategy <|.. ContentNegotiationManager : implement
 ```
 
-**内容协商策略类的结构**：
+**内容协商策略类的层级结构**：
 
 ```mermaid
 flowchart BT
@@ -6365,7 +6621,7 @@ flowchart BT
     A("ContentNegotiationManager<br/>+resolveMediaType()") --"invoke"--> B("HeaderContentNegotiationStrategy")
   ```
 
-  比如，服务端返回 XML 类型数据
+  **例**：服务端返回 XML 类型数据
 
   导入 Jackson 依赖：
 
@@ -6410,7 +6666,7 @@ flowchart BT
         favor-parameter: true
   ```
   
-  控制器方法：
+  **例**：控制器方法
   
   ```java
   @RequestMapping("/test")
@@ -6425,6 +6681,12 @@ flowchart BT
 
 #### 消息转换器
 
+**在返回值处理时**，需要先进行消息内容转换，再写入响应中，如：将实体类转换为 JSON
+
+所有消息转换器，都直接或间接实现 HttpMessageConverter 接口
+
+其中一条类层级结构：
+
 ```mermaid
 flowchart BT
   A("&lt;&lt;Interface&gt;&gt;<br/>GenericHttpMessageConverter") -."implement".-> I("&lt;&lt;Interface&gt;&gt;<br/>HttpMessageConverter")
@@ -6438,8 +6700,356 @@ flowchart BT
   classDef aclass fill:#8BA270;
 ```
 
+**自定义消息转换器被调用的原理**：
 
+AbstractMessageConverterMethodProcessor 类的 **writeWithMessageConverters** 方法，会获取 客户端支持的内容类型、服务端可处理的内容类型；并判断 最佳匹配的媒体内容类型
 
+```java
+protected <T> void writeWithMessageConverters() throws... {
+    ...
+    // 获取客户端可以接收的内容类型（调用 resolveMediaTypes 方法）
+    List acceptableTypes = this.getAcceptableMediaTypes(request);
+    ...
+    // 获取服务器端可以处理的内容类型
+    List<MediaType> producibleTypes = this.getProducibleMediaTypes(request, valueType, (Type)targetType);
+    ...
+    // 判断出最佳匹配的 MediaType，放入 mediaTypeToUse 中
+    mediaTypesToUse.add(this.getMostSpecificMediaType(mediaType, producibleType);
+    ...
+    // 之后会循环遍历，调用 canWrite() 判断哪个 MessageConverter 支持对指定的数据类型进行写出
+    // 然后执行 write() 将内容写入响应
+}
+```
+
+- **获取客户端支持的内容类型**：
+
+  `List acceptableTypes = this.getAcceptableMediaTypes(...);`
+
+  getAcceptableMediaTypes() -- invoke --\> resolveMediaTypes()
+
+  ContentNegotiationManager 中的方法：
+
+  ```java
+  public List<MediaType> resolveMediaTypes(NativeWebRequest request) throws... {
+      Iterator var2 = this.strategies.iterator();
+  
+      List mediaTypes;
+      // 循环调用所有内容协商策略类
+      do {
+          if (!var2.hasNext()) {
+              return MEDIA_TYPE_ALL_LIST;
+          }
+          ContentNegotiationStrategy strategy = (ContentNegotiationStrategy)var2.next();
+          // 调用内容协商策略类的方法，获取请求中包含的，客户端对内容类型的要求
+          mediaTypes = strategy.resolveMediaTypes(request);
+      } while(mediaTypes.equals(MEDIA_TYPE_ALL_LIST));
+  
+      return mediaTypes;
+  }
+  ```
+
+  以上方法又调用了 resolveMediaTypes，这是通过 ContentNegotiationStrategy 接口调用所有的内容协商策略实现类，来获取客户端通过各种方式提供的要求的媒体内容类型（如：请求头的 "Accept"、请求参数 format）
+
+- **获取服务端可处理的内容类型**：
+
+  `List<MediaType> producibleTypes = this.getProducibleMediaTypes(...);`
+
+  AbstractMessageConverterMethodProcessor 中的方法：
+  
+  ```java
+  protected List<MediaType> getProducibleMediaTypes(...) {
+      ...
+      List<MediaType> result = new ArrayList();
+      Iterator var6 = this.messageConverters.iterator();
+  
+      while(true) {
+          // 循环遍历所有消息转换器，获取消息转换器支持的媒体类型，记录到集合中
+          while(var6.hasNext()) {
+              HttpMessageConverter<?> converter = (HttpMessageConverter)var6.next();
+              if (converter instanceof GenericHttpMessageConverter && targetType != null) {
+                  if (((GenericHttpMessageConverter)converter)
+                      .canWrite(targetType, valueClass, (MediaType)null)) {
+                      result.addAll(converter.getSupportedMediaTypes(valueClass));
+                  }
+              // 自定义的 MyConverter 会进入 else if 分支
+              } else if (converter.canWrite(valueClass, (MediaType)null)) {
+                  // 调用 getSupportedMediaTypes 获取到支持的媒体类型，如 "application/custom"
+                  result.addAll(converter.getSupportedMediaTypes(valueClass));
+              }
+          }
+  
+          return (List)(result.isEmpty() ? Collections.singletonList(MediaType.ALL) : result);
+      }
+  }
+  ```
+
+#### 视图解析器
+
+请求会被 DispatcherServlet 拦截，在 doDispatch 方法中：
+
+通过处理器映射器获取匹配的 Handler -\> 通过处理器适配器执行 Handler -\> 获取到 Handler 的返回值 ModelAndView -> 视图解析
+
+**视图解析器**：
+
+所有视图解析器，都直接或间接实现了 ViewResolver 接口
+
+- ThymeleafViewResolver - Thymeleaf 的视图解析器
+- InternalResourceViewResolver - 用于访问诸如 JSP、HTML... 的视图
+- BeanNameViewResolver - 用于自定义的视图
+
+以下为部分解析器的类层级结构：
+
+```mermaid
+flowchart BT
+  A("ContentNegotiatingViewResolver"):::sclass -."implement".-> I("&lt;&lt;Interface&gt;&gt;<br/>ViewResolver")
+  C("ThymeleafViewResolver"):::sclass --"extends"--> B("&lt;&lt;Abstract&gt;&gt;<br/>AbstractCachingViewResolver"):::aclass -."implement".-> I
+  E("InternalResourceViewResolver"):::sclass --"extends"--> D("UrlBasedViewResolver"):::sclass --"extends"--> B
+  F("BeanNameViewResolver"):::sclass -."implement".-> I
+  G("...") -."implement".-> I
+  classDef sclass fill:#7eabd0;
+  classDef aclass fill:#8BA270;
+```
+
+**以此控制器方法为例**：
+
+```java
+@PostMapping("/login")
+public String loginHandler(...) { return "redirect:/gotoMain"; }
+
+@GetMapping("/gotoMain")
+public String mainPage() { return "main"; }
+```
+
+请求：POST 方式请求 /login
+
+以下为视图解析流程：
+
+1. doDispatch 最后会调用 **processDispatchResult** 处理运行的结果
+
+   ```java
+   protected void doDispatch(...) throws... {
+       ...
+       mappedHandler = this.getHandler(processedRequest);
+       ...
+       HandlerAdapter ha = this.getHandlerAdapter(mappedHandler.getHandler());
+       ...
+       mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
+       ...
+       // 处理运行的结果
+       this.processDispatchResult(processedRequest, response, mappedHandler, mv, ...);
+       ...
+   }
+   ```
+
+2. 调用到 **processDispatchResult** 方法
+
+   ```java
+   private void processDispatchResult(...) throws... {
+       boolean errorView = false;
+       // 判断有无异常，若有，就
+       if (exception != null) {
+           if (exception instanceof ModelAndViewDefiningException) {
+               this.logger.debug("ModelAndViewDefiningException encountered", exception);
+               mv = ((ModelAndViewDefiningException)exception).getModelAndView();
+           } else {
+               Object handler = mappedHandler != null ? mappedHandler.getHandler() : null;
+               // 设置 ModelAndView
+               mv = this.processHandlerException(request, response, handler, exception);
+               errorView = mv != null;
+           }
+       }
+       // 只有 ModelAndView 为空时，才会执行下面的代码
+       if (mv != null && !mv.wasCleared()) {
+           // 调用 render 方法来解析视图
+           this.render(mv, request, response);
+           if (errorView) {
+               WebUtils.clearErrorRequestAttributes(request);
+           }
+       }
+       ...
+   }
+   ```
+
+3. 调用到 **render** 方法
+
+   ```java
+   protected void render(...) throws... {
+       ...
+       String viewName = mv.getViewName();
+       ...
+       // 使用视图解析器，对视图进行解析
+       view = this.resolveViewName(viewName, mv.getModelInternal(), locale, request);
+       ...
+   }
+   ```
+
+4. 调用到 **resolveViewName** 方法，来解析视图名称
+
+   ```java
+   protected View resolveViewName(...) throws... {
+       if (this.viewResolvers != null) {
+           Iterator var5 = this.viewResolvers.iterator();
+           // 循环 ViewResolver 来解析视图名称
+           while(var5.hasNext()) {
+               ViewResolver viewResolver = (ViewResolver)var5.next();
+               // 解析视图，获取 View 对象
+               View view = viewResolver.resolveViewName(viewName, locale);
+               if (view != null) {
+                   return view;
+               }
+           }
+       }
+       return null;
+   }
+   ```
+
+5. 进入 ContentNegotiatingViewResolve 类的 resolveViewName 方法（会返回一个 bestView）  
+   该方法调用 **getCandidateViews** 来获取候选视图集合 List\<View\>
+
+   ```java
+   private List<View> getCandidateViews(...) throws... {
+       ...
+       Iterator var5 = this.viewResolvers.iterator();
+       // 循环 ViewResolver，使用合适的解析器来解析视图
+       while(var5.hasNext()) {
+           ViewResolver viewResolver = (ViewResolver)var5.next();
+           // 解析视图名称，如 "redirect:/gotoMain"
+           View view = viewResolver.resolveViewName(viewName, locale);
+           if (view != null) {
+               candidateViews.add(view);
+           }
+           ...
+       }
+       return candidateViews;
+   }
+   ```
+
+6. 若使用 Thymeleaf 的视图解析器，则调用的是 AbstractCachingViewResolver 类的 resolveViewName 方法，来解析视图名称  
+   该方法会调用 ThymeleafViewResolver 类中的 **createView** 方法
+
+   ```java
+   protected View createView(String viewName, Locale locale) throws... {
+       ...
+       String forwardUrl;
+       // 重定向的视图
+       if (viewName.startsWith("redirect:")) {
+           ...
+           RedirectView view = new RedirectView(forwardUrl, ...);
+           return (View)this.getApplicationContext()
+               .getAutowireCapableBeanFactory().initializeBean(view, "redirect:");
+       }
+       // 转发的视图
+       else if (viewName.startsWith("forward:")) {
+           ...
+           return new InternalResourceView(forwardUrl);
+       }
+       // 无法处理该视图
+       else if (this.alwaysProcessRedirectAndForward && !this.canHandle(viewName, locale)) {
+           ...
+           return null;
+       }
+       // 其他可以处理的视图
+       else {
+           ...
+           return this.loadView(viewName, locale);
+       }
+   }
+   ```
+
+7. 最终，DispatcherServlet 会获取到解析完毕的 View 对象，然后调用 View 接口的 **render** 方法，执行视图渲染工作
+
+   `view.render(mv.getModelInternal(), request, response);`
+
+#### 拦截器
+
+拦截器中有三个方法 preHanlder、postHandler、afterCompletion
+
+getHandler 方法获取的 HandlerExecutionChain 中包含 Handler 和 Interceptor
+
+**执行链示例**：
+
+- mappedHandler = {HandlerExecutionChain}
+  - handler = {HandlerMethod} "com.domenic.controller.LoginController\#loginPage"
+  - interceptorList = {ArrayList}
+    - 0 = {LoginInterceptor}
+    - 1 = {ConversionServiceExposingInterceptor}
+    - 2 = {ResourceUrlProviderExposingInterceptor}
+
+DispatcherServlet 中的 **doDispatch** 方法：
+
+```java
+protected void doDispatch(...) throws... {
+    ...
+    try {
+        ...
+        // 获取 HandlerExecutionChain
+        mappedHandler = this.getHandler(processedRequest);
+        ...
+        HandlerAdapter ha = this.getHandlerAdapter(mappedHandler.getHandler());
+        // 1.执行所有拦截器的 preHandler 方法
+        // 若返回值为 false，则直接结束 doDispatch 方法
+        if (!mappedHandler.applyPreHandle(processedRequest, response)) {
+            return;
+        }
+        // 执行 Handler 方法
+        mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
+        ...
+        // 2.执行所有拦截器的 postHandler 方法
+        mappedHandler.applyPostHandle(processedRequest, response, mv);
+        
+        this.processDispatchResult(...);
+    } catch (Exception var22) {
+        // 3.执行所有拦截器的 AfterCompletion 方法
+        this.triggerAfterCompletion(...);
+    } catch (Throwable var23) {
+        this.triggerAfterCompletion(...);
+    }
+    ...
+}
+```
+
+拦截器方法调用：
+
+- **preHandler**
+
+  ```java
+  boolean applyPreHandle(...) throws... {
+      for(int i = 0; i < this.interceptorList.size(); this.interceptorIndex = i++) {
+          HandlerInterceptor interceptor = (HandlerInterceptor)this.interceptorList.get(i);
+          if (!interceptor.preHandle(request, response, this.handler)) {
+              this.triggerAfterCompletion(request, response, (Exception)null);
+              return false;
+          }
+      }
+      return true;
+  }
+  ```
+
+- **postHandler**
+
+  ```java
+  void applyPostHandle(...) throws... {
+      for(int i = this.interceptorList.size() - 1; i >= 0; --i) {
+          HandlerInterceptor interceptor = (HandlerInterceptor)this.interceptorList.get(i);
+          interceptor.postHandle(request, response, this.handler, mv);
+      }
+  }
+  ```
+
+- **afterCompletion**
+
+  ```java
+  void triggerAfterCompletion(...) {
+      for(int i = this.interceptorIndex; i >= 0; --i) {
+          HandlerInterceptor interceptor = (HandlerInterceptor)this.interceptorList.get(i);
+          try {
+              interceptor.afterCompletion(request, response, this.handler, ex);
+          } catch (Throwable var7) {
+              logger.error("HandlerInterceptor.afterCompletion threw exception", var7);
+          }
+      }
+  }
+  ```
 
 ---
 
@@ -6555,7 +7165,7 @@ jdbc.password=root
         <property name="configLocation" value="classpath:mybatis-config.xml"/>
         
         <property name="dataSource" ref="dataSource"/>
-        <!-- 给封装类取别名，代替 <typeAliases>；alias 在使用时，不区分大小写 -->
+        <!-- 给实体类取别名，代替 <typeAliases>；alias 在使用时，不区分大小写 -->
         <property name="typeAliasesPackage" value="com.domenic.pojo"/>
     </bean>
 
@@ -6709,7 +7319,21 @@ Spring 的 IOC 容器排除 Controller 组件
 
 ## thymeleaf
 
-### 整合
+SpringMVC 中，进行视图跳转（重定向、转发）需要借助于 JSP 来实现。但 SpringBoot 默认不支持 JSP，**需要引入第三方模板引擎技术**实现页面渲染
+
+第三方的模板引擎有：thymeleaf、freemaker、groovy
+
+> [官网](https://www.thymeleaf.org/)介绍：
+>
+> Thymeleaf is a modern server-side Java template engine for both web and standalone environments.
+>
+> Thymeleaf's main goal is to bring elegant natural templates to your development workflow — HTML that can be correctly displayed in browsers and also work as static prototypes, allowing for stronger collaboration in development teams.
+>
+> With modules for Spring Framework, a host of integrations with your favourite tools, and the ability to plug in your own functionality, Thymeleaf is ideal for modern-day HTML5 JVM web development — although there is much more it can do.
+
+### 引入
+
+#### SSM
 
 依赖导入
 
@@ -6760,15 +7384,125 @@ spring-mvc.xml
 </bean>
 ```
 
-### 使用
+#### SpringBoot
 
-index.html
+引入启动类
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>
+```
+
+SpringBoot 会对 Thymeleaf 进行自动配置
+
+自动配置类：
+
+```java
+@AutoConfiguration(
+    after = {WebMvcAutoConfiguration.class, WebFluxAutoConfiguration.class}
+)
+// 开启 Thymeleaf 相关配置属性的绑定
+@EnableConfigurationProperties({ThymeleafProperties.class})
+@ConditionalOnClass({TemplateMode.class, SpringTemplateEngine.class})
+@Import({ReactiveTemplateEngineConfiguration.class, DefaultTemplateEngineConfiguration.class})
+public class ThymeleafAutoConfiguration { ... }
+```
+
+配置属性类：
+
+```java
+@ConfigurationProperties(prefix = "spring.thymeleaf")
+public class ThymeleafProperties {
+    private static final Charset DEFAULT_ENCODING;
+    // 默认访问 /templates 目录下的资源
+    public static final String DEFAULT_PREFIX = "classpath:/templates/";
+    public static final String DEFAULT_SUFFIX = ".html";
+    ...
+}
+```
+
+### 语法
 
 HTML 页面中使用 Thymeleaf，需要在 &lt;html&gt; 标签中引入命名空间：`<html ... xmlns:th="http://www.thymeleaf.org">`
 
+<table style="width:40rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width=20%>名称</th>
+            <th width=16%>写法</th>
+            <th width=64%>用途</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>变量取值</td>
+            <td>${...}</td>
+            <td>获取 request 域、session 域、对象...中的值</td>
+        </tr>
+        <tr>
+            <td>选择变量</td>
+            <td>*{...}</td>
+            <td>获取上下文对象值</td>
+        </tr>
+        <tr>
+            <td>消息</td>
+            <td>#{...}</td>
+            <td>获取国际化等值</td>
+        </tr>
+        <tr>
+            <td>链接</td>
+            <td>@{...}</td>
+            <td>设置链接</td>
+        </tr>
+        <tr>
+            <td>片段表达式</td>
+            <td>~{...}</td>
+            <td>引入公共页面片段</td>
+        </tr>
+    </tbody>
+</table>
+
+
+- **字面量**
+  
+  文本值：'one text' , 'Another one!'  
+  数字：0 , 34 , 3.0 , 12.3  
+  布尔值：true , false  
+  空值：null  
+  变量：one , two , ... 变量不能有空格
+  
+- **文本操作**
+  
+  字符串拼接：\+  
+  变量替换：\|The name is \${name}\|
+  
+- **数学运算**
+  
+  运算符：\+ , \- , \* , / , %
+  
+- **布尔运算**
+  
+  运算符：and , or  
+  一元运算：! , not
+  
+- **比较运算**
+  
+  比较：\> , \< , \>= , \<= ( gt , lt , ge , le )  
+  等式：== , != ( eq , ne )
+  
+- **条件运算**
+  
+  If-then：(if) ? (then)  
+  If-then-else：(if) ? (then) : (else)  
+  Default：(value) ?: (defaultvalue)
+
+### 使用
+
 #### 设置链接
 
-th:href 
+th:href
 
 ```html
 <!-- Thymeleaf 会自动给链接添加上下文路径 -->
@@ -6859,7 +7593,7 @@ th:checked 来控制选框是否被选中
 </label>
 ```
 
-## 配置声明式事务
+## 声明式事务
 
 需要导入 spring-jdbc 依赖
 
@@ -7645,18 +8379,19 @@ car:
 
 - **方式二**
 
-  通过配置类将 bean 交予 IOC 容器
-
   ```java
   @ConfigurationProperties(prefix = "car")
   public class Car { ... }
   ```
-
+  
   ```java
   @Configuration
+  // 通过配置类将 bean 交予 IOC 容器
   @EnableConfigurationProperties(Car.class)
   public class MyConfig { ... }
   ```
+  
+  > @EnableConfigurationProperties 在 SpringBoot 应用中启用了对 @ConfigurationProperties 注解的类的支持
 
 将 spring-boot-configuration-processor 作为可选依赖添加：
 
@@ -7735,469 +8470,4 @@ IDE 可以利用该依赖，在写配置时进行智能提示
   @EnableAutoConfiguration  // 开启自动配置
   @ComponentScan(           // 开启包扫描
       excludeFilters = {@Filter(
-      type = FilterType.CUSTOM,
-      classes = {TypeExcludeFilter.class}
-  ), @Filter(
-      type = FilterType.CUSTOM,
-      classes = {AutoConfigurationExcludeFilter.class}
-  )}
-  )
-  public @interface SpringBootApplication { ... }
-  ```
-
-- **@EnableAutoConfiguration**
-
-  开启自动导入配置
-
-  ```java
-  @Target({ElementType.TYPE})
-  @Retention(RetentionPolicy.RUNTIME)
-  @Documented
-  @Inherited
-  @AutoConfigurationPackage  // 自动导包
-  @Import({AutoConfigurationImportSelector.class})  // 自动配置的导入选择（按需选择）
-  public @interface EnableAutoConfiguration { ... }
-  ```
-
-  - **@AutoConfigurationPackage**
-
-    自动导包
-
-    ```java
-    @Target({ElementType.TYPE})
-    @Retention(RetentionPolicy.RUNTIME)
-    @Documented
-    @Inherited
-    @Import({Registrar.class})  // 导入了 Registrar
-    public @interface AutoConfigurationPackage { ... }
-    ```
-
-    **Registrar.class**
-
-    通过 Registrar 给容器中导入一系列组件
-
-    ```java
-    // AutoConfigurationPackage 抽象类中的内部类
-    static class Registrar implements ImportBeanDefinitionRegistrar, DeterminableImports {
-        ...
-        public void registerBeanDefinitions(AnnotationMetadata metadata, 
-                                            BeanDefinitionRegistry registry) {
-            /*
-             * 该方法的第二个参数就是当前启动类所在的包名
-             */
-            AutoConfigurationPackages.register(registry, 
-                (String[])(new AutoConfigurationPackages.PackageImports(metadata))
-                .getPackageNames().toArray(new String[0]));
-        }
-    }
-    ```
-
-    **注意**：@EnableAutoConfiguration 和 @ComponentScan 的不同
-
-    - `@EnableAutoConfiguration` 自动配置 Spring Boot 应用程序类路径中存在的 bean
-
-      `@ComponentScan` 扫描并加载 Spring 组件 `@Controller`/`@Service`/`@Component`/`@Repository`
-
-      > 比如，使用 Spring Data JPA 时，可能会在实体类上写 `@Entity` 注解  
-      > 这个 `@Entity` 注解由 `@AutoConfigurationPackage` 扫描并加载
-
-    - `Registrar.class` 来注册项目包外的 bean，因为 `@ComponentScan` 只能扫描注册项目包内的 bean
-
-    > [@EnableAutoConfiguration](https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/autoconfigure/EnableAutoConfiguration.html) document excerpts：
-    >
-    > Enable auto-configuration of the Spring Application Context, attempting to guess and configure beans that you are likely to need.
-    >
-    > Auto-configuration is always applied after user-defined beans have been registered.
-    >
-    > It will be used when scanning for `@Entity` classes. It is generally recommended that you place `@EnableAutoConfiguration` (if you're not using `@SpringBootApplication`) in a root package so that all sub-packages and classes can be searched.
-
-  - **AutoConfigurationImportSelector.class**
-
-    自动配置信息的导入选择器，根据场景按需导入
-
-    selectImports()，该方法的作用是根据配置文件将需要的 bean 注入容器中
-
-    ```mermaid
-    flowchart LR
-      A("selectImports") --call--> B("getAutoConfigurationEntry") --call--> C("getCandidateConfigurations")
-    ```
-
-    最终，会调用 SpringFactoriesLoader.class 来获取候选类，之后再经过去重、筛选，才会确定要自动配置的类
-
-    - 版本 2.7 以前，配置文件只有 spring.factories
-    - 版本 2.7 开始，配置文件为 spring-boot-autoconfigure 包下 META-INF 下的 spring.factories 和 org.springframework.boot.autoconfigure.AutoConfiguration.imports
-
-### 举例分析
-
-SpringBoot 选择需要自动导入的配置，底层实现使用了 [@Conditional...](#@Conditional...) 注解，会进行各种判断，如：类路径下是否有指定类、容器中是否有指定 bean、是否有指定的配置项...
-
-SpringBoot 会判断容器中是否已存在用户自定义的配置（如：multipartResolver），若有则不再进行配置
-
-实现各种场景自动配置的类，都在 org.springframework.boot.autoconfigure 包下
-
-- **AopAutoConfiguration**
-
-  源码截取：
-
-  ```java
-  @AutoConfiguration
-  @ConditionalOnProperty(  // 配置项 spring.aop.auto=true 时才会自动配置 AOP
-      prefix = "spring.aop",
-      name = {"auto"},
-      havingValue = "true",
-      matchIfMissing = true  // 若没配置则默认为 true
-  )
-  public class AopAutoConfiguration {
-      ...
-      @Configuration(proxyBeanMethods = false)
-      @ConditionalOnClass({Advice.class})  // 若存在 org.aspectj.weaver.Advice 这个类，则进行自动配置
-      static class AspectJAutoProxyingConfiguration { ... }
-  }
-  ```
-
-- **DispatcherServletAutoConfiguration**
-
-  源码截取：
-
-  ```java
-  @AutoConfigureOrder(-2147483648)
-  @AutoConfiguration(
-      after = {ServletWebServerFactoryAutoConfiguration.class}
-  )
-  @ConditionalOnWebApplication( // 项目为 web 项目时，才会进行该自动配置
-      type = Type.SERVLET
-  )
-  @ConditionalOnClass({DispatcherServlet.class})  // 类路径中要有 DispatcherServlet
-  public class DispatcherServletAutoConfiguration {
-      @Bean
-      @ConditionalOnBean({MultipartResolver.class})
-      // 若容器中已有用户自定义的 multipartResolver，则不进行创建
-      @ConditionalOnMissingBean(name = {" multipartResolver"})
-      public MultipartResolver multipartResolver(MultipartResolver resolver) { ... }
-  }
-  ```
-
-- **CacheAutoConfiguration**
-
-  源码截取：
-
-  ```java
-  @AutoConfiguration(
-      // 配置完这些类后，才会进行 CacheAutoConfiguration
-      after = {CouchbaseDataAutoConfiguration.class, HazelcastAutoConfiguration.class,
-               HibernateJpaAutoConfiguration.class, RedisAutoConfiguration.class}
-  )
-  @ConditionalOnClass({CacheManager.class})
-  @ConditionalOnBean({CacheAspectSupport.class})
-  // 容器中没有 id 为 cacheResolver，类型为 CacheManager 的 bean 时才会自动配置
-  @ConditionalOnMissingBean(
-      value = {CacheManager.class},
-      name = {"cacheResolver"}
-  )
-  @EnableConfigurationProperties({CacheProperties.class})  // 开启配置信息的绑定
-  @Import({CacheAutoConfiguration.CacheConfigurationImportSelector.class, CacheAutoConfiguration.CacheManagerEntityManagerFactoryDependsOnPostProcessor.class})
-  public class CacheAutoConfiguration { ... }
-  ```
-
-  ```java
-  // 配置文件中与缓存有关的属性名都要以 spring.cache 开头，如：spring.cache.redis.cache-null-values
-  @ConfigurationProperties(prefix = "spring.cache")
-  public class CacheProperties { ... }
-  ```
-
-### 执行流程
-
-SpringBoot 自动配置的流程：
-
-```mermaid
-flowchart TD
-    A(("启动")) --> B("@SpringBootApplication<br/>启动类注解")
-    B --> C("@SpringBootConfiguration<br/>标识为启动类")
-    B --> D("@EnableAutoConfiguration<br/>开启自动导入配置")
-    B --> E("@ComponentScan<br/>包扫描")
-    C --> F("@Configuration<br/>标识为配置类")
-    D --> G("@Import({AutoConfigurationImportSelector.class})<br/>自动配置的导入选择 - 按需选择")
-    G --> J("AutoConfigurationImportSelector<br/>获取所有候选的自动配置")
-    J --> K("SpringFactoriesLoader#loadFactoryNames<br/>获取候选的自动配置类")
-    K --> L("spring.factories<br/>...AutoConfiguration.imports<br/>记录所有候选类的配置文件")
-    L --"web"--> M("spring-boot-starter-web<br/>xxxAutoConfiguration<br/>...")
-    L --"cache"--> N("spring-boot-starter-cache<br/>xxxAutoConfiguration<br/>...")
-    M --> P{"@Conditional<br/>运行时判断"}
-    N --> P
-    P --"是"--> Y["加入 IOC 容器"]
-    P --"否"--> X["不加载"]
-    D --> H("@AutoConfigurationPackage<br/>自动导入配置类的包")
-    H --> I("@Import({Registrar.class})<br/>自动配置应用程序类路径下的 bean")
-```
-
-## Web
-
-### 使用
-
-#### 静态资源
-
-默认情况下，Spring Boot 静态资源路径：
-
-1. classpath 中名为 /static（或 /public 或 /resources 或 /META-INF/resources）的目录
-2. ServletContext 的根目录（/webapp 目录）
-
-访问地址：http://localhost:8088/demo.html
-
-正确的静态资源存放路径：
-
-```ASCII
-main
-├── resource
-│   ├── META-INF
-│   │   └── resource
-│   │       └── a.html
-│   ├── static
-│   │   └── b.html
-│   ├── public
-│   │   └── c.html
-│   └── resources
-│       └── d.html
-└── webapp
-    └── e.html
-```
-
-**自定义存放路径**：
-
-```yml
-spring:
-  web:
-    resources:
-      static-locations: [classpath:/assets/]  # 数组
-```
-
-配置后，就更改了 SpringBoot 默认的静态资源映射规则，只映射配置的路径下的资源
-
-访问地址：http://localhost:8088/demo.html
-
-**自定义访问前缀**：
-
-```yml
-spring:
-  mvc:
-    static-path-pattern: /resource/**
-```
-
-访问地址：http://localhost:8088/resource/demo.html，静态资源存放地址不变
-
-#### REST
-
-SpringBoot 也支持 REST 风格请求处理
-
-**Contoller 类**：
-
-```java
- @RestController
- @RequestMapping("/hello")
- public class MyController {
-     @RequestMapping("")
-     public String hello() {
-         return "Hello SpringBoot";
-     }
- }
-```
-
-访问路径：http://localhost:8080/hello
-
-RESTful 风格使用详解：[Spring MVC -> RESTful](#RESTful)
-
-SpringBoot 需要如下配置，来开启隐藏方法
-
-```yml
- spring:
-   mvc:
-     hiddenmethod:
-       filter:
-         enabled: true
-```
-
-可以自定义 HiddenHttpMethodFilter 过滤器的相关属性
-
-```java
-@Configuration
-public class HiddenHttpMethodConfig {
-    @Bean
-    // 自定义，并将该对象交予 IOC 容器管理
-    public HiddenHttpMethodFilter hiddenHttpMethodFilter(){
-        HiddenHttpMethodFilter methodFilter = new HiddenHttpMethodFilter();
-        // 将默认的隐藏方法参数名 _method 改为 _m
-        methodFilter.setMethodParam("_m");
-        return methodFilter;
-    }
-}
-```
-
-#### 视图跳转
-
-##### 转发到页面
-
-需要 thymeleaf 依赖，来执行视图解析器的工作
-
-```xml
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-thymeleaf</artifactId>
-</dependency>
-```
-
-控制器
-
-```java
-@RestController
-public class MyController {
-    @RequestMapping("/test")
-    public ModelAndView test(ModelAndView mv) {
-        mv.setViewName("abc");  // 转发到 abc.html
-        return mv;
-    }
-}
-```
-
-**注意**：目标资源文件，默认在 src/main/resources/templates 文件夹下
-
-调用 URL 时，控制器会搜索模板文件夹中的 HTML 文件。若文件不可用，将引发此异常  
-错误原因可能是，控制器中错误的 viewName 或 template 文件夹中的资源文件不可用
-
-自定义 template 的 存放地址 和 后缀：
-
-```yml
-spring:
-  thymeleaf:
-    prefix: classpath:/static/
-    suffix: .html
-```
-
-##### 转发到控制器
-
-若返回 ModelAndView，viewName 是识别为静态资源名称，不会跳转到 Controller 方法
-
-```java
-@Controller
-public class MyController {
-    @RequestMapping("/test1")
-    public String test1(HttpServletRequest req) {
-        req.setAttribute("name", "Domenic");
-        return "forward:/test2";  // 转发到 "/test2"
-    }
-    @RequestMapping("/test2")
-    @ResponseBody
-    public String test2(@RequestAttribute String name) {
-        return name;
-    }
-}
-```
-
-### 工作原理
-
-[SpringMVC 框架详解](#MVC%20框架详解)，包含组件介绍、执行流程、处理器映射器
-
-#### 静态资源映射
-
-配置信息绑定到 webMvcProperies 和 WebProperties 上
-
-```java
-@ConfigurationProperties(prefix = "spring.mvc")
-public class WebMvcProperties { ... }
-
-@ConfigurationProperties("spring.web")
-public class WebProperties { ... }
-```
-
-静态资源映射的自动配置在 **WebMvcAutoConfiguration** 类中实现
-
-内部类 WebMvcAutoConfigurationAdapter 是配置器适配器
-
-```java
-...
-/* 指定了 spring.mvc 和 spring.web 配置 */
-@EnableConfigurationProperties({WebMvcProperties.class, WebProperties.class})
-public static class WebMvcAutoConfigurationAdapter... { ... }
-```
-
-该类拥有以下属性：
-
-- *resourceProperties* - spring.resources 绑定的所有配置的值
-- *mvcProperties* - spring.mvc 绑定的所有配置的值
-- *beanFactory* - Spring 的 beanFactory
-- *messageConvertersProvider* - 所有的 HttpMessageConverter
-- *dispatchServletPath* - 前端控制器
-- *ServletRegistrations* - 给应用注册 Servlet、Filter...
-- *resourceHandlerRegistrationCustomizer* - 资源处理器的自定义器
-
-该类下的 addResourceHandlers 方法，描述静态资源默认的处理规则
-
-**欢迎页**
-
-WelcomePageHandlerMapping 类中封装了欢迎页的规则
-
-```java
-/* 构造函数中的代码 */
-// static-path-pattern 设置后，欢迎页就无法访问，因为必须等于 /**
-if (welcomePage != null && "/**".equals(staticPathPattern)) {
-    logger.info("Adding welcome page: " + welcomePage);
-    this.setRootViewName("forward:index.html");  // 转发到欢迎页
-} else if (this.welcomeTemplateExists(templateAvailabilityProviders, applicationContext)) {
-    logger.info("Adding welcome page template: index");
-    this.setRootViewName("index");  // 转发到映射路径为 "/" 的 controller 方法
-}
-```
-
-#### REST 请求处理
-
-**WebMvcAutoConfiguration** 类中创建了处理 HiddenMethod 的类对象
-
-```java
-@Bean
-@ConditionalOnMissingBean({HiddenHttpMethodFilter.class})
-@ConditionalOnProperty(
-    prefix = "spring.mvc.hiddenmethod.filter",  // 需要有该配置项
-    name = {"enabled"}  // 该值默认为 false，需要设置为 true 才生效
-)
-public OrderedHiddenHttpMethodFilter hiddenHttpMethodFilter() {
-    return new OrderedHiddenHttpMethodFilter();
-}
-```
-
-OrderedHiddenHttpMethodFilter 类继承了 HiddenHttpMethodFilter 类
-
-HiddenHttpMethodFilter 类中的 doFilterInternal 方法，会获取名为 \_method 的参数值作为隐藏方法，并对请求重新包装
-
-```java
-protected void doFilterInternal(...) ... {
-    // 复制一份 request，用于重新包装
-    HttpServletRequest requestToUse = request;
-    // getMethod() 获取请求方法
-    if ("POST".equals(request.getMethod()) && 
-        request.getAttribute("javax.servlet.error.exception") == null) {
-        // 获取名为 _method 的参数值
-        String paramValue = request.getParameter(this.methodParam);
-        if (StringUtils.hasLength(paramValue)) {
-            // 将值转为大写
-            String method = paramValue.toUpperCase(Locale.ENGLISH);
-            if (ALLOWED_METHODS.contains(method)) {
-                // 重新包装
-                requestToUse = new HiddenHttpMethodFilter.HttpMethodRequestWrapper(request, method);
-            }
-        }
-    }
-    // 放行请求
-    filterChain.doFilter((ServletRequest)requestToUse, response);
-}
-```
-
-#### 处理器映射器
-
-详见：[SpringMVC 框架详解](#MVC%20框架详解) -> 工作原理 -> 处理器映射器
-
-从接收一个 Controller 请求，到执行对应的控制器方法，SpringBoot 通过控制器方法映射，来查找对应的控制器方法
-
-DispatcherServlet 中的 doDispatch 方法，会获取到 HandlerExecutionChain
-
-#### 请求参数解析
-
-详见：[SpringMVC 框架详解](#MVC%20框架详解) -> 工作原理 -> 请求参数解析
-
+      typ
