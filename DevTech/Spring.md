@@ -4013,6 +4013,106 @@ axios.post("请求路径").then(res => {
 })
 ```
 
+#### @ResponseStatus
+
+该注解用来自定义 HTTP 响应信息
+
+有两种使用方式：1. 注解控制器方法；2. 注解自定义的异常类
+
+1. **注解在控制器方法上**
+
+   ```java
+   @GetMapping(value = "/test")
+   // 自定义响应信息 reason
+   @ResponseStatus(value = HttpStatus.OK, reason = "Successfully get what you want!")
+   public @ResponseBody String helloResponseStatus() {
+       ...
+   }
+   ```
+
+   请求：
+
+   ```bash
+   curl -X GET http://localhost:8080/test
+   ```
+
+   默认返回值示例：
+
+   ```json
+   {
+   	"timestamp": "2050-11-22T07:27:59.140+00:00",
+   	"status": 200,
+   	"error": "OK",
+   	"message": "Successfully get what you want!",
+   	"path": "/test"
+   }
+   ```
+
+2. **注解在异常类上**
+
+   自定义异常类 CustomizeException
+
+   ```java
+   @ResponseStatus(value = HttpStatus.BAD_GATEWAY, reason = "id can't be negative")
+   public class CustomizeException extends RuntimeException {
+       public CustomizeException() {}
+       public CustomizeException(String message) { super(message); }
+   }
+   ```
+
+   控制器方法：
+
+   ```java
+   @GetMapping("/test")
+   public @ResponseBody String testCustomizeException(@RequestParam("id") Integer id) {
+       if (id < 0) { throw new CustomizeException("Custom error"); }
+       return "query success";
+   }
+   ```
+
+   请求：
+
+   ```bash
+   # id 传小于 0 的值，引发自定义异常
+   curl -H "Accept: text/html" http://localhost:8080/test?id=-1
+   ```
+
+   默认返回值示例：
+
+   ```json
+   {
+   	"timestamp": "2050-11-22T06:37:40.026+00:00",
+   	"status": 502,
+   	"error": "Bad Gateway",
+   	"trace": "...",
+   	"message": "id can't be negative",
+   	"path": "/test"
+   }
+   ```
+
+   > 注意：
+   >
+   > 若使用 @ResponseStatus 注解自定义异常类的同时，还用 @ControllerAdvice 配置了全局异常处理类，@ResponseStatus 不会被用到
+   >
+   > 因为出现异常后，@ControllerAdvice 注解的全局异常处理类会首先执行，然后直接返回，不会有后续的执行了
+   >
+   > 解决方案：
+   >
+   > 可用 `e.getClass().getAnnotation(ResponseStatus.class)` 检测异常类有无 @ResponseStatus  
+   > 若有，可以直接 `throw e;` 让框架用默认方式来处理；或者按需执行其他操作
+   >
+   > ```java
+   > @ControllerAdvice
+   > public class GlobalExceptionResolver {
+   >     @ExceptionHandler(Exception.class)
+   >     public ModelAndView errResolver(
+   >             HttpServletRequest req, Exception e) throws Exception {
+   >         if (e.getClass().getAnnotation(ResponseStatus.class) != null) { throw e; }
+   >         ...
+   >     }
+   > }
+   > ```
+
 #### @SessionAttributes
 
 该注解使用在类上
@@ -5162,7 +5262,7 @@ flowchart LR
 
 **若不配置**，SpringMVC 默认使用 DefaultHandlerExceptionResolver 
 
-#### 内置处理机制
+#### 默认处理机制
 
 SimpleMappingExceptionResolver 类，该类实现了 HandlerExceptionResolver 接口
 
@@ -5191,7 +5291,7 @@ SimpleMappingExceptionResolver 类，该类实现了 HandlerExceptionResolver �
 </bean>
 ```
 
-#### 自定义处理机制
+#### 自定义处理类
 
 自定义异常处理类，并实现 HandlerExceptionResolver 接口，并重写 resolveException 方法
 
@@ -5201,9 +5301,8 @@ SimpleMappingExceptionResolver 类，该类实现了 HandlerExceptionResolver �
 @Component // 不要忘记在核心配置文件中添加包扫描
 public class MyExceptionResolver implements HandlerExceptionResolver {
     @Override
-    public ModelAndView resolveException(HttpServletRequest req,
-                                         HttpServletResponse resp,
-                                         Object handler, Exception e) {
+    public ModelAndView resolveException(
+            HttpServletRequest req, HttpServletResponse resp, Object handler, Exception e) {
         ModelAndView model = new ModelAndView();
         model.addObject("msg", e.getMessage());
         // 可以给 ViewResolver 配置了前后缀，就能简写为 error
@@ -5213,7 +5312,9 @@ public class MyExceptionResolver implements HandlerExceptionResolver {
 }
 ```
 
-#### 注解处理机制
+#### 注解自定义
+
+##### @ControllerAdvice
 
 在 Controller 的方法上使用 @ExceptionHandler，当此 Controller 中发生异常时，有该注解的方法就会处理异常
 
@@ -5221,21 +5322,39 @@ public class MyExceptionResolver implements HandlerExceptionResolver {
 
 **解决方案**：
 
-1. 使用 **@ControllerAdvice**，该注解允许将多个分散的 @ExceptionHandler **整合**到一个单一的全局异常处理组件中  
-   意味着，有该注解的 Controller 可以作为一个异常处理类，处理其他 Controller 中产生的异常
+1. @ControllerAdvice 是一个 Component
+
+   用于声明要在多个 @Controller 类之间共享的 @ExceptionHandler、@InitBinder、@ModelAttribute 方法
+
+   使用 **@ControllerAdvice**，该注解可以将多个分散的 @ExceptionHandler **整合**到一个单一的全局异常处理组件中  
+   这意味着，有该注解的类可以作为一个异常处理类，处理其他 Controller 中产生的异常
 
    ```java
    @ControllerAdvice
    public class MyExceptionResolver {
        /**
         * 该注解的值为需要处理的异常类型的 class 对象，可定义多个
+        * 若要处理所有异常，则为 Exception.class
         */
-       @ExceptionHandler({RuntimeException.class, FileNotFoundException.class})
+       @ExceptionHandler({ArithmeticException.class, NullPointerException.class})
        // 形参 e 表示当前请求处理中，出现的异常对象
-       public String myResolver(HttpServletRequest req, Exception e) {
-           req.setAttribute("msg", e.getMessage());
-           return "error";
+       public ResponseEntity<Object> errResolver(HttpServletRequest req, Exception e) {
+           Map<String, Object> body = new LinkedHashMap<>();
+           body.put("timestamp", LocalDateTime.now());
+           body.put("message", e.getMessage());
+           return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
        }
+   }
+   ```
+
+   若 Handler 方法中出现 NullPointerException，就会被 errResolver 方法处理
+
+   返回值示例：
+
+   ```json
+   {
+       "timestamp": "2050-11-21T16:56:08.1003936",
+       "message": "/ by zero"
    }
    ```
 
@@ -5244,16 +5363,119 @@ public class MyExceptionResolver implements HandlerExceptionResolver {
 
    ```java
    @Controller
-   public class MyController {
-       ...
+   public class BaseController {
        @ExceptionHandler({IOException.class, NullPointerException.class})
        public String handleException() { return "error"; }
+       ...
    }
+   
+   @Controller
+   public class LoginController extends BaseController { ... }
    ```
 
    > 注意：被 @ExceptionHandler 注解的方法的参数必须是固定的，否则运行时无法生效
 
-#### Web 处理机制
+##### @ResponseStatus
+
+有两种使用方式：1. 注解控制器方法；2. 注解自定义的异常类
+
+1. **注解控制器方法**
+
+   若该控制器出现了 404 错误，返回 @ResponseStatus 的 reason 的内容
+
+   ```java
+   @GetMapping(value = "/test")
+   // 注解在 Handler 方法上，当出现 404 错误时，就会返回 reason 中的值
+   @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Oops 404, no such page!")
+   public @ResponseBody String helloResponseStatus() {
+       return "no-such-page";
+   }
+   ```
+
+   请求：
+
+   ```bash
+   curl -X GET http://localhost:8080/test
+   ```
+
+   默认返回值示例：
+
+   ```json
+   {
+   	"timestamp": "2050-11-22T06:40:52.772+00:00",
+   	"status": 404,
+   	"error": "Not Found",
+   	"message": "Oops, no such page 404!",
+   	"path": "/test"
+   }
+   ```
+
+2. **注解自定义的异常类**
+
+   自定义异常类 CustomizeException
+
+   ```java
+   @ResponseStatus(reason = "id can't be negative")
+   public class CustomizeException extends RuntimeException {
+       public CustomizeException() {}
+       public CustomizeException(String message) { super(message); }
+   }
+   ```
+
+   控制器方法：
+
+   ```java
+   @GetMapping("/test")
+   public @ResponseBody String testCustomizeException(@RequestParam("id") Integer id) {
+       if (id < 0) { throw new CustomizeException("Custom error"); }
+       return "query success";
+   }
+   ```
+
+   请求：
+
+   ```bash
+   # id 传小于 0 的值，引发自定义异常
+   curl -H "Accept: text/html" http://localhost:8080/test?id=-1
+   ```
+
+   默认返回值示例：
+
+   ```json
+   {
+   	"timestamp": "2050-11-22T06:37:40.026+00:00",
+   	"status": 502,
+   	"error": "Bad Gateway",
+   	"trace": "...",
+   	"message": "id can't be negative",
+   	"path": "/test"
+   }
+   ```
+
+   > 注意：
+   >
+   > 若使用 @ResponseStatus 注解自定义异常类的同时，还用 @ControllerAdvice 配置了全局异常处理类，@ResponseStatus 不会被用到
+   >
+   > 因为出现异常后，@ControllerAdvice 注解的全局异常处理类会首先执行，然后直接返回，不会有后续的执行了
+   >
+   > 解决方案：
+   >
+   > 可用 `e.getClass().getAnnotation(ResponseStatus.class)` 检测异常类有无 @ResponseStatus  
+   > 若有，可以直接 `throw e;` 让框架用默认方式来处理；或者按需执行其他操作
+   >
+   > ```java
+   > @ControllerAdvice
+   > public class GlobalExceptionResolver {
+   >     @ExceptionHandler(Exception.class)
+   >     public ModelAndView errResolver(
+   >             HttpServletRequest req, Exception e) throws Exception {
+   >         if (e.getClass().getAnnotation(ResponseStatus.class) != null) { throw e; }
+   >         ...
+   >     }
+   > }
+   > ```
+
+#### 配置自定义
 
 在 web.xml 中配置
 
@@ -5476,7 +5698,7 @@ public class MyInterceptor implements HandlerInterceptor {
 
 ### 服务器三大组件
 
-执行顺序：监听器 --\> 过滤器 --\> 拦截器
+执行顺序：监听器（Listener）--\> 过滤器（Filter）--\> 拦截器（Interceptor）
 
 **过滤器 \& 拦截器**：
 
@@ -5592,17 +5814,17 @@ public class MyInterceptor implements HandlerInterceptor {
    用户请求到达前端控制器 DispatcherServlet，它就相当于 MVC 模式中的 Controller，是整个流程控制的中心，由它调用其它组件来处理用户的请求。DispatcherServlet 的存在降低了组件之间的耦合性
 
 2. **处理器映射器**：HandlerMapping
-   HandlerMapping 负责根据请求找到 Handler（处理器）  
+   HandlerMapping 负责根据请求匹配到合适的 Handler（处理器）  
    SpringMVC 根据请求的 url、method 等信息查找匹配的 Handler（控制器方法）
 
 3. **处理器适配器**：HandlerAdapter
-   通过 HandlerAdapter 来执行处理器，这是[适配器模式](https://www.runoob.com/design-pattern/adapter-pattern.html)的应用，通过扩展适配器可以对更多类型的处理器进行执行
+   使用合适的 HandlerAdapter 来执行对应的处理器，这是[适配器模式](https://www.runoob.com/design-pattern/adapter-pattern.html)的应用，通过扩展适配器可以对更多类型的处理器进行执行
 
 4. **处理器**：Handler【**由使用者编写**】
    开发中要编写的具体业务控制器。由 DispatcherServlet 把用户请求转发到 Handler，Handler 对具体的用户请求进行处理
 
 5. **视图解析器**：ViewResolver
-   View Resolver 负责将处理结果生成 View 视图，View Resolver 根据 ModelAndView 对象中的 View 信息，将逻辑视图名解析成物理视图名（即具体的页面地址），再生成 View 视图对象，最后对 View 进行渲染将处理结果通过页面展示给用户
+   View Resolver 负责将处理结果生成 View 视图，View Resolver 根据 ModelAndView 对象中的 View 信息，将逻辑视图名解析成物理视图名，再生成 View 视图对象，最后对 View 进行渲染将处理结果通过页面展示给用户
 
    不同的视图解析器，如：ThymeleafView、InternalResourceView、RedirectView
 
@@ -5670,8 +5892,8 @@ flowchart LR
   C --> D("&lt;&lt;Abstract&gt;&gt;<br/>HttpServlet"):::aclass
   D --> E("&lt;&lt;Abstract&gt;&gt;<br/>GenericServlet"):::aclass
   E --> F["&lt;&lt;Abstract&gt;&gt;<br/>Servlet"]:::aclass
-  classDef sclass fill:#7eabd0;
-  classDef aclass fill:#8BA270;
+  classDef sclass fill:#6eabd0;
+  classDef aclass fill:#7BA270;
 ```
 
 请求会先到达 FrameworkServlet 中的 doGet、doPost、doPut、doDelete 方法  
@@ -5702,10 +5924,12 @@ DispatcherServlet 中的执行过程：
 
 #### 处理器映射器
 
+概述：HandlerMapping 负责根据请求，匹配到合适的 Handler 方法
+
 在 DispatcherServlet 的 doDispatch 方法中，会获取匹配的 Handler 对象，该对象封装在 HandlerExecutionChain 中
 
 ```java
-protected void doDispatch(...) throws... {
+protected void doDispatch(...) throws ... {
     ...
     // 获取执行链
     mappedHandler = this.getHandler(processedRequest);
@@ -5716,7 +5940,7 @@ protected void doDispatch(...) throws... {
 DispatcherServlet 中获取执行链的方法：
 
 ```java
-protected HandlerExecutionChain getHandler(HttpServletRequest request) throws... {
+protected HandlerExecutionChain getHandler(HttpServletRequest request) throws ... {
     if (this.handlerMappings != null) {
         Iterator var2 = this.handlerMappings.iterator();
         // 循环遍历 List<HandlerMapping>
@@ -5754,18 +5978,22 @@ flowchart BT
   A("&lt;&lt;Abstract&gt;&gt;<br/>AbstractHandlerMapping"):::aclass -."implement".-> I("&lt;&lt;Interface&gt;&gt;<br/>HandlerMapping") 
   D("WelcomPageHandlerMapping"):::sclass --"extends"--> B("&lt;&lt;Abstract&gt;&gt;<br/>AbstractUrlHandlerMapping"):::aclass --"extends"--> A
   F("RequestMappingHandlerMapping"):::sclass --"extends"--> E("&lt;&lt;Abstract&gt;&gt;<br/>RequestMappingInfoHandlerMapping"):::aclass --"extends"--> C("&lt;&lt;Abstract&gt;&gt;<br/>AbstractHandlerMethodMapping"):::aclass --"extends"--> A
-  classDef sclass fill:#7eabd0;
-  classDef aclass fill:#8BA270;
+  classDef sclass fill:#6eabd0;
+  classDef aclass fill:#7BA270;
 ```
 
-**以访问控制器方法为例**：
+**匹配 Handler 的流程**：
 
-> 以 GET 方法访问 /user 对应的控制器方法，以下为匹配 Handler 的流程
+以 GET 请求 `/user` 对应的控制器方法为例
+
+```bash
+curl -X GET http://localhost:8080/user
+```
 
 1. DispatcherServlet 调用到 RequestMappingHandlerMapping 的 **getHandler** 方法
 
    ```java
-   protected HandlerExecutionChain getHandler(...) throws... {
+   protected HandlerExecutionChain getHandler(...) throws ... {
        ...
        HandlerExecutionChain handler = mapping.getHandler(request);
        ...
@@ -5777,7 +6005,7 @@ flowchart BT
    - mappingRegistry - 记录所有的请求路径，如：{/hello}、{GET /user}、{POST /user}、{/error}...
 
    ```java
-   protected HandlerMethod getHandlerInternal(HttpServletRequest request) throws... {
+   protected HandlerMethod getHandlerInternal(HttpServletRequest request) throws ... {
        String lookupPath = this.initLookupPath(request);  // 获取请求路径，如 /user
        this.mappingRegistry.acquireReadLock();  // 获取锁，保证并发场景下的安全性
    
@@ -5803,7 +6031,7 @@ flowchart BT
 
    ```java
    protected HandlerMethod lookupHandlerMethod(
-           String lookupPath, HttpServletRequest request) throws... {
+           String lookupPath, HttpServletRequest request) throws ... {
        List<AbstractHandlerMethodMapping<T>.Match> matches = new ArrayList();
        List<T> directPathMatches = this.mappingRegistry.getMappingsByDirectPath(lookupPath);
        if (directPathMatches != null) {
@@ -5824,10 +6052,12 @@ flowchart BT
 
 #### 处理器适配器
 
+概述：使用合适的 HandlerAdapter 来执行对应的处理器
+
 请求会被 DispatcherServlet 拦截，其中的 doDispatch 方法处理请求
 
 ```java
-protected void doDispatch(...) throws... {
+protected void doDispatch(...) throws ... {
     ...
     // 获取执行链
     mappedHandler = this.getHandler(processedRequest);
@@ -5844,7 +6074,7 @@ protected void doDispatch(...) throws... {
 DispatcherServlet 中获取匹配的 HandlerAdapter
 
 ```java
-protected HandlerAdapter getHandlerAdapter(Object handler) throws... {
+protected HandlerAdapter getHandlerAdapter(Object handler) throws ... {
     if (this.handlerAdapters != null) {
         Iterator var2 = this.handlerAdapters.iterator();
         // 循环遍历 List<HandlerAdapter>
@@ -5878,11 +6108,13 @@ flowchart RL
   C("HandlerFunctionAdapter"):::sclass -."implement".-> I
   D("HttpRequestHandlerAdapter"):::sclass -."implement".-> I
   E("SimpleControllerHandlerAdapter"):::sclass -."implement".-> I
-  classDef sclass fill:#7eabd0;
-  classDef aclass fill:#8BA270;
+  classDef sclass fill:#6eabd0;
+  classDef aclass fill:#7BA270;
 ```
 
 #### 请求参数解析
+
+概述：将请求中要接收的数据，解析为 Handler 方法需要接收的数据，其中涉及到参数的数据类型转换
 
 ##### 执行原理
 
@@ -5892,16 +6124,23 @@ flowchart RL
 
 以下为部分解析器的类层级结构：
 
+有一个 composite 类 HandlerMethodArgumentResolverComposite 实现了 HandlerMethodArgumentResolver  
+负责调用其他的参数解析实现类（相当于 Service）
+
 ```mermaid
 flowchart BT
-  A("PathVariableMapMethodArgumentResolver") -."implement".-> I("&lt;&lt;Interface&gt;&gt;<br/>HandlerMethodReturnValueHandler")
-  C("RequestHeaderMethodArgumentResolver") --"extends"--> B("&lt;&lt;Abstract&gt;&gt;<br/>AbstractNamedValueMethodArgumentResolver") -."implement".-> I
-  D("RequestParamMethodArgumentResolver") --"extends"--> B
-  E("ModelMethodProcessor") -."implement".-> I
+  A("PathVariableMapMethodArgumentResolver"):::sclass -."implement".-> I("&lt;&lt;Interface&gt;&gt;<br/>HandlerMethodArgumentResolver")
+  C("RequestHeaderMethodArgumentResolver"):::sclass --"extends"--> B("&lt;&lt;Abstract&gt;&gt;<br/>AbstractNamedValueMethodArgumentResolver"):::aclass -."implement".-> I
+  D("RequestParamMethodArgumentResolver"):::sclass --"extends"--> B
+  E("ModelMethodProcessor"):::sclass -."implement".-> I
   F("...") -."implement".-> I
+  classDef sclass fill:#6eabd0;
+  classDef aclass fill:#7BA270;
 ```
 
-**以此控制器方法为例**：
+**请求链接中的参数，被解析的流程**：
+
+以此控制器方法为例
 
 ```java
 @RequestMapping("user/{userId}/num/{num}")
@@ -5913,12 +6152,10 @@ public @ResponseBody String testParam(
 
 请求：http://localhost:8080/user/1001/num/321?username=domenic
 
-以下为请求链接中的参数，被解析的流程：
-
 1. DispatcherServlet 调用到 RequestMappingHandlerAdapter 的 **handle** 方法
 
    ```java
-   protected void doDispatch(...) throws... {
+   protected void doDispatch(...) throws ... {
        ...
        // 调用 HandlerAdapter ha 的 handle 方法
        mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
@@ -5929,7 +6166,7 @@ public @ResponseBody String testParam(
 2. handle 方法又会调用到 RequestMappingHandlerAdapter 类下的 **handleInternal**
 
    ```java
-   protected ModelAndView handleInternal(...) throws... {
+   protected ModelAndView handleInternal(...) throws ... {
        // 检查是否支持该请求
        this.checkRequest(request);
        ...
@@ -5956,7 +6193,7 @@ public @ResponseBody String testParam(
    - **returnValueHandlers** - 返回值处理器
 
    ```java
-   protected ModelAndView invokeHandlerMethod(...) throws... {
+   protected ModelAndView invokeHandlerMethod(...) throws ... {
        ...
        if (this.argumentResolvers != null) {
            // 设置参数解析器
@@ -5999,7 +6236,7 @@ public @ResponseBody String testParam(
    invokeForRequest 又调用本类的 **getMethodArgumentValues** 方法获取所有参数
 
    ```java
-   protected Object[] getMethodArgumentValues(...) throws... {
+   protected Object[] getMethodArgumentValues(...) throws ... {
        // 获取 Handler 方法有几个参数
        MethodParameter[] parameters = this.getMethodParameters();
        if (ObjectUtils.isEmpty(parameters)) {
@@ -6042,7 +6279,7 @@ public @ResponseBody String testParam(
        return this.getArgumentResolver(parameter) != null;
    }
    
-   public Object resolveArgument(...) throws... {
+   public Object resolveArgument(...) throws ... {
        // 获取与 parameter 匹配的解析器
        HandlerMethodArgumentResolver resolver = this.getArgumentResolver(parameter);
        ...
@@ -6185,6 +6422,8 @@ public String test(HttpServletRequest request){
 
 #### 类型转换
 
+概述：对从请求中接收的数据，进行必要的类型转换，变成 Handler 方法需要的数据类型
+
 有三个关于类型转换的接口：Converter\<S,T\>，ConverterFactory\<S, R\>，GenericConverter
 
 自定义类型转换器示例：
@@ -6318,7 +6557,7 @@ public class WebConfig implements WebMvcConfigurer {
    该方法会调用到 TypeConverterDelegate 类的 convertIfNecessary 方法：
 
    ```java
-   public <T> T convertIfNecessary(...) throws... {
+   public <T> T convertIfNecessary(...) throws ... {
        ...
        // 判断是否支持转换
        if (conversionService.canConvert(sourceTypeDesc, typeDescriptor)) {
@@ -6357,6 +6596,8 @@ public class WebConfig implements WebMvcConfigurer {
 
 #### 返回值处理
 
+概述：对 Handler 方法的返回值进行处理
+
 请求会被 DispatcherServlet 拦截并处理  
 在 ServletInvocableHandlerMethod 类的 invokeAndHandle 方法中，会获取到处理完的请求参数 `invokeForRequest`  
 之后就进行返回值处理 `handleReturnValue`
@@ -6392,22 +6633,27 @@ classDiagram
 
 以下为部分处理器的类层级结构：
 
+有一个 composite 类 HandlerMethodReturnValueHandlerComposite 实现了 HandlerMethodReturnValueHandler  
+负责调用其他的返回值处理实现类（相当于 Service）
+
 ```mermaid
 flowchart BT
-  A("ViewNameMethodReturnValueHandler") -."implement".-> I("&lt;&lt;Interface&gt;&gt;<br/>HandlerMethodReturnValueHandler")
-  C("RequestResponseBodyMethodProcessor") --"extends"--> B("&lt;&lt;Abstract&gt;&gt;<br/>AbstractMessageConverterMethodProcessor") -."implement".-> I
-  D("ModelMethodProcessor") -."implement".-> I
+  A("ViewNameMethodReturnValueHandler"):::sclass -."implement".-> I("&lt;&lt;Interface&gt;&gt;<br/>HandlerMethodReturnValueHandler")
+  C("RequestResponseBodyMethodProcessor"):::sclass --"extends"--> B("&lt;&lt;Abstract&gt;&gt;<br/>AbstractMessageConverterMethodProcessor"):::aclass -."implement".-> I
+  D("ModelMethodProcessor"):::sclass -."implement".-> I
   E("...") -."implement".-> I
+  classDef sclass fill:#6eabd0;
+  classDef aclass fill:#7BA270;
 ```
 
-**以此控制器方法为例**：
+**返回值处理的流程**：
+
+以此控制器方法为例
 
 ```java
 @PostMapping("/saveUser")
 public @ResponseBody Person saveUser(Person person) { return person; }
 ```
-
-以下是返回值处理的流程：
 
 1. **RequestMappingHandlerAdapter** 类中的 invokeHandlerMethod 方法，会设置 请求参数解析器 和 返回值处理器
 
@@ -6429,7 +6675,7 @@ public @ResponseBody Person saveUser(Person person) { return person; }
    调用 handleReturnValue 进行返回值处理，类型转换，并写入响应中
 
    ```java
-   public void invokeAndHandle(...) throws... {
+   public void invokeAndHandle(...) throws ... {
        // 获取 Handler 方法执行完的返回值
        Object returnValue = this.invokeForRequest(webRequest, mavContainer, providedArgs);
        ...
@@ -6442,7 +6688,7 @@ public @ResponseBody Person saveUser(Person person) { return person; }
 3. 调用 HandlerMethodReturnValueHandlerComposite 类的 handleReturnValue 方法
 
    ```java
-   public void handleReturnValue(...) throws... {
+   public void handleReturnValue(...) throws ... {
        // 获取合适的返回值处理器
        HandlerMethodReturnValueHandler handler = this.selectHandler(returnValue, returnType);
        ...
@@ -6489,7 +6735,7 @@ public @ResponseBody Person saveUser(Person person) { return person; }
    3. 调用 write() 将信息写入响应中
 
    ```java
-   protected <T> void writeWithMessageConverters() throws... {
+   protected <T> void writeWithMessageConverters() throws ... {
        ...
        // 获取客户端可以接收的内容类型（调用 resolveMediaTypes 方法）
        List acceptableTypes = this.getAcceptableMediaTypes(request);
@@ -6525,7 +6771,7 @@ classDiagram
   }
   ServletInvocableHandlerMethod --> HandlerMethodReturnValueHandlerComposite : invoke
   HandlerMethodReturnValueHandlerComposite --> HandlerMethodReturnValueHandler : invoke
-  HandlerMethodReturnValueHandler <|.. RequestResponseBodyMethodProcessor : implement
+  RequestResponseBodyMethodProcessor ..|> HandlerMethodReturnValueHandler : implement
 ```
 
 ```mermaid
@@ -6558,17 +6804,34 @@ classDiagram
   <<abstract>> AbstractJackson2HttpMessageConverter
   RequestResponseBodyMethodProcessor --> AbstractMessageConverterMethodProcessor : invoke
   AbstractMessageConverterMethodProcessor --> GenericHttpMessageConverter : invoke
-  HttpMessageConverter <|-- GenericHttpMessageConverter : extends
-  GenericHttpMessageConverter <|.. AbstractGenericHttpMessageConverter : implement
+  GenericHttpMessageConverter --|> HttpMessageConverter : extends
+  AbstractGenericHttpMessageConverter ..|> GenericHttpMessageConverter : implement
   AbstractGenericHttpMessageConverter --> AbstractJackson2HttpMessageConverter : invoke
 ```
 
 #### 内容协商
 
-AbstractMessageConverterMethodProcessor 中执行 消息内容类型转换 和 写入响应 的方法
+概述：根据客户端接收能力不同，返回不同媒体类型的内容（如 HTML，JSON）
+
+内容协商策略类的层级结构：
+
+ContentNegotiationManager 类负责调用合适的协商策略类
+
+```mermaid
+flowchart BT
+  A("ContentNegotiationManager"):::sclass -."implement".-> I("&lt;&lt;Interface&gt;&gt;<br/>contentNegotiationStrategy")
+  C("ParameterContentNegotiationStrategy"):::sclass --"extends"--> B("&lt;&lt;Abstract&gt;&gt;<br/>AbstractMappingContentNegotiationStrategy"):::aclass -."implement".-> I
+  Y("...") --"extends"--> B
+  D("HeaderContentNegotiationStrategy"):::sclass -."implement".-> I
+  Z("...") -."implement".-> I
+  classDef sclass fill:#6eabd0;
+  classDef aclass fill:#7BA270;
+```
+
+AbstractMessageConverterMethodProcessor 类中执行 **消息内容类型转换** 和 **写入响应** 的方法
 
 ```java
-protected <T> void writeWithMessageConverters() throws... {
+protected <T> void writeWithMessageConverters() throws ... {
     ...
     // 获取客户端可以接收的内容类型（调用 resolveMediaTypes 方法）
     List acceptableTypes = this.getAcceptableMediaTypes(request);
@@ -6579,8 +6842,9 @@ protected <T> void writeWithMessageConverters() throws... {
 }
 ```
 
-writeWithMessageConverters 方法会用 getAcceptableMediaTypes 调用 resolveMediaTypes，通过内容协商来决定 MediaType  
-ContentNegotiationManager 类的 resolveMediaTypes 方法，会通过 ContentNegotiateStrategy 接口调用对应的内容协商策略类
+writeWithMessageConverters 方法会用 **getAcceptableMediaTypes** 调用 resolveMediaTypes，通过内容协商来决定 MediaType
+
+ContentNegotiationManager 类的 **resolveMediaTypes** 方法，会通过 ContentNegotiateStrategy 接口调用对应的内容协商策略类
 
 ```mermaid
 classDiagram
@@ -6590,26 +6854,15 @@ classDiagram
     - getAcceptableMediaTypes()
   }
   <<abstract>> AbstractMessageConverterMethodProcessor
-  class ContentNegotiationManager {
-    + resolveMediaTypes()
-  }
   class ContentNegotiationStrategy {
     resolveMediaTypes()
   }
   <<interface>> ContentNegotiationStrategy
-  AbstractMessageConverterMethodProcessor --> ContentNegotiationManager : invoke
+  class ContentNegotiationManager {
+    + resolveMediaTypes()
+  }
+  AbstractMessageConverterMethodProcessor --> ContentNegotiationStrategy : invoke
   ContentNegotiationStrategy <|.. ContentNegotiationManager : implement
-```
-
-**内容协商策略类的层级结构**：
-
-```mermaid
-flowchart BT
-  A("HeaderContentNegotiationStrategy"):::sclass -."implement".-> I("&lt;&lt;Interface&gt;&gt;<br/>contentNegotiationStrategy")
-  C("ParameterContentNegotiationStrategy"):::sclass --"extends"--> B("&lt;&lt;Abstract&gt;&gt;<br/>AbstractMappingContentNegotiationStrategy"):::aclass -."implement".-> I
-  Z("...") -."implement".-> I
-  classDef sclass fill:#7eabd0;
-  classDef aclass fill:#8BA270;
 ```
 
 - **基于请求头的内容协商**：
@@ -6651,37 +6904,37 @@ flowchart BT
 - **基于请求参数的内容协商**：
 
   可以根据客户端**请求参数中的 format 值**，响应不同类型的内容
-  
+
   ```mermaid
   flowchart LR
     A("ContentNegotiationManager<br/>+resolveMediaType()") --"invoke"--> B("ParameterContentNegotiationStrategy")
   ```
-  
+
   配置中开启基于请求参数的内容协商
-  
+
   ```yml
   spring:
     mvc:
       contentnegotiation:
         favor-parameter: true
   ```
-  
+
   **例**：控制器方法
-  
+
   ```java
   @RequestMapping("/test")
   public @ResponseBody Person responseXML() {
       return new Person(...);
   }
   ```
-  
+
   请求：http://localhost:8080/test?format=xml，响应 XML 类型
-  
+
   请求：http://localhost:8080/test?format=json，响应 JSON 类型
 
 #### 消息转换器
 
-**在返回值处理时**，需要先进行消息内容转换，再写入响应中，如：将实体类转换为 JSON
+概述：**在返回值处理时**，需要先进行消息内容转换，再写入响应中，如：将实体类转换为 JSON
 
 所有消息转换器，都直接或间接实现 HttpMessageConverter 接口
 
@@ -6696,8 +6949,8 @@ flowchart BT
   D("&lt;&lt;Abstract&gt;&gt;<br/>AbstractJackson2HttpMessageConverter"):::aclass --"extends"--> C
   E("MappingJackson2HttpMessageConverter"):::sclass --"extends"--> D
   F("MappingJackson2XmlHttpMessageConverter"):::sclass --"extends"--> D
-  classDef sclass fill:#7eabd0;
-  classDef aclass fill:#8BA270;
+  classDef sclass fill:#6eabd0;
+  classDef aclass fill:#7BA270;
 ```
 
 **自定义消息转换器被调用的原理**：
@@ -6705,7 +6958,7 @@ flowchart BT
 AbstractMessageConverterMethodProcessor 类的 **writeWithMessageConverters** 方法，会获取 客户端支持的内容类型、服务端可处理的内容类型；并判断 最佳匹配的媒体内容类型
 
 ```java
-protected <T> void writeWithMessageConverters() throws... {
+protected <T> void writeWithMessageConverters() throws ... {
     ...
     // 获取客户端可以接收的内容类型（调用 resolveMediaTypes 方法）
     List acceptableTypes = this.getAcceptableMediaTypes(request);
@@ -6730,7 +6983,7 @@ protected <T> void writeWithMessageConverters() throws... {
   ContentNegotiationManager 中的方法：
 
   ```java
-  public List<MediaType> resolveMediaTypes(NativeWebRequest request) throws... {
+  public List<MediaType> resolveMediaTypes(NativeWebRequest request) throws ... {
       Iterator var2 = this.strategies.iterator();
   
       List mediaTypes;
@@ -6785,6 +7038,8 @@ protected <T> void writeWithMessageConverters() throws... {
 
 #### 视图解析器
 
+概述：根据 Handler 方法返回值 ModelAndView 对象中的 View 信息，**将逻辑视图名解析成物理视图名**，再生成 View 视图对象
+
 请求会被 DispatcherServlet 拦截，在 doDispatch 方法中：
 
 通过处理器映射器获取匹配的 Handler -\> 通过处理器适配器执行 Handler -\> 获取到 Handler 的返回值 ModelAndView -> 视图解析
@@ -6806,11 +7061,13 @@ flowchart BT
   E("InternalResourceViewResolver"):::sclass --"extends"--> D("UrlBasedViewResolver"):::sclass --"extends"--> B
   F("BeanNameViewResolver"):::sclass -."implement".-> I
   G("...") -."implement".-> I
-  classDef sclass fill:#7eabd0;
-  classDef aclass fill:#8BA270;
+  classDef sclass fill:#6eabd0;
+  classDef aclass fill:#7BA270;
 ```
 
-**以此控制器方法为例**：
+**视图解析流程**：
+
+以此控制器方法为例
 
 ```java
 @PostMapping("/login")
@@ -6822,12 +7079,10 @@ public String mainPage() { return "main"; }
 
 请求：POST 方式请求 /login
 
-以下为视图解析流程：
-
 1. doDispatch 最后会调用 **processDispatchResult** 处理运行的结果
 
    ```java
-   protected void doDispatch(...) throws... {
+   protected void doDispatch(...) throws ... {
        ...
        mappedHandler = this.getHandler(processedRequest);
        ...
@@ -6836,7 +7091,8 @@ public String mainPage() { return "main"; }
        mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
        ...
        // 处理运行的结果
-       this.processDispatchResult(processedRequest, response, mappedHandler, mv, ...);
+       this.processDispatchResult(
+           processedRequest, response, mappedHandler, mv, (Exception)dispatchException);
        ...
    }
    ```
@@ -6844,21 +7100,21 @@ public String mainPage() { return "main"; }
 2. 调用到 **processDispatchResult** 方法
 
    ```java
-   private void processDispatchResult(...) throws... {
+   private void processDispatchResult(...) throws ... {
        boolean errorView = false;
-       // 判断有无异常，若有，就
+       // 判断有无异常，若有，就进行异常处理
        if (exception != null) {
            if (exception instanceof ModelAndViewDefiningException) {
                this.logger.debug("ModelAndViewDefiningException encountered", exception);
                mv = ((ModelAndViewDefiningException)exception).getModelAndView();
            } else {
                Object handler = mappedHandler != null ? mappedHandler.getHandler() : null;
-               // 设置 ModelAndView
+               // 处理 Handler 的异常，返回 ModelAndView；若没有成功处理，则返回 null
                mv = this.processHandlerException(request, response, handler, exception);
                errorView = mv != null;
            }
        }
-       // 只有 ModelAndView 为空时，才会执行下面的代码
+       // 只有 ModelAndView 不为空时，才会执行下面 render 方法来渲染视图
        if (mv != null && !mv.wasCleared()) {
            // 调用 render 方法来解析视图
            this.render(mv, request, response);
@@ -6873,7 +7129,7 @@ public String mainPage() { return "main"; }
 3. 调用到 **render** 方法
 
    ```java
-   protected void render(...) throws... {
+   protected void render(...) throws ... {
        ...
        String viewName = mv.getViewName();
        ...
@@ -6886,7 +7142,7 @@ public String mainPage() { return "main"; }
 4. 调用到 **resolveViewName** 方法，来解析视图名称
 
    ```java
-   protected View resolveViewName(...) throws... {
+   protected View resolveViewName(...) throws ... {
        if (this.viewResolvers != null) {
            Iterator var5 = this.viewResolvers.iterator();
            // 循环 ViewResolver 来解析视图名称
@@ -6907,7 +7163,7 @@ public String mainPage() { return "main"; }
    该方法调用 **getCandidateViews** 来获取候选视图集合 List\<View\>
 
    ```java
-   private List<View> getCandidateViews(...) throws... {
+   private List<View> getCandidateViews(...) throws ... {
        ...
        Iterator var5 = this.viewResolvers.iterator();
        // 循环 ViewResolver，使用合适的解析器来解析视图
@@ -6928,7 +7184,7 @@ public String mainPage() { return "main"; }
    该方法会调用 ThymeleafViewResolver 类中的 **createView** 方法
 
    ```java
-   protected View createView(String viewName, Locale locale) throws... {
+   protected View createView(String viewName, Locale locale) throws ... {
        ...
        String forwardUrl;
        // 重定向的视图
@@ -6962,6 +7218,8 @@ public String mainPage() { return "main"; }
 
 #### 拦截器
 
+概述：用于对控制器 Controller 进行**预处理和后处理**
+
 拦截器中有三个方法 preHanlder、postHandler、afterCompletion
 
 getHandler 方法获取的 HandlerExecutionChain 中包含 Handler 和 Interceptor
@@ -6978,7 +7236,7 @@ getHandler 方法获取的 HandlerExecutionChain 中包含 Handler 和 Intercept
 DispatcherServlet 中的 **doDispatch** 方法：
 
 ```java
-protected void doDispatch(...) throws... {
+protected void doDispatch(...) throws ... {
     ...
     try {
         ...
@@ -6996,7 +7254,7 @@ protected void doDispatch(...) throws... {
         ...
         // 2.执行所有拦截器的 postHandler 方法
         mappedHandler.applyPostHandle(processedRequest, response, mv);
-        
+        // 处理运行结果
         this.processDispatchResult(...);
     } catch (Exception var22) {
         // 3.执行所有拦截器的 AfterCompletion 方法
@@ -7013,7 +7271,7 @@ protected void doDispatch(...) throws... {
 - **preHandler**
 
   ```java
-  boolean applyPreHandle(...) throws... {
+  boolean applyPreHandle(...) throws ... {
       for(int i = 0; i < this.interceptorList.size(); this.interceptorIndex = i++) {
           HandlerInterceptor interceptor = (HandlerInterceptor)this.interceptorList.get(i);
           if (!interceptor.preHandle(request, response, this.handler)) {
@@ -7028,7 +7286,7 @@ protected void doDispatch(...) throws... {
 - **postHandler**
 
   ```java
-  void applyPostHandle(...) throws... {
+  void applyPostHandle(...) throws ... {
       for(int i = this.interceptorList.size() - 1; i >= 0; --i) {
           HandlerInterceptor interceptor = (HandlerInterceptor)this.interceptorList.get(i);
           interceptor.postHandle(request, response, this.handler, mv);
@@ -7463,8 +7721,6 @@ HTML 页面中使用 Thymeleaf，需要在 &lt;html&gt; 标签中引入命名空
         </tr>
     </tbody>
 </table>
-
-
 - **字面量**
   
   文本值：'one text' , 'Another one!'  
@@ -8470,4 +8726,1172 @@ IDE 可以利用该依赖，在写配置时进行智能提示
   @EnableAutoConfiguration  // 开启自动配置
   @ComponentScan(           // 开启包扫描
       excludeFilters = {@Filter(
-      typ
+      type = FilterType.CUSTOM,
+      classes = {TypeExcludeFilter.class}
+  ), @Filter(
+      type = FilterType.CUSTOM,
+      classes = {AutoConfigurationExcludeFilter.class}
+  )}
+  )
+  public @interface SpringBootApplication { ... }
+  ```
+
+- **@EnableAutoConfiguration**
+
+  开启自动导入配置
+
+  ```java
+  @Target({ElementType.TYPE})
+  @Retention(RetentionPolicy.RUNTIME)
+  @Documented
+  @Inherited
+  @AutoConfigurationPackage  // 自动导包
+  @Import({AutoConfigurationImportSelector.class})  // 自动配置的导入选择（按需选择）
+  public @interface EnableAutoConfiguration { ... }
+  ```
+
+  - **@AutoConfigurationPackage**
+
+    自动导包
+
+    ```java
+    @Target({ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    @Inherited
+    @Import({Registrar.class})  // 导入了 Registrar
+    public @interface AutoConfigurationPackage { ... }
+    ```
+
+    **Registrar.class**
+
+    通过 Registrar 给容器中导入一系列组件
+
+    ```java
+    // AutoConfigurationPackage 抽象类中的内部类
+    static class Registrar implements ImportBeanDefinitionRegistrar, DeterminableImports {
+        ...
+        public void registerBeanDefinitions(AnnotationMetadata metadata, 
+                                            BeanDefinitionRegistry registry) {
+            /*
+             * 该方法的第二个参数就是当前启动类所在的包名
+             */
+            AutoConfigurationPackages.register(registry, 
+                (String[])(new AutoConfigurationPackages.PackageImports(metadata))
+                .getPackageNames().toArray(new String[0]));
+        }
+    }
+    ```
+
+    **注意**：@EnableAutoConfiguration 和 @ComponentScan 的不同
+
+    - `@EnableAutoConfiguration` 自动配置 Spring Boot 应用程序类路径中存在的 bean
+
+      `@ComponentScan` 扫描并加载 Spring 组件 `@Controller`/`@Service`/`@Component`/`@Repository`
+
+      > 比如，使用 Spring Data JPA 时，可能会在实体类上写 `@Entity` 注解  
+      > 这个 `@Entity` 注解由 `@AutoConfigurationPackage` 扫描并加载
+
+    - `Registrar.class` 来注册项目包外的 bean，因为 `@ComponentScan` 只能扫描注册项目包内的 bean
+
+    > [@EnableAutoConfiguration](https://docs.spring.io/spring-boot/docs/current/api/org/springframework/boot/autoconfigure/EnableAutoConfiguration.html) document excerpts：
+    >
+    > Enable auto-configuration of the Spring Application Context, attempting to guess and configure beans that you are likely to need.
+    >
+    > Auto-configuration is always applied after user-defined beans have been registered.
+    >
+    > It will be used when scanning for `@Entity` classes. It is generally recommended that you place `@EnableAutoConfiguration` (if you're not using `@SpringBootApplication`) in a root package so that all sub-packages and classes can be searched.
+
+  - **AutoConfigurationImportSelector.class**
+
+    自动配置信息的导入选择器，根据场景按需导入
+
+    selectImports()，该方法的作用是根据配置文件将需要的 bean 注入容器中
+
+    ```mermaid
+    flowchart LR
+      A("selectImports") --call--> B("getAutoConfigurationEntry") --call--> C("getCandidateConfigurations")
+    ```
+
+    最终，会调用 SpringFactoriesLoader.class 来获取候选类，之后再经过去重、筛选，才会确定要自动配置的类
+
+    - 版本 2.7 以前，配置文件只有 spring.factories
+    - 版本 2.7 开始，配置文件为 spring-boot-autoconfigure 包下 META-INF 下的 spring.factories 和 org.springframework.boot.autoconfigure.AutoConfiguration.imports
+
+### 举例分析
+
+SpringBoot 选择需要自动导入的配置，底层实现使用了 [@Conditional...](#@Conditional...) 注解，会进行各种判断，如：类路径下是否有指定类、容器中是否有指定 bean、是否有指定的配置项...
+
+SpringBoot 会判断容器中是否已存在用户自定义的配置（如：multipartResolver），若有则不再进行配置
+
+实现各种场景自动配置的类，都在 org.springframework.boot.autoconfigure 包下
+
+- **AopAutoConfiguration**
+
+  源码截取：
+
+  ```java
+  @AutoConfiguration
+  @ConditionalOnProperty(  // 配置项 spring.aop.auto=true 时才会自动配置 AOP
+      prefix = "spring.aop",
+      name = {"auto"},
+      havingValue = "true",
+      matchIfMissing = true  // 若没配置则默认为 true
+  )
+  public class AopAutoConfiguration {
+      ...
+      @Configuration(proxyBeanMethods = false)
+      @ConditionalOnClass({Advice.class})  // 若存在 org.aspectj.weaver.Advice 这个类，则进行自动配置
+      static class AspectJAutoProxyingConfiguration { ... }
+  }
+  ```
+
+- **DispatcherServletAutoConfiguration**
+
+  源码截取：
+
+  ```java
+  @AutoConfigureOrder(-2147483648)
+  @AutoConfiguration(
+      after = {ServletWebServerFactoryAutoConfiguration.class}
+  )
+  @ConditionalOnWebApplication( // 项目为 web 项目时，才会进行该自动配置
+      type = Type.SERVLET
+  )
+  @ConditionalOnClass({DispatcherServlet.class})  // 类路径中要有 DispatcherServlet
+  public class DispatcherServletAutoConfiguration {
+      @Bean
+      @ConditionalOnBean({MultipartResolver.class})
+      // 若容器中已有用户自定义的 multipartResolver，则不进行创建
+      @ConditionalOnMissingBean(name = {" multipartResolver"})
+      public MultipartResolver multipartResolver(MultipartResolver resolver) { ... }
+  }
+  ```
+
+- **CacheAutoConfiguration**
+
+  源码截取：
+
+  ```java
+  @AutoConfiguration(
+      // 配置完这些类后，才会进行 CacheAutoConfiguration
+      after = {CouchbaseDataAutoConfiguration.class, HazelcastAutoConfiguration.class,
+               HibernateJpaAutoConfiguration.class, RedisAutoConfiguration.class}
+  )
+  @ConditionalOnClass({CacheManager.class})
+  @ConditionalOnBean({CacheAspectSupport.class})
+  // 容器中没有 id 为 cacheResolver，类型为 CacheManager 的 bean 时才会自动配置
+  @ConditionalOnMissingBean(
+      value = {CacheManager.class},
+      name = {"cacheResolver"}
+  )
+  @EnableConfigurationProperties({CacheProperties.class})  // 开启配置信息的绑定
+  @Import({CacheAutoConfiguration.CacheConfigurationImportSelector.class, CacheAutoConfiguration.CacheManagerEntityManagerFactoryDependsOnPostProcessor.class})
+  public class CacheAutoConfiguration { ... }
+  ```
+
+  ```java
+  // 配置文件中与缓存有关的属性名都要以 spring.cache 开头，如：spring.cache.redis.cache-null-values
+  @ConfigurationProperties(prefix = "spring.cache")
+  public class CacheProperties { ... }
+  ```
+
+### 执行流程
+
+SpringBoot 自动配置的流程：
+
+```mermaid
+flowchart TD
+    A(("启动")) --> B("@SpringBootApplication<br/>启动类注解")
+    B --> C("@SpringBootConfiguration<br/>标识为启动类")
+    B --> D("@EnableAutoConfiguration<br/>开启自动导入配置")
+    B --> E("@ComponentScan<br/>包扫描")
+    C --> F("@Configuration<br/>标识为配置类")
+    D --> G("@Import({AutoConfigurationImportSelector.class})<br/>自动配置的导入选择 - 按需选择")
+    G --> J("AutoConfigurationImportSelector<br/>获取所有候选的自动配置")
+    J --> K("SpringFactoriesLoader#loadFactoryNames<br/>获取候选的自动配置类")
+    K --> L("spring.factories<br/>...AutoConfiguration.imports<br/>记录所有候选类的配置文件")
+    L --"web"--> M("spring-boot-starter-web<br/>xxxAutoConfiguration<br/>...")
+    L --"cache"--> N("spring-boot-starter-cache<br/>xxxAutoConfiguration<br/>...")
+    M --> P{"@Conditional<br/>运行时判断"}
+    N --> P
+    P --"是"--> Y["加入 IOC 容器"]
+    P --"否"--> X["不加载"]
+    D --> H("@AutoConfigurationPackage<br/>自动导入配置类的包")
+    H --> I("@Import({Registrar.class})<br/>自动配置应用程序类路径下的 bean")
+```
+
+## Web
+
+### 使用
+
+#### 静态资源
+
+默认情况下，静态资源存放路径：
+
+1. classpath 中名为 /static（或 /public 或 /resources 或 /META-INF/resources）的目录
+2. ServletContext 的根目录（/webapp）
+
+访问地址：http://localhost:8088/demo.html
+
+正确的存放路径：
+
+```ASCII
+main
+├── resource
+│   ├── META-INF
+│   │   └── resource
+│   │       └── a.html
+│   ├── static
+│   │   └── b.html
+│   ├── public
+│   │   └── c.html
+│   └── resources
+│       └── d.html
+└── webapp
+    └── e.html
+```
+
+**自定义存放路径**：
+
+```yml
+spring:
+  web:
+    resources:
+      static-locations: [classpath:/assets/]  # 数组
+```
+
+配置后，就更改了 SpringBoot 默认的静态资源映射规则，只映射配置的路径下的资源
+
+访问地址：http://localhost:8088/demo.html
+
+**自定义访问前缀**：
+
+```yml
+spring:
+  mvc:
+    static-path-pattern: /resource/**
+```
+
+访问地址：http://localhost:8088/resource/demo.html，静态资源存放地址不变
+
+#### REST
+
+SpringBoot 也支持 REST 风格请求处理
+
+**Contoller 类**：
+
+```java
+ @RestController
+ @RequestMapping("/hello")
+ public class MyController {
+     @RequestMapping("")
+     public String hello() {
+         return "Hello SpringBoot";
+     }
+ }
+```
+
+访问路径：http://localhost:8080/hello
+
+RESTful 风格使用详解：[Spring MVC -> RESTful](#RESTful)
+
+SpringBoot 需要如下配置，来开启隐藏方法
+
+```yml
+ spring:
+   mvc:
+     hiddenmethod:
+       filter:
+         enabled: true
+```
+
+可以自定义 HiddenHttpMethodFilter 过滤器的相关属性
+
+```java
+@Configuration
+public class HiddenHttpMethodConfig {
+    @Bean
+    // 自定义，并将该对象交予 IOC 容器管理
+    public HiddenHttpMethodFilter hiddenHttpMethodFilter(){
+        HiddenHttpMethodFilter methodFilter = new HiddenHttpMethodFilter();
+        // 将默认的隐藏方法参数名 _method 改为 _m
+        methodFilter.setMethodParam("_m");
+        return methodFilter;
+    }
+}
+```
+
+#### 视图跳转
+
+##### 转发到页面
+
+需要 thymeleaf 依赖，来执行视图解析器的工作
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>
+```
+
+控制器
+
+```java
+@RestController
+public class MyController {
+    @RequestMapping("/test")
+    public ModelAndView test(ModelAndView mv) {
+        mv.setViewName("abc");  // 转发到 abc.html
+        return mv;
+    }
+}
+```
+
+**注意**：目标资源文件，默认在 src/main/resources/templates 文件夹下
+
+调用 URL 时，控制器会搜索模板文件夹中的 HTML 文件。若文件不可用，将引发此异常  
+错误原因可能是，控制器中错误的 viewName 或 template 文件夹中的资源文件不可用
+
+自定义 template 的 存放地址 和 后缀：
+
+```yml
+spring:
+  thymeleaf:
+    prefix: classpath:/static/
+    suffix: .html
+```
+
+##### 转发到控制器
+
+若返回 ModelAndView，viewName 是识别为静态资源名称，不会跳转到 Controller 方法
+
+```java
+@Controller
+public class MyController {
+    @RequestMapping("/test1")
+    public String test1(HttpServletRequest req) {
+        req.setAttribute("name", "Domenic");
+        return "forward:/test2";  // 转发到 "/test2"
+    }
+    @RequestMapping("/test2")
+    @ResponseBody
+    public String test2(@RequestAttribute String name) {
+        return name;
+    }
+}
+```
+
+### 工作原理
+
+[SpringMVC 框架详解](#MVC%20框架详解)，包含组件介绍、执行流程、处理器映射器
+
+#### 静态资源映射
+
+配置信息绑定到 webMvcProperies 和 WebProperties 上
+
+```java
+@ConfigurationProperties(prefix = "spring.mvc")
+public class WebMvcProperties { ... }
+
+@ConfigurationProperties("spring.web")
+public class WebProperties { ... }
+```
+
+静态资源映射的自动配置在 **WebMvcAutoConfiguration** 类中实现
+
+内部类 WebMvcAutoConfigurationAdapter 是配置器适配器
+
+```java
+...
+/* 指定了 spring.mvc 和 spring.web 配置 */
+@EnableConfigurationProperties({WebMvcProperties.class, WebProperties.class})
+public static class WebMvcAutoConfigurationAdapter... { ... }
+```
+
+该类拥有以下属性：
+
+- *resourceProperties* - spring.resources 绑定的所有配置的值
+- *mvcProperties* - spring.mvc 绑定的所有配置的值
+- *beanFactory* - Spring 的 beanFactory
+- *messageConvertersProvider* - 所有的 HttpMessageConverter
+- *dispatchServletPath* - 前端控制器
+- *ServletRegistrations* - 给应用注册 Servlet、Filter...
+- *resourceHandlerRegistrationCustomizer* - 资源处理器的自定义器
+
+该类下的 addResourceHandlers 方法，描述静态资源默认的处理规则
+
+**欢迎页**
+
+WelcomePageHandlerMapping 类中封装了欢迎页的规则
+
+```java
+/* 构造函数中的代码 */
+// static-path-pattern 设置后，欢迎页就无法访问，因为必须等于 /**
+if (welcomePage != null && "/**".equals(staticPathPattern)) {
+    logger.info("Adding welcome page: " + welcomePage);
+    this.setRootViewName("forward:index.html");  // 转发到欢迎页
+} else if (this.welcomeTemplateExists(templateAvailabilityProviders, applicationContext)) {
+    logger.info("Adding welcome page template: index");
+    this.setRootViewName("index");  // 转发到映射路径为 "/" 的 controller 方法
+}
+```
+
+#### REST 请求处理
+
+**WebMvcAutoConfiguration** 类中创建了处理 HiddenMethod 的类对象
+
+```java
+@Bean
+@ConditionalOnMissingBean({HiddenHttpMethodFilter.class})
+@ConditionalOnProperty(
+    prefix = "spring.mvc.hiddenmethod.filter",  // 需要有该配置项
+    name = {"enabled"}  // 该值默认为 false，需要设置为 true 才生效
+)
+public OrderedHiddenHttpMethodFilter hiddenHttpMethodFilter() {
+    return new OrderedHiddenHttpMethodFilter();
+}
+```
+
+OrderedHiddenHttpMethodFilter 类继承了 HiddenHttpMethodFilter 类
+
+HiddenHttpMethodFilter 类中的 **doFilterInternal** 方法，会获取名为 `_method` 的参数值作为隐藏方法，并对请求重新包装
+
+```java
+protected void doFilterInternal(...) throws ... {
+    // 复制一份 request，用于重新包装
+    HttpServletRequest requestToUse = request;
+    // getMethod() 获取请求方法
+    if ("POST".equals(request.getMethod()) && 
+        request.getAttribute("javax.servlet.error.exception") == null) {
+        // 获取名为 _method 的参数值
+        String paramValue = request.getParameter(this.methodParam);
+        if (StringUtils.hasLength(paramValue)) {
+            // 将值转为大写
+            String method = paramValue.toUpperCase(Locale.ENGLISH);
+            if (ALLOWED_METHODS.contains(method)) {
+                // 重新包装
+                requestToUse = new HiddenHttpMethodFilter.HttpMethodRequestWrapper(request, method);
+            }
+        }
+    }
+    // 放行请求
+    filterChain.doFilter((ServletRequest)requestToUse, response);
+}
+```
+
+#### 异常处理
+
+SpringBoot 有一个异常的自动配置类 ErrorMvcAutoConfiguration
+
+```java
+@AutoConfiguration(before = {WebMvcAutoConfiguration.class})
+// 是 web 应用时才生效
+@ConditionalOnWebApplication(type = Type.SERVLET)
+// IOC 中存在 Servlet 和 DispatcherServlet 时才生效
+@ConditionalOnClass({Servlet.class, DispatcherServlet.class})
+// 使配置类生效
+@EnableConfigurationProperties({ServerProperties.class, WebMvcProperties.class})
+public class ErrorMvcAutoConfiguration { ... }
+```
+
+ServerProperties 绑定了前缀为 service 的配置  
+WebMvcProperties 绑定了前缀为 spring.mvc 的配置
+
+在 ErrorMvcAutoConfiguration 的作用下，当异常出现时，客户端会接收到 Whitelabel Error Page，或 JSON 格式的异常数据
+
+##### 组件
+
+在自动配置类 ErrorMvcAutoConfiguration 中，有 3 个组件值得关注
+
+1. DefaultErrorAttributes
+2. BasicErrorController
+3. BeanNameViewResolver
+
+**异常的响应原理**（默认状态下）：
+
+异常发生后
+
+1. DefaultErrorAttributes 获取各种需要响应的信息，如：timestamp，status，message
+2. BasicErrorController 处理 /error 请求，获取并封装 ErrorAttribute 数据到 ModelAndView 或 ResponseEntity 中
+3. 异常自动配置类中会将 defaultErrorView 放入名为 error 的 bean 中交予 IOC 容器管理（将默认异常视图声明为 bean）
+4. BeanNameViewResolver 解析名为 error 的 bean
+
+###### DefaultErrorAttributes
+
+当 IOC 容器中没有 ErrorAttribute 类型的 bean 时，才会配置该组件，因此可以自定义
+
+```java
+@Bean
+@ConditionalOnMissingBean(
+    value = {ErrorAttributes.class},
+    search = SearchStrategy.CURRENT
+)
+public DefaultErrorAttributes errorAttributes() {
+    return new DefaultErrorAttributes();
+}
+```
+
+该类中的 getErrorAttributes 方法用来定义错误信息，并将错误信息封装入一个名为 errorAttributes 的 Map 集合。Spring 处理异常时，可以将这些数据取出并返回给客户端
+
+默认的返回信息示例：
+
+```json
+{
+    "timestamp": "2050-11-20T06:00:38.569+00:00",
+    "status": 404,
+    "error": "Not Found",
+    "message": "No message available",
+    "path": "/domenic"
+}
+```
+
+###### BasicErrorController
+
+SpringBoot autoconfigure 包下的类
+
+```java
+@Bean
+@ConditionalOnMissingBean(
+    value = {ErrorController.class},
+    search = SearchStrategy.CURRENT
+)
+public BasicErrorController basicErrorController(...) { ... }
+```
+
+当发生异常后，Spring 会发出 /error 请求，并被该 Controller 类处理
+
+```java
+@Controller
+@RequestMapping({"${server.error.path:${error.path:/error}}"})
+public class BasicErrorController extends AbstractErrorController { ... }
+```
+
+BasicErrorController 类中处理异常信息相应的方法
+
+- **响应页面**
+
+  ```java
+  @RequestMapping(
+      // produce 参数指定了返回的内容类型为 text/html
+      produces = {"text/html"}
+  )
+  public ModelAndView errorHtml(HttpServletRequest request, HttpServletResponse response) {
+      HttpStatus status = this.getStatus(request);
+      Map<String, Object> model = Collections.unmodifiableMap(this.getErrorAttributes(
+              request, this.getErrorAttributeOptions(request, MediaType.TEXT_HTML)));
+      response.setStatus(status.value());
+      // 获取并封装 ErrorAttribute
+      ModelAndView modelAndView = this.resolveErrorView(request, response, status, model);
+      // 返回的是名为 error 的视图
+      return modelAndView != null ? modelAndView : new ModelAndView("error", model);
+  }
+  ```
+
+  - 响应页面时，框架先在 /error 文件夹下尝试寻找合适的自定义异常页面，如：404.html，5xx.html...  
+    匹配的页面，默认会被 DefaultErrorViewResolver 解析
+  - 若 /error 下没有匹配的页面，就在 classpath 下（Thymeleaf 就是在 /templates 下）查找 error.html，或是查找名为 error 的 bean（声明为视图的 bean）
+  - 若没有 error.html，则返回默认的异常页 "Whitelabel Error Page"
+
+- **响应 JSON**
+
+  ```java
+  @RequestMapping
+  // 方法返回了一个实体类，最终会以 JSON 的格式传递给
+  public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) {
+      HttpStatus status = this.getStatus(request);
+      if (status == HttpStatus.NO_CONTENT) {
+          return new ResponseEntity(status);
+      } else {
+          // 获取并封装 ErrorAttribute
+          Map<String, Object> body =
+              this.getErrorAttributes(request, this.getErrorAttributeOptions(request, MediaType.ALL));
+          return new ResponseEntity(body, status);
+      }
+  }
+  ```
+
+###### BeanNameViewResolver
+
+该类用于解析声明为 bean 的视图
+
+```java
+/* ErrorMvcAutoConfiguration 的内部类，配置默认的异常页面 */
+protected static class WhitelabelErrorViewConfiguration {
+    // StaticView 描述了默认异常页
+    private final ErrorMvcAutoConfiguration.StaticView defaultErrorView = 
+        new ErrorMvcAutoConfiguration.StaticView();
+    // 将 defaultErrorView 视图声明为 bean
+    @Bean(name = {"error"})
+    @ConditionalOnMissingBean(name = {"error"})
+    public View defaultErrorView() {
+        return this.defaultErrorView;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public BeanNameViewResolver beanNameViewResolver() {
+        BeanNameViewResolver resolver = new BeanNameViewResolver();
+        resolver.setOrder(2147483637);
+        return resolver;
+    }
+}
+```
+
+defaultErrorView 是被声明为 bean 的视图，将会被 BeanNameViewResolver 解析
+
+ErrorMvcAutoConfiguration 中的内部类 StaticView 就是描述 Whitelabel Error Page 的
+
+##### 原理
+
+**异常处理器**：
+
+所有 Handler 异常处理器，都直接或间接实现了 HandlerExceptionResolver 接口
+
+以下为处理器的类层级结构：
+
+有一个 composite 类 HandlerExceptionResolverComposite 实现了 HandlerExceptionResolver  
+负责调用其他的 Handler 异常处理实现类（相当于 Service 层）
+
+```mermaid
+flowchart BT
+  A("DefaultErrorAttributes"):::sclass -."implement".-> I("&lt;&lt;Interface&gt;&gt;<br/>HandlerExceptionResolver")
+  E("DefaultHandlerExceptionResolver"):::sclass --"extends"--> B("&lt;&lt;Abstract&gt;&gt;<br/>AbstractHandlerExceptionResolver"):::aclass
+  D("ExceptionHandlerExceptionResolver"):::sclass --"extends"--> C("&lt;&lt;Abstract&gt;&gt;<br/>AbstractHandlerMethodExceptionResolver"):::aclass --"extends"--> B -."implement".-> I
+  F("ResponseStatusExceptionResolver"):::sclass --"extends"--> B
+  G("SimpleMappingExceptionResolver"):::sclass --"extends"--> B
+  classDef sclass fill:#6eabd0;
+  classDef aclass fill:#7BA270;
+```
+
+###### 默认处理机制
+
+概述：默认状态下，SpringBoot 自动配置的 Handler 方法异常处理原理
+
+以此请求为例
+
+```bash
+# 访问不存在的页面
+curl -H "Accept: text/html" http://localhost:8080/no-such-page
+```
+
+执行流程：
+
+1. DispatcherServlet 的 **doDispatch** 方法：
+
+   ```java
+   protected void doDispatch(...) throws ... {
+       ...
+       mappedHandler = this.getHandler(processedRequest);
+       ...
+       HandlerAdapter ha = this.getHandlerAdapter(mappedHandler.getHandler());
+       ...
+       // 执行 Handler 方法
+       mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
+       ...
+       // 处理运行的结果
+       this.processDispatchResult(
+           processedRequest, response, mappedHandler, mv, (Exception)dispatchException);
+       ...
+   }
+   ```
+
+   HandlerAdapter 的 handle 方法，最终会调用到 InvocableHandlerMethod 的 doinvoke 方法，执行 Handler 方法
+
+2. 若 Handler 执行时出现异常，会由 DispatcherServlet 的 **processDispatchResult** 方法进行处理
+
+   ```java
+   private void processDispatchResult(...) throws ... {
+       boolean errorView = false;
+       // 判断有无异常，若有，就进行异常处理
+       if (exception != null) {
+           if (exception instanceof ModelAndViewDefiningException) {
+               this.logger.debug("ModelAndViewDefiningException encountered", exception);
+               mv = ((ModelAndViewDefiningException)exception).getModelAndView();
+           } else {
+               Object handler = mappedHandler != null ? mappedHandler.getHandler() : null;
+               // 处理 Handler 的异常，返回 ModelAndView；若没有成功处理，则返回 null
+               mv = this.processHandlerException(request, response, handler, exception);
+               errorView = mv != null;
+           }
+       }
+       // 只有 ModelAndView 不为空时，才会执行下面 render 方法来渲染视图
+       ...
+   }
+   ```
+
+3. 调用 DispatcherServlet 的 **processHandlerException** 方法
+
+   - handlerExceptionResolvers - 包含自定义和默认的异常处理器
+
+     示例，自定义了 CustomErrorAttribute 继承 DefaultErrorAttribute 类：
+
+     - 0 = {CustomErrorAttribute}
+     - 1 = {HandlerExceptionResolverComposite}
+       - resolvers = {ArrayList} size = 3
+         - 0 = {ExceptionHandlerExceptionResolver}
+         - 1 = {ResponseStatusExceptionResolver}
+         - 2 = {DefaultHandlerExceptionResolver}
+
+   ```java
+   protected ModelAndView processHandlerException(...) throws ... {
+       request.removeAttribute(HandlerMapping.PRODUCIBLE_MEDIA_TYPES_ATTRIBUTE);
+       ModelAndView exMv = null;
+       if (this.handlerExceptionResolvers != null) {
+           Iterator var6 = this.handlerExceptionResolvers.iterator();
+           // 循环遍历 handlerExceptionResolvers，进行异常处理
+           while(var6.hasNext()) {
+               HandlerExceptionResolver resolver = (HandlerExceptionResolver)var6.next();
+               // 调用处理异常的方法，尝试对异常进行处理
+               exMv = resolver.resolveException(request, response, handler, ex);
+               if (exMv != null) {
+                   break;
+               }
+           }
+       }
+       // 若 ModelAndView 不是 null，则代表异常处理成功了
+       if (exMv != null) {
+           if (exMv.isEmpty()) {
+               request.setAttribute(EXCEPTION_ATTRIBUTE, ex);
+               return null;
+           } else {
+               if (!exMv.hasView()) {
+                   // 获取默认相应的异常页面
+                   String defaultViewName = this.getDefaultViewName(request);
+                   if (defaultViewName != null) {
+                       exMv.setViewName(defaultViewName);
+                   }
+               }
+               ...
+               return exMv;
+           }
+       } else {
+           throw ex;
+       }
+   }
+   ```
+
+   该方法会调用 HandlerExceptionResolver 接口实现类的 **resolveException** 方法
+
+   1. 首先，调用 **DefaultErrorAttribute**（或自定义的 ErrorAttribute 类）的 resolveException 方法，将 Exception 信息放入 request 域中。该方法返回值为 null，还会继续循环
+
+   2. 调用 **HandlerExceptionResolverComposite** 的 resolveException 方法，该方法会循环遍历 resolvers
+
+      - **ExceptionHandler**MethodExceptionResolver
+      - **ResponseStatus**ExceptionResolver
+      - **DefaultHandler**ExceptionResolver
+
+      若异常成功被处理，则该方法返回 ModelAndView；若没有三个处理器都没有不能处理，则返回 null
+
+      ```java
+      public ModelAndView resolveException(...) {
+          if (this.resolvers != null) {
+              Iterator var5 = this.resolvers.iterator();
+              // 循环遍历 resolvers 中的几个异常处理器
+              while(var5.hasNext()) {
+                  HandlerExceptionResolver handlerExceptionResolver = 
+                      (HandlerExceptionResolver)var5.next();
+                  ModelAndView mav = handlerExceptionResolver.resolveException(...);
+                  if (mav != null) {
+                      return mav;
+                  }
+              }
+          }
+          return null;
+      }
+      ```
+
+4. 若 Handler 异常最终无法被 processHandlerException 方法处理
+
+   那就会调用 Response 类下的 `sendError()` 给响应写错误信息，并最终挂起本次响应 `setSuspended(true)`从而结束请求
+
+   之后，org.apache.catalina.core 中的类，会解除对响应的挂起，再发起一个 `/error` 请求
+   
+   StandardHostValve 类的 invoke 方法（Tomcat 8.5.78）：
+   
+   ```java
+   public final void invoke(...) throws ... {
+       ...
+       // 解除对响应的挂起
+       response.setSuspended(false);
+       ...
+       // 设置 status
+       this.status(request, response);
+       ...
+   }
+   ```
+   
+   ```java
+   private void status(Request request, Response response) {
+       int statusCode = response.getStatus();
+       Context context = request.getContext();
+       ...
+       // 根据错误代码，寻找匹配的 error 页面
+       ErrorPage errorPage = context.findErrorPage(statusCode);
+       ...
+       String message = response.getMessage();
+       ...
+       // 获取异常信息
+       request.setAttribute("javax.servlet.error.message", message);
+       // 获取 errorPage 的地址，默认为 /error
+       request.setAttribute("org.apache.catalina.core.DISPATCHER_REQUEST_PATH", errorPage.getLocation());
+       // 指定 Filter 的作用范围（默认为 REQUEST）
+       request.setAttribute("org.apache.catalina.core.DISPATCHER_TYPE", DispatcherType.ERROR);
+       ...
+   }
+   ```
+   
+   之后，调用 org.apache.catalina.core 中的 ApplicationDispatcher 类的 invoke 方法  
+   通过各个 Filter 之后，将 `/error` 请求转发到 DispatcherServlet
+   
+5. `/error` 请求最终会被 ErrorMvcAutoConfiguration 自动配置的 **BasicErrorController** 处理
+   
+   - 若返回 HTML 页面，则进入 errorHtml 方法，该方法会调用 **resolveErrorView** 来解析视图并获取 ModelAndView
+   - 若返回 JSON 数据，则进入 error 方法，返回 ResponseEntity\<Map\<String, Object\>\>
+   
+   ```java
+   @Controller
+   @RequestMapping({"${server.error.path:${error.path:/error}}"})
+   public class BasicErrorController extends AbstractErrorController {
+       @RequestMapping(produces = {"text/html"})
+       public ModelAndView errorHtml(HttpServletRequest request, HttpServletResponse response) {
+           HttpStatus status = this.getStatus(request);
+           // 获取到 ErrorAttributes，放入 Map 集合中
+           Map<String, Object> model = Collections.unmodifiableMap(
+               this.getErrorAttributes(request, this.getErrorAttributeOptions(request, MediaType.TEXT_HTML)));
+           response.setStatus(status.value());
+           // 解析 Error 视图，获取 ModelAndView
+           ModelAndView modelAndView = this.resolveErrorView(request, response, status, model);
+           return modelAndView != null ? modelAndView : new ModelAndView("error", model);
+       }
+       
+       @RequestMapping
+       public ResponseEntity<Map<String, Object>> error(HttpServletRequest request) { ... }
+       ...
+   }
+   ```
+   
+6. 调用到 AbstractErrorController 的 **resolveErrorView** 方法
+
+   该方法循环遍历 ErrorViewResolver（默认只有一个 **DefaultErrorViewResolver**），调用解析器的 resolveErrorView 方法
+
+   ```java
+   protected ModelAndView resolveErrorView(...) {
+       Iterator var5 = this.errorViewResolvers.iterator();
+       ModelAndView modelAndView;
+       do {
+           if (!var5.hasNext()) { return null; }
+           ErrorViewResolver resolver = (ErrorViewResolver)var5.next();
+           // 调用 ErrorViewResolver 的方法解析视图
+           modelAndView = resolver.resolveErrorView(request, status, model);
+       } while(modelAndView == null);
+       
+       return modelAndView;
+   }
+   ```
+
+7. 调用到 **resolveErrorView** 方法
+
+   ```java
+   static {
+       Map<Series, String> views = new EnumMap(Series.class);
+       // "4xx" 和 "5xx" 就是 ViewName
+       views.put(Series.CLIENT_ERROR, "4xx");
+       views.put(Series.SERVER_ERROR, "5xx");
+       SERIES_VIEWS = Collections.unmodifiableMap(views);
+   }
+   
+   public ModelAndView resolveErrorView(
+           HttpServletRequest request, HttpStatus status, Map<String, Object> model) {
+       // 比如 status 是 404，调用 resolve 方法查找有无 error/404 这个视图
+       ModelAndView modelAndView = this.resolve(String.valueOf(status.value()), model);
+       // 若没有 error/404，则从 SERIES_VIEWS 中获取 4xx
+       // 再调用 resolve 方法查找 error/4xx 这个视图
+       if (modelAndView == null && SERIES_VIEWS.containsKey(status.series())) {
+           modelAndView = this.resolve((String)SERIES_VIEWS.get(status.series()), model);
+       }
+       return modelAndView;
+   }
+   
+   private ModelAndView resolve(String viewName, Map<String, Object> model) {
+       String errorViewName = "error/" + viewName;
+       TemplateAvailabilityProvider provider = ...;
+       return provider != null ? 
+           new ModelAndView(errorViewName, model) : 
+           this.resolveResource(errorViewName, model);
+   }
+   ```
+
+**调用链总结**：
+
+```mermaid
+classDiagram
+  direction LR
+  class DispatcherServlet {
+    - processDispatchResult()
+    # processHandlerException()
+  }
+  class HandlerExceptionResolver {
+    resolveException()
+  }
+  <<interface>> HandlerExceptionResolver
+  class HandlerExceptionResolverComposite {
+    + resolveException()
+  }
+  DispatcherServlet --> HandlerExceptionResolver : invoke
+  HandlerExceptionResolver <|.. HandlerExceptionResolverComposite  : implement
+```
+
+```mermaid
+classDiagram
+  direction LR
+  class DispatcherServlet {
+    # doDispatch()
+  }
+  class InvocableHandlerMethod {
+    + invokeForRequest()
+    # doinvoke()
+  }
+  class BasicErrorController {
+    + errorHtml()
+    + error()
+  }
+  class ErrorViewResolver {
+    resolveErrorView()
+  }
+  <<interface>> ErrorViewResolver
+  DispatcherServlet --> InvocableHandlerMethod : invoke...to
+  InvocableHandlerMethod --> BasicErrorController : invoke
+  BasicErrorController --> ErrorViewResolver : invoke...to
+```
+
+###### 全局处理类
+
+概述：@ControllerAdvice 注解标识的自定义全局异常处理类，被调用的原理
+
+以请求 `/test` 对应的，有 ArithmeticException 异常的控制器方法为例
+
+```bash
+curl -H "Accept: text/html" http://localhost:8080/test
+```
+
+执行流程：
+
+1. 前面的流程与 “默认处理机制” 中的一致
+
+   DispatcherServlet 的 **processHandlerException** 方法，会调用 HandlerExceptionResolver 接口实现类的 **resolveException** 方法
+
+   - 先调用 **DefaultErrorAttribute**
+   - 再调用 **HandlerExceptionResolverComposite**
+
+2. HandlerExceptionResolverComposite 类的 resolveException 方法循环调用默认的异常处理类
+
+   **ExceptionHandlerExceptionResolver** 类的 **doResolveHandlerMethodException** 方法可以处理该类型异常
+
+   ```java
+   // 返回值 ModelAndView 就是异常处理方法的返回值
+   protected ModelAndView doResolveHandlerMethodException(...) {
+       // 获取 @ControllerAdvice 注解的类中，处理对应 Exception 的方法
+       ServletInvocableHandlerMethod exceptionHandlerMethod = 
+           this.getExceptionHandlerMethod(handlerMethod, exception);
+       ...
+       // 调用异常处理方法
+       exceptionHandlerMethod.invokeAndHandle(...);
+       ...
+   }
+   ```
+
+   invokeAndHandle() -- invoke --\> invokeForRequest() -- invoke --\> **doInvoke**()
+
+   最终，调用 InvocableHandlerMethod 类中的 doInvoke 方法，通过反射调用了异常处理方法，返回值被封装进 ModelAndView 对象
+
+3. ModelAndView 返回到 DispatcherServlet 的 **processHandlerException** 方法中
+
+   若 ModelAndView 不是 null，再返回给 processDispatchResult 方法
+
+4. 进入到 DispatcherServlet 的 **processDispatchResult**
+
+   该方法对返回值 ModelAndView 进行了渲染
+
+   ```java
+   private void processDispatchResult(...) throws ... {
+       boolean errorView = false;
+       // 判断有无异常，若有，就进行异常处理
+       if (exception != null) {
+           ...
+           // 调用异常处理方法，返回 ModelAndView；若没有成功处理，则返回 null
+           mv = this.processHandlerException(request, response, handler, exception);
+           ...
+       }
+       // ModelAndView 不为空，执行 render 方法来渲染视图
+       if (mv != null && !mv.wasCleared()) {
+           this.render(mv, request, response);
+           ...
+       }
+       ...
+   }
+   ```
+
+**调用链总结**：
+
+```mermaid
+classDiagram
+  direction LR
+  class DispatcherServlet {
+    ModelAndView exMv
+    - processDispatchResult()
+    # processHandlerException()
+  }
+  class HandlerExceptionResolver {
+    resolveException()
+  }
+  <<interface>> HandlerExceptionResolver
+  class HandlerExceptionResolverComposite {
+    + resolveException()
+  }
+  class DefaultErrorAttributes {
+    + resolveException()
+  }
+  DispatcherServlet --> HandlerExceptionResolver : invoke
+  HandlerExceptionResolver <|.. HandlerExceptionResolverComposite  : implement
+  HandlerExceptionResolver <|.. DefaultErrorAttributes : implement
+```
+
+```mermaid
+classDiagram
+  direction LR
+  class HandlerExceptionResolverComposite {
+    + resolveException()
+  }
+  class AbstractHandlerExceptionResolver {
+    + resolveException()
+  }
+  class ExceptionHandlerExceptionResolver {
+    # doResolveHandlerMethodException()
+  }
+  class ServletInvocableHandlerMethod {
+    + invokeAndHandle()
+  }
+  HandlerExceptionResolverComposite --> AbstractHandlerExceptionResolver : invoke
+  AbstractHandlerExceptionResolver --> ExceptionHandlerExceptionResolver : invoke...to
+  ExceptionHandlerExceptionResolver --> ServletInvocableHandlerMethod : invoke
+```
+
+###### 自定义响应状态
+
+概述：用 @ResponseStatus 注解自定义异常类，设置响应状态
+
+如 `@ResponseStatus(value = HttpStatus.BAD_GATEWAY, reason = "id can't be negative")`，当参数 id 为负数是，会进入自定义的异常
+
+以此请求为例
+
+```bash
+curl -X GET http://localhost:8080/test?id=-1
+```
+
+执行流程：
+
+1. 前面的流程，与 “默认处理机制” 中的一致
+
+   DispatcherServlet 的 **processHandlerException** 方法，会调用 HandlerExceptionResolver 接口实现类的 **resolveException** 方法
+
+   - 先调用 **DefaultErrorAttribute**
+   - 再调用 **HandlerExceptionResolverComposite**
+
+2. HandlerExceptionResolverComposite 类的 resolveException 方法循环调用默认的异常处理类
+
+   **ResponseStatusExceptionResolver** 类的 **doResolveException** 方法可以处理该类型异常
+
+   ```java
+   protected ModelAndView doResolveException(...) {
+       ...
+       // 获取注解 @ResponseStatus 的信息
+       ResponseStatus status = (ResponseStatus)AnnotatedElementUtils
+           .findMergedAnnotation(ex.getClass(), ResponseStatus.class);
+       // 有注解，则进入 resolveResponseStatus
+       if (status != null) {
+           return this.resolveResponseStatus(status, request, response, handler, ex);
+       }
+       if (ex.getCause() instanceof Exception) {
+           // 若没有该注解，则再调用本方法，解析 异常的 cause
+           return this.doResolveException(request, response, handler, (Exception)ex.getCause());
+       }
+       ...
+       return null;
+   }
+   ```
+
+3. 进入同一个类下的 resolveResponseStatus 方法
+
+   ```java
+    protected ModelAndView resolveResponseStatus(...) throws ... {
+        int statusCode = responseStatus.code().value();
+        String reason = responseStatus.reason();
+        return this.applyStatusAndReason(statusCode, reason, response);
+    }
+   ```
+
+   同类下的 applyStatusAndReason 方法，调用 Response 类下的 `sendError()` 给响应写错误信息，并最终挂起本次响应 `setSuspended(true)`从而结束请求
+
+   ```java
+    protected ModelAndView applyStatusAndReason(...) throws ... {
+        if (!StringUtils.hasLength(reason)) {
+            response.sendError(statusCode);
+        } else {
+            String resolvedReason = this.messageSource != null ? 
+                this.messageSource.getMessage(...) : reason;
+            response.sendError(statusCode, resolvedReason);
+        }
+        return new ModelAndView();
+    }
+   ```
+
+4. 之后会解除对响应的挂起，再发起一个 `/error` 请求  
+   `/error` 请求会被 ErrorMvcAutoConfiguration 自动配置的 **BasicErrorController** 处理
+
+   之后的处理流程，与 “默认处理机制” 中的一致
+
+**调用链总结**：
+
+```mermaid
+classDiagram
+  direction LR
+  class DispatcherServlet {
+    ModelAndView exMv
+    - processDispatchResult()
+    # processHandlerException()
+  }
+  class HandlerExceptionResolver {
+    resolveException()
+  }
+  <<interface>> HandlerExceptionResolver
+  class HandlerExceptionResolverComposite {
+    + resolveException()
+  }
+  class DefaultErrorAttributes {
+    + resolveException()
+  }
+  DispatcherServlet --> HandlerExceptionResolver : invoke
+  HandlerExceptionResolver <|.. HandlerExceptionResolverComposite  : implement
+  HandlerExceptionResolver <|.. DefaultErrorAttributes : implement
+```
+
+```mermaid
+classDiagram
+  direction LR
+  class HandlerExceptionResolverComposite {
+    + resolveException()
+  }
+  class AbstractHandlerExceptionResolver {
+    + resolveException()
+  }
+  class ResponseStatusExceptionResolver {
+    # doResolveException()
+  }
+  class Response {
+    + sendError()
+  }
+  HandlerExceptionResolverComposite --> AbstractHandlerExceptionResolver : invoke
+  AbstractHandlerExceptionResolver --> ResponseStatusExceptionResolver : invoke
+  ResponseStatusExceptionResolver --> Response : invoke...to
+```

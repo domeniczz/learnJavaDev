@@ -6179,10 +6179,12 @@ src
        └── mybatis-config.xml
    ```
 
-   注意：resources 下只能创建 directory，因此创建时，不能用 . 来做分隔符，而应该用 /
+   注意：resources 下只能创建 directory，因此创建时，不能用 `.` 来做分隔符，应该用 `/`
 
-   > SQL 映射文件也可以与 Mapper 接口放在一起，就是在 java 目录下  
+   > SQL 映射文件也可以与 Mapper 接口放在同一物理目录下  
    > 不过，需要在 pom 中添加资源插件
+   > 
+   > 资源插件，将文件从输入资源目录复制到输出目录
    >
    > ```xml
    > <plugin>
@@ -6201,8 +6203,8 @@ src
    >             <directory>src/main/resources</directory>
    >             <includes>
    >                 <include>**/*.properties</include>
-   >                 <include>**/*.yml</include>
    >                 <include>**/*.xml</include>
+   >                 <include>**/*.yml</include>
    >                 <filtering>true</filtering>
    >             </includes>
    >         </resource>

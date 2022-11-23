@@ -1,18 +1,16 @@
-## 设计原则和设计模式
-
 **资源网站**
 
 [设计模式 - 菜鸟教程](https://www.runoob.com/design-pattern/design-pattern-intro.html)
 
 [设计模式 - 动力节点](http://www.bjpowernode.com/shejimoshi/)
 
-### 常用的设计原则（记住）
+# 常用的设计原则
 
-#### 软件开发流程
+## 软件开发流程
 
 需求分析文档、概要设计文档、详细设计文档、编码和测试、安装和调试、维护和升级
 
-#### 常用设计原则
+## 常用设计原则
 
 - 开闭原则（Open Close Principle）<br/>对扩展开放对修改关闭，为了使程序的扩展性好，易于维护和升级
 - 里氏代换原则（Liskov Substitution Principle）<br/>任何基类可以出现的地方，子类一定可以出现，多使用多态的方式
@@ -36,7 +34,8 @@ public interface RunAnimal {
 }
 ```
 
-此时，如果 Dog 类实现的是大接口 Animal，那么它就必须重写 fly 方法，但是狗不能飞<br/>所以为了避免接口污染，Dog 类应该实现小接口 RunAnimal
+此时，如果 Dog 类实现的是大接口 Animal，那么它就必须重写 fly 方法，但是狗不能飞  
+所以为了避免接口污染，Dog 类应该实现小接口 RunAnimal
 
 **合成复用原则举例**
 
@@ -60,22 +59,20 @@ public class B {
 
 ---
 
-### 常用设计模式
+# 常用设计模式
 
-**概述：**
+**概述**：
 
 - 设计模式（Design pattern）是一套被反复使用、多数人知晓的、经过分类编目的、代码设计经验的总结
 - 设计模式就是一种用于固定场合的固定套路
 
 **分类**
 
-- 创建型模式：[单例设计模式](#单例设计模式)、[普通工厂模式](#普通工厂模式)、[抽象工厂模式](#抽象工厂模式) ...
-- 结构型模式：[装饰器模式](#装饰器模式)、[代理模式](#代理模式) ...
-- 行为型模式：[模板设计模式](#模板设计模式) ...
+- 创建型模式：[单例设计模式](#单例设计模式)、[普通工厂模式](#普通工厂模式)、[抽象工厂模式](#抽象工厂模式)...
+- 结构型模式：[装饰器模式](#装饰器模式)、[代理模式](#代理模式)...
+- 行为型模式：[模板设计模式](#模板设计模式)...
 
-
-
-#### 单例设计模式
+## 单例设计模式
 
 分为：饿汉式 和 懒汉式
 
@@ -131,13 +128,13 @@ public class Singleton {
 2. 同步代码块<br/>只把 new 对象的代码用 synchronized 锁起来
 3. **双重检查锁**（Double Check Locking，DCL）<br/>多次检查，若没有对象才进入 synchronized；若有对象则直接 return。这样减少了性能消耗
 
+## 普通工厂模式
 
+**概述**：
 
-#### 普通工厂模式
-
-**概述：**
-
-提供了一种创建对象的最佳方式<br/>在创建对象时不会对客户端暴露创建逻辑，并且是通过使用一个共同的接口来指向新创建的对象<br/>普通工厂方法模式就是建立一个工厂类，对实现了同一接口的不同实现类进行实例的创建
+提供了一种创建对象的最佳方式  
+在创建对象时不会对客户端暴露创建逻辑，并且是通过使用一个共同的接口来指向新创建的对象  
+普通工厂方法模式就是建立一个工厂类，对实现了同一接口的不同实现类进行实例的创建
 
 > 比如您要一辆车，可直接去工厂提货，而不用管这辆车是怎么做出来的，以及这个车的具体实现
 
@@ -148,9 +145,12 @@ public class Singleton {
 
 SendFactory 类就是工厂类，produce 方法运用多态，返回 Sender 类型对象指向新创建的对象
 
-**优点：**扩展性和可维护性强，尤其是在需要创建大量对象的前提下
+**优点**：扩展性和可维护性强，尤其是在需要创建大量对象的前提下
 
-**缺点：**1. 在普通工厂模式中，若传递的字符串出错，则不能正确创建对象，且可能出现<u>空指针异常</u><br/>		   2. 需要新增新类型的对象时，要修改工厂类源码，有违开闭原则
+**缺点**：
+
+1. 在普通工厂模式中，若传递的字符串出错，则不能正确创建对象，且可能出现<u>空指针异常</u>
+2. 需要新增新类型的对象时，要修改工厂类源码，有违开闭原则
 
 工厂类
 
@@ -186,25 +186,24 @@ public static Sender produceMail() { return new MailSender(); }
 public static Sender produceSms() { return new SmsSender(); }
 ```
 
+## 抽象工厂模式
 
+**概述**：
 
-#### 抽象工厂模式
-
-**概述：**
-
-若用普通工厂模式，之后想创建新类型的对象，这需要修改工厂类的源代码，有违开闭原则<br/>抽象工厂模式有更好的扩展性，无需修改源代码
+若用普通工厂模式，之后想创建新类型的对象，这需要修改工厂类的源代码，有违开闭原则  
+抽象工厂模式有更好的扩展性，无需修改源代码
 
 <img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/Java设计模式/抽象工厂模式.png" width="600rem" style="border-radius:.4rem" float="left" alt="抽象工厂模式"/><div style="clear:both"></div>
 
 运用了多态的思想，MailSendFactory 和 SmsSendFactory 都是 Provider 工厂的实现类
 
+## 装饰器模式
 
+**概述**：
 
-#### 装饰器模式
-
-**概述：**
-
-装饰器模式就是给一个对象动态的增加一些新功能<br/>创建一个新类，包装原始类，从而在新类中提升原来类的功能<br/>要求装饰对象和被装饰对象实现同一个接口，装饰对象持有被装饰对象的实例
+装饰器模式就是给一个对象动态的增加一些新功能  
+创建一个新类，包装原始类，从而在新类中提升原来类的功能  
+要求装饰对象和被装饰对象实现同一个接口，装饰对象持有被装饰对象的实例
 
 例：IO 流中的 BufferedInputStream 就是 FileInputStream 的装饰类，它们都继承了 InputStream 接口
 
@@ -212,7 +211,10 @@ public static Sender produceSms() { return new SmsSender(); }
 
 <img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/Java设计模式/装饰器模式.png" width="500rem" style="border-radius:.4rem" float="left" alt="装饰器模式"/><div style="clear:both"></div>
 
-**优点：**可以实现对一个类功能的扩展<br/>		   可以动态的增加功能，而且还能动态撤销（继承不行）<br/>		   就是说可以调用扩展了的 Decorator 类的对象，也可以调用原始的 Source 类的对象<br/>**缺点：**会产生过多相似的对象，不易排错
+**优点**：可以实现对一个类功能的扩展  
+可以动态的增加功能，而且还能动态撤销（继承不行）  
+就是说可以调用扩展了的 Decorator 类的对象，也可以调用原始的 Source 类的对象  
+**缺点**：会产生过多相似的对象，不易排错
 
 ```java
 public interface Sourceable {
@@ -244,21 +246,23 @@ public class Decorator implements Sourceable {
 }
 ```
 
+## 代理模式
 
+**概述**：
 
-#### 代理模式
-
-**概述：**
-
-代理模式就是找一个代理类替原对象进行一些操作<br/>类似于添加一个中间层，可以实现在访问一个类时做一些控制
+代理模式就是找一个代理类替原对象进行一些操作  
+类似于添加一个中间层，可以实现在访问一个类时做一些控制
 
 > 比如买火车票不一定在火车站买，也可以去代售点，代售点就相当于代理类
 
-**优点：**若在使用时需要对原有的方法进行改进，可以用代理类调用原有方法，并且对结果进行控制<br/>		   使用代理模式，可以将功能划分的更加清晰，有助于后期维护<br/>**缺点：**因为加了一个中间层，性能难免会有所降低
+**优点**：若在使用时需要对原有的方法进行改进，可以用代理类调用原有方法，并且对结果进行控制  
+使用代理模式，可以将功能划分的更加清晰，有助于后期维护  
+**缺点**：因为加了一个中间层，性能难免会有所降低
 
 **代理模式和装饰器模式的区别**
 
-- 装饰器模式通常是将原始对象作为一个参数传给装饰者的构造器<br/>而代理模式通常在一个代理类中创建一个被代理类的对象
+- 装饰器模式通常是将原始对象作为一个参数传给装饰者的构造器  
+  而代理模式通常在一个代理类中创建一个被代理类的对象
 - 装饰器模式关注于在一个对象上动态的添加方法，然而代理模式关注于控制对对象的访问
 
 这两个模式实现方式一样，只是用途不一样：
@@ -270,13 +274,13 @@ public class Decorator implements Sourceable {
 
 <img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/Java设计模式/代理模式.png" width="700rem" style="border-radius:.4rem" float="left" alt="代理模式"/><div style="clear:both"></div>
 
-创建一个 Image 接口和实现了 Image 接口的实体类 RealImage<br/>ProxyImage 是一个代理类，减少 RealImage 对象加载的内存占用<br/>ProxyPatternDemo 类使用 ProxyImage 来获取要加载的 Image 对象，并按照需求进行显示
+创建一个 Image 接口和实现了 Image 接口的实体类 RealImage  
+ProxyImage 是一个代理类，减少 RealImage 对象加载的内存占用  
+ProxyPatternDemo 类使用 ProxyImage 来获取要加载的 Image 对象，并按照需求进行显示
 
+## 模板设计模式
 
-
-#### 模板设计模式
-
-**概述：**
+**概述**：
 
 - 定义一个操作中的算法的骨架，而将一些步骤延迟到子类中。模板方法使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤
 - 多种操作之间有一些通用的方法时，可将这些通用算法抽象到抽象类中实现，其他步骤在子类实现
@@ -313,5 +317,100 @@ public class Cricket extends Game {
 }
 
 public class Football extends Game { ... }
+```
+
+## 策略模式
+
+**概述**：
+
+在策略模式（Strategy Pattern）中，一个类的行为或其算法可以在运行时更改。这种类型的设计模式属于行为型模式
+
+根据不同的使用场景，提供不同的解决方案
+
+> 比如登录行为，可以有密码登录、二维码登录、微信登录...  
+> 不同的情况下，调用不同的算法来完成登录操作
+
+```mermaid
+classDiagram
+  direction RL
+  class OperateStrategy {
+    operate()
+  }
+  <<interface>> OperateStrategy
+  class AddStrategy {
+    + operate()
+  }
+  class SubtractStrategy {
+    + operate()
+  }
+  class Context {
+    - OperateStrategy strategy
+    + operate()
+  }
+  class Client {
+    Context Context
+  }
+  AddStrategy ..|> OperateStrategy : implement
+  SubtractStrategy ..|> OperateStrategy : implement
+  Context --> AddStrategy : invoke
+  Context --> SubtractStrategy : invoke
+  Client --> Context : invoke
+```
+
+```java
+// 抽象策略
+public interface OperateStrategy {
+    // 策略模式的运算法则
+    void operate(int i, int j);
+}
+```
+
+```java
+// 具体策略
+public class AddStrategy implements Strategy {
+    @Override
+    public void operate(int i, int j) {
+        System.out.println("Add Operation" + (i + j));
+    }
+}
+```
+
+```java
+// 具体策略
+public class SubtractStrategy implements Strategy {
+    @Override
+    public void operate(int i, int j) {
+        System.out.println("Subtract Operation" + (i - j));
+    }
+}
+```
+
+```java
+// 封装所有功能
+public class Context {
+    // 抽象策略
+    private Strategy strategy;
+
+    // 构造函数设置具体策略
+    public Context(Strategy strategy) {
+        this.strategy = strategy;
+    }
+
+    // 封装后的策略方法
+    public void operate(int i, int j) {
+        this.strategy.operate(int i, int j);
+    }
+}
+```
+
+```java
+public class Client {
+    public static void main(String[] args) {
+        // 声明一个具体的策略，传入 Context
+        Context context = new Context(new AddStrategy());
+        // 执行封装后的方法
+        context.operate(1, 2);
+    }
+}
 ```
 

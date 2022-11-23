@@ -3617,6 +3617,20 @@ flowchart LR
   D <--> E("Web 资源")
 ```
 
+**过滤器涉及的类**：
+
+- javax.servlet.Filter：包含 Filter 的生命周期方法，在 Servlet 容器初始化或销毁时被调用
+- javax.servlet.FilterConfig：包含关于 Filter 的配置信息，其中最重要就是它的初始化参数
+- javax.servlet.FilterChain：Servlet 容器提供的，实现多个过滤器间调用的类
+
+Filter 的 doFilter() 方法是实现具体的拦截器逻辑的地方，它可以修改请求的内容和属性，或者在响应中添加一个 HTTP 标头
+
+一个资源对应的过滤器可能不止一个，一个过滤器也会拦截多个请求。基于这种机制，一个资源实际上是对应一个过滤器链，每当一个过滤器处理结束后，就将请求转发给其他的过滤器，直到最后一个过滤器处理完成后，就会将请求和响应发给对应的 Servlet
+
+完成自己的逻辑之后要调用 FilterChain 的 doFilter() 方法，将 Servlet 容器提供的请求实例和响应实例转发给下一个过滤器或 Servlet
+
+> 注意：与 Servlet 类似，容器默认为每个过滤器类创建一个实例（**单实例**），可能会有**多线程问题**
+
 ### 使用
 
 - 自定义类实现 javax.servlet.Filter 接口，并重写 doFilter 方法  
