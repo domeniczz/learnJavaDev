@@ -179,11 +179,11 @@ flowchart BT
 
 快捷键提示插件：Key Promoter X
 
-<table style="width:50rem">
+<table style="width:35rem">
     <thead>
         <tr style="text-align:left">
-            <th width=40%>快捷键</th>
-            <th width=60%>功能</th>
+            <th width=48%>快捷键</th>
+            <th width=52%>功能</th>
         </tr>
     </thead>
     <tbody>
@@ -3833,8 +3833,8 @@ Map 并不是真正意义上的集合，因为它们没有继承集合接口，�
 <img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/Java基础/Map集合_框架结构图.png" width="600rem" style="border-radius:.4rem" float="left" alt="Map集合_框架结构图"/><div style="clear:both"></div>
 
 - java.util.Map\<K,V\> 集合中存取元素的基本单位是：单对元素，其中类型参数如下：
-  	K - 此映射所维护的键 (Key) 的类型，相当于目录
-  	V - 映射值 (Value) 的类型，相当于内容
+  - K - 此映射所维护的键 (Key) 的类型，相当于目录
+  - V - 映射值 (Value) 的类型，相当于内容
 - Map 集合中 key 不允许重复，而且一个 key 只能对应一个 value
 - HashMap 类的底层采用 <u>哈希表</u> 进行数据管理
 - TreeMap 类的底层采用 <u>红黑树</u> 进行数据管理
@@ -4169,12 +4169,14 @@ flowchart TB
   F --> J("FileReader<br/>BufferedReader<br/>InputStreamReader")
   C --> G(Writer)
   G --> K("FileWriter<br/>BufferedWriter<br/>OutputStreamWriter<br/>PrintWriter")
-  subgraph 抽象类
+  subgraph Abstract-Class
     D
     E
     F
     G
   end
+  classDef subgraphstyle fill:transparent
+  class Abstract-Class subgraphstyle
 ```
 
 #### 相关流的详解
@@ -5121,6 +5123,8 @@ flowchart LR
     D(阻塞状态) --阻塞解除--> B(就绪状态)
   end
   A((创建)) --"start()"--> 线程执行 --> E((终止))
+  classDef subgraphstyle fill:transparent
+  class 线程执行 subgraphstyle
 ```
 
 - 新建状态（New）
@@ -6106,8 +6110,8 @@ OSI（Open System Interconnect），即开放式系统互联，是 ISO（国际�
 
 #### 端口号（重点）
 
-- IP 地址 - 可以定位到具体某一台设备
-- 端口号 - 可以定位到该设备中具体某一个进程
+- *IP 地址* - 可以定位到具体某一台设备
+- *端口号* - 可以定位到该设备中具体某一个进程
 - 端口号本质上是 16 位二进制组成的整数，表示范围：0 ~ 65535，其中 0 ~ 1024 之间的端口号通常被系统占用，建议编程使用从 1025 开始
 - 特殊的端口：
   HTTP:80    FTP:21    Oracle:1521    MySQL:3306    Tomcat:8080
@@ -7338,12 +7342,12 @@ Predicate p = o -> false;          // 只有一个形参和 return 语句
 #### 方法引用
 
 - 方法引用主要指通过方法的名字来指向一个方法，而不需要为方法引用提供方法体<br/><u>该方法的调用，交给函数式接口执行</u>
-- 方法引用使用一对冒号 :: 将类或对象与方法名进行连接，通常使用方式如下：
-  - 对象的非静态方法引用    ObjectName :: MethodName
-  - 类的静态方法引用    ClassName :: StaticMethodName
-  - 类的非静态方法引用    ClassName :: MethodName
-  - 构造器的引用    ClassName :: new
-  - 数组的引用    TypeName[] :: new
+- 方法引用使用一对冒号 `::` 将类或对象与方法名进行连接，通常使用方式如下：
+  - *对象的非静态方法引用* - ObjectName::MethodName
+  - *类的静态方法引用* - ClassName::StaticMethodName
+  - *类的非静态方法引用* - ClassName::MethodName
+  - *构造器的引用* - ClassName::new
+  - *数组的引用* - TypeName\[\]::new
 - **注意**：一般情况下，要求<u>所调用的方法的结构和函数式接口的方法的结构要一致</u><br/>比如 有无形参和有无返回值 需要相同
 - 方法引用是在特定场景下 lambda 表达式的一种简化表示<br/>可进一步简化代码的编写使代码更加紧凑简洁，从而减少冗余代码
 
@@ -7360,7 +7364,7 @@ Person person = new Person("Domenic", 20);
 new Runnable() {
     @Override
     public void run() {
-        person.show();        // run 里面调用 person 对象是 show 方法
+        person.show();     // run 里面调用 person 对象是 show 方法
     }
 }.run();
 
@@ -7369,8 +7373,8 @@ Runnable r = () -> person.show();
 r.run();
 
 // 方法引用的写法
-Runnable r = person :: show;  // 通过名字指向 person 对象的 show 方法
-r.run();                      // show 方法还是通过 run 调用的
+Runnable r = person::show; // 通过名字指向 person 对象的 show 方法
+r.run();                   // show 方法还是通过 run 调用的
 
 // --------------- 有参方法 --------------- 
 
@@ -7387,14 +7391,14 @@ Consumer<String> c = s -> person.setName(s);
 c.accept("Louis");
 
 // 方法引用的写法
-Consumer c = person :: setName;
+Consumer c = person::setName;
 c.accept("Louis");
 ```
 
 （2）类的静态方法引用
 
 ```java
-Function <String, Integer> f = Integer :: parseInt;
+Function <String, Integer> f = Integer::parseInt;
 f.apply("12345")
 ```
 
@@ -7410,7 +7414,7 @@ Comparator<Integer> c = (i1, i2) -> i1.compareTo(i2);
 c.compare(1, 2);
 
 // 方法引用的写法
-Comparator<Integer> c = Integer :: compareTo;
+Comparator<Integer> c = Integer::compareTo;
 c.compare(1, 2);
 ```
 
@@ -7426,13 +7430,13 @@ Supplier<Person> s = () -> new Person();
 s.get();
 
 // 方法引用的写法
-Supplier<Person> s = Person :: new;
+Supplier<Person> s = Person::new;
 s.get();
 
 // --------------- 有参构造 --------------- 
 
 // 方法引用的写法
-BiFunction<String, Integer, Person> bf = Person :: new;
+BiFunction<String, Integer, Person> bf = Person::new;
 bf.apply("Domenic", 20);
 ```
 
@@ -7440,8 +7444,8 @@ bf.apply("Domenic", 20);
 
 ```java
 // 创建多个对象，放入对象数组
-Function<Integer, Person[]> f = Person[] :: new;
-Person[] pArr = f.apply(5);    // 创建 5 个 Person 对象
+Function<Integer, Person[]> f = Person[]::new;
+Person[] pArr = f.apply(5);   // 创建 5 个 Person 对象
 
 // 匿名内部类写法
 Function<Integer, String[]> f = new Function<Integer, String[]> () {
@@ -7450,7 +7454,7 @@ Function<Integer, String[]> f = new Function<Integer, String[]> () {
 		return new String[t];
 	}
 };
-String[] strArr = f.apply(5);  // 创建 5 个 String 对象
+String[] strArr = f.apply(5); // 创建 5 个 String 对象
 ```
 
 ---
@@ -8168,7 +8172,7 @@ Logback 日志系统的特性，都通过核心配置文件 logback.xml 控制
 
 ---
 
-## 单元测试
+## JUnit
 
 ### 概述
 
@@ -8188,7 +8192,7 @@ Logback 日志系统的特性，都通过核心配置文件 logback.xml 控制
 
 ### 准备
 
-1. 将 JUnit 的 jar 包导入到项目中
+1. 将 JUnit 4 的 jar 包导入到项目中
 
    - IDEA 通常整合了 Junit 框架，一般无需导入
 
@@ -8216,28 +8220,89 @@ Logback 日志系统的特性，都通过核心配置文件 logback.xml 控制
 
 **Junit 常用注解（Junit 版本 4.xxxx）**
 
-| 注解         | 功能                                                   |
-| ------------ | ------------------------------------------------------ |
-| @Test        | 测试方法                                               |
-| @ignore      | 忽略测试方法                                           |
-| @Before      | 修饰实例方法，该方法会在每一个测试方法执行之前执行一次 |
-| @After       | 修饰实例方法，该方法会在每一个测试方法执行之后执行一次 |
-| @BeforeClass | 静态修饰方法，该方法会在所有测试方法之前只执行一次     |
-| @AfterClass  | 静态修饰方法，该方法会在所有测试方法之后只执行一次     |
+<table style="width:38rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width=25%>注解</th>
+            <th width=75%>功能</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Test</td>
+            <td>测试方法</td>
+        </tr>
+        <tr>
+            <td>@ignore</td>
+            <td>忽略测试方法</td>
+        </tr>
+        <tr>
+            <td>@Before</td>
+            <td>修饰实例方法，该方法在 每个测试方法 执行前执行一次</td>
+        </tr>
+        <tr>
+            <td>@After</td>
+            <td>修饰实例方法，该方法在 每个测试方法 执行后执行一次</td>
+        </tr>
+        <tr>
+            <td>@BeforeClass</td>
+            <td>静态修饰方法，该方法在 所有测试方法 前执行一次</td>
+        </tr>
+        <tr>
+            <td>@AfterClass</td>
+            <td>静态修饰方法，该方法在 所有测试方法 后执行一次</td>
+        </tr>
+    </tbody>
+</table>
 
 开始执行的方法：初始化资源  
 执行完之后的方法：释放资源
 
-**Junit 常用注解（Junit 版本 5.xxxx ）**
+**Junit 常用注解（Junit 版本 5.xxxx）**
 
-| 注解        | 功能                                                   |
-| ----------- | ------------------------------------------------------ |
-| @Test       | 测试方法                                               |
-| @Disable    | 禁用测试类或测试方法，此类注释不会被继承               |
-| @BeforeEach | 修饰实例方法，该方法会在每一个测试方法执行之前执行一次 |
-| @AfterEach  | 修饰实例方法，该方法会在每一个测试方法执行之后执行一次 |
-| @BeforeAll  | 静态修饰方法，该方法会在所有测试方法之前只执行一次     |
-| @AfterAll   | 静态修饰方法，该方法会在所有测试方法之后只执行一次     |
+<table style="width:38rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width=25%>注解</th>
+            <th width=75%>功能</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@DisplayName</td>
+            <td>设置测试类或测试方法的展示名称</td>
+        </tr>
+        <tr>
+            <td>@Test</td>
+            <td>测试方法</td>
+        </tr>
+        <tr>
+            <td>@Disable</td>
+            <td>禁用测试类或测试方法，此类注释不会被继承</td>
+        </tr>
+        <tr>
+            <td>@BeforeEach</td>
+            <td>修饰实例方法，该方法在 每个测试方法 执行前执行一次</td>
+        </tr>
+        <tr>
+            <td>@AfterEach</td>
+            <td>修饰实例方法，该方法在 每个测试方法 执行后执行一次</td>
+        </tr>
+        <tr>
+            <td>@BeforeAll</td>
+            <td>静态修饰方法，该方法在 所有测试方法 前执行一次</td>
+        </tr>
+        <tr>
+            <td>@AfterAll</td>
+            <td>静态修饰方法，该方法在 所有测试方法 后执行一次</td>
+        </tr>
+        <tr>
+            <td>@Timeout</td>
+            <td>若测试方法运行超过指定时间，则返回错误</td>
+        </tr>
+    </tbody>
+</table>
+
 
 ### 使用
 
@@ -8264,10 +8329,10 @@ public class UserService {
 
 ```java
 /**
-* 测试方法
-* 1.必须是公开、无参数、无返回值的方法
-* 2.测试方法必须使用@Test 注解标记
-*/
+ * 测试方法
+ * 1.必须是公开、无参数、无返回值的方法
+ * 2.测试方法必须使用 @Test 注解标记
+ */
 @Test
 public void testLoginName(){
     UserService userService = new UserService();
@@ -8307,10 +8372,10 @@ MD5（Message Digest Algorithm 5）消息摘要算法
 
 **特性**：
 
-- 稳定、运算速度快
-- 压缩性 - 输入任意长度，输出固定长度（128 bit）
-- 运算不可逆 - 已知运算结果的情况下，无法通过逆运算得到原始字符串
-- 高度离散 - 输入的微小变化，可导致运算结果差异巨大
+- *稳定、运算速度快*
+- *压缩性* - 输入任意长度，输出固定长度（128 bit）
+- *运算不可逆* - 已知运算结果的情况下，无法通过逆运算得到原始字符串
+- *高度离散* - 输入的微小变化，可导致运算结果差异巨大
 
 **用途**：
 
@@ -8843,11 +8908,11 @@ public void parseToList() throws Exception {
 
 - [全文检索](#全文检索)
 
-  //元素 - 在全文找这个元素（所有层级）<br/>//元素 1/元素 2 - 在全文找元素 1（所有层级）下面的一级元素 2<br/>//元素 1//元素 2 - 在全文找元素 1（所有层级）下面的全部元素 2（所有层级）
+  `//元素` - 在全文找这个元素（所有层级）<br/>`//元素 1/元素 2` - 在全文找元素 1（所有层级）下面的一级元素 2<br/>`//元素 1//元素 2` - 在全文找元素 1（所有层级）下面的全部元素 2（所有层级）
 
 - [属性查找](#属性查找)
 
-  //@属性名称 - 在全文检索属性对象<br/>//元素[@属性名称] - 在全文检索包含该属性的元素对象<br/>//元素[@属性名称=值] - 在全文检索包含该属性的元素且属性值为该值的元素对象
+  `//@属性名称` - 在全文检索属性对象<br/>`//元素[@属性名称]` - 在全文检索包含该属性的元素对象<br/>`//元素[@属性名称=值]` - 在全文检索包含该属性的元素且属性值为该值的元素对象
 
 解析如下 xml 文件
 
@@ -8893,9 +8958,9 @@ List<Node> nameNodes = root.selectNodes("./contact/name");
 
 #### 全文检索
 
-//元素 - 在全文找这个元素（所有层级）  
-//元素 1/元素 2 - 在全文找元素 1（所有层级）下面的一级元素 2  
-//元素 1//元素 2 - 在全文找元素 1（所有层级）下面的全部元素 2（所有层级）
+`//元素` - 在全文找这个元素（所有层级）  
+`//元素 1/元素 2` - 在全文找元素 1（所有层级）下面的一级元素 2  
+`//元素 1//元素 2` - 在全文找元素 1（所有层级）下面的全部元素 2（所有层级）
 
 ```java
 // 通过 SAXReader 对象，调用 read 方法，加载 xml 文件成为 Document 对象 doc
@@ -8907,9 +8972,9 @@ List<Node> nameNodes = doc.selectNodes("//name");
 
 #### 属性查找
 
-//@属性名称 - 在全文检索属性对象  
-//元素[@属性名称] - 在全文检索包含该属性的元素对象  
-//元素[@属性名称=值] - 在全文检索包含该属性的元素且属性值为该值的元素对象
+`//@属性名称` - 在全文检索属性对象  
+`//元素[@属性名称]` - 在全文检索包含该属性的元素对象  
+`//元素[@属性名称=值]` - 在全文检索包含该属性的元素且属性值为该值的元素对象
 
 ```java
 // 通过 SAXReader 对象，调用 read 方法，加载 xml 文件成为 Document 对象 doc
@@ -8929,7 +8994,7 @@ Node node = document.selectSingleNode("//name[@id=01]");
 
 ### 概述
 
-YAML - YAML Ain't a Markup Language
+**YAML** - YAML Ain't a Markup Language
 
 YAML 的语法和其他高级语言类似，并且可以简单地表达清单、散列表、标量等数据形态，特别适合用来表达或编辑数据结构、各种配置文件、倾印调试内容、文件大纲
 
@@ -8960,9 +9025,9 @@ YAML 的语法和其他高级语言类似，并且可以简单地表达清单、
 
 可以 双引号 或 单引号 包裹 或 不包裹
 
-- 双引号 - **会转义**字符串中的特殊字符，特殊字符会作为本身的表示被表达
-- 单引号 - **不会转义**字符串中的特殊字符，被当做普通字符串表达
-- 不包裹 - **不会转义**字符串中的特殊字符
+- *双引号* - **会转义**字符串中的特殊字符，特殊字符会作为本身的表示被表达
+- *单引号* - **不会转义**字符串中的特殊字符，被当做普通字符串表达
+- *不包裹* - **不会转义**字符串中的特殊字符
 
 各类型标量示例：
 
@@ -9003,7 +9068,7 @@ datetime:
 
 ### 数组
 
-以 - 开头的行表示构成一个数组
+以 `-` 开头的行表示构成一个数组
 
 ```yml
 pets:

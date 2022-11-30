@@ -326,6 +326,10 @@ flowchart LR
     E3 --> F3((e))
   end
   step1 --"Insert 'ant'"--> step2 --"Insert 'ante'"--> step3
+  classDef subgraphstyle fill:transparent,stroke-opacity:0
+  class step1 subgraphstyle
+  class step2 subgraphstyle
+  class step3 subgraphstyle
 ```
 
 In step 3, "isEndOfWord" is true in three nodes: "d", "t", "e"

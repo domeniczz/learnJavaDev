@@ -239,14 +239,16 @@ MySQL 就是一个**关系型数据库**
 
 ```mermaid
 flowchart LR
-  subgraph 数据库
+  subgraph DataBase
   direction LR
-    B[("数据库")] --> C["数据表"]
+    B[("DataBase")] --> C["Data Table"]
     B --> D["..."]
-    C["数据表"] --> E("数据")
-    C --> F("数据")
+    C --> E("Data")
+    C --> F("Data")
   end
-  A("数据库管理系统") --> 数据库
+  A("Database Management System") --> DataBase
+  classDef subgraphstyle fill:transparent
+  class DataBase subgraphstyle
 ```
 
 ### IDEA 连接数据库
@@ -285,16 +287,23 @@ flowchart LR
 
 ### SQL 分类
 
-1. [DDL](#DDL)（Data Definition Language）数据定义语言  
+1. [DDL](#DDL)（Data Definition Language）数据定义语言
+
    用来定义数据库对象：数据库、表、列等  
    DDL 简单理解就是，用来操作**数据库、表**等
-2. [DML](#DML)（Data Manipulation Language）数据操作语言  
+
+2. [DML](#DML)（Data Manipulation Language）数据操作语言
+
    用来对数据库中表的数据进行增删改  
    DML 简单理解就是，对表中**数据进行增删改**
-3. [DQL](#DQL)（Data Query Language）数据查询语言  
+
+3. [DQL](#DQL)（Data Query Language）数据查询语言
+
    用来查询数据库中表的记录（数据），这是最常用且重要的操作  
    DQL 简单理解就是，对**数据进行查询操作**，从数据库表中查询到我们想要的数据
-4. [DCL](#DCL)（Data Control Language）数据控制语言  
+
+4. [DCL](#DCL)（Data Control Language）数据控制语言
+
    用来定义数据库的访问权限和安全级别，及创建用户  
    DCL 简单理解就是，对**数据库进行权限控制**，如：使某一个数据库表只能让某一个用户进行操作等
 
@@ -669,7 +678,7 @@ CREATE TABLE 表名 (
 	字段名 1  数据类型 1,
 	字段名 2  数据类型 2,
 	…
-	字段名 n  数据类型 n  #注意：最后一行末尾，不能加逗号
+	字段名 n  数据类型 n  # 注意：最后一行末尾，不能加逗号
 );
 ```
 
@@ -682,9 +691,9 @@ CREATE TABLE 表名 (
 示例代码
 
 ```sql
-CREATE TABLE tb_user (     #tb_user 是表名
+CREATE TABLE tb_user (     # tb_user 是表名
 	id INT,
-    username VARCHAR(20),  #20 代表最大长度，username 不允许超过 20 位
+    username VARCHAR(20),  # 20 代表最大长度，username 不允许超过 20 位
     password VARCHAR(32)
 );
 ```
@@ -916,14 +925,14 @@ CREATE TABLE student (
 
 -- 添加数据
 INSERT INTO student VALUES
-(1,'马运',55,'男','杭州',66,78,'1995-09-01'),
-(2,'马花疼',45,'女','深圳',98,87,'1998-09-01'),
-(3,'马斯克',55,'男','香港',56,77,'1999-09-02'),
-(4,'柳白',20,'女','湖南',76,65,'1997-09-05'),
-(5,'柳青',20,'男','湖南',86,NULL,'1998-09-01'),
-(6,'刘德花',57,'男','香港',99,99,'1998-09-01'),
-(7,'张学右',22,'女','香港',99,99,'1998-09-01'),
-(8,'德玛西亚',18,'男','南京',56,65,'1994-09-02');
+( 1, '马运', 55, '男', '杭州', 66, 78, '1995-09-01' ),
+( 2, '马花疼', 45, '女', '深圳', 98, 87, '1998-09-01' ),
+( 3, '马斯克', 55, '男', '香港', 56, 77, '1999-09-02' ),
+( 4, '柳白', 20, '女', '湖南', 76, 65, '1997-09-05' ),
+( 5, '柳青', 20, '男', '湖南', 86, NULL, '1998-09-01' ),
+( 6, '刘德花', 57, '男', '香港', 99, 99, '1998-09-01' ),
+( 7, '张学右', 22, '女', '香港', 99, 99, '1998-09-01' ),
+( 8, '德玛西亚', 18, '男', '南京', 56, 65, '1994-09-02' );
 ```
 
 <img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/数据库/MySQL_DQL_查询测试数据表.png" width="650rem" style="border-radius:.4rem" float="left" alt="MySQL_DQL_查询测试数据表"/><div style="clear:both"></div>
@@ -1025,11 +1034,11 @@ SELECT 字段列表 FROM 表名 [WHERE 条件列表];
 
 条件列表可以使用以下运算符：
 
-<table style="width:45rem">
+<table style="width:35rem">
     <thead>
         <tr style="text-align:left">
-            <th width=40%>符号</th>
-            <th width=60%>功能</th>
+            <th width=36%>符号</th>
+            <th width=64%>功能</th>
         </tr>
     </thead>
     <tbody>
@@ -1091,7 +1100,6 @@ SELECT 字段列表 FROM 表名 [WHERE 条件列表];
         </tr>
     </tbody>
 </table>
-
 
 ##### 模糊查询
 
@@ -1176,15 +1184,38 @@ SELECT 字段列表 FROM 表名 ORDER BY 排序字段名 1 [排序方式 1],排�
 SELECT 聚合函数名(字段名) FROM 表 [WHERE 条件];
 ```
 
-| 聚合函数        | 功能                                                         |
-| --------------- | ------------------------------------------------------------ |
-| COUNT（字段名） | 统计数量（一般不选用有 NULL 值的列）<br/>可以使用 COUNT(\*) 来统计 |
-| MAX（字段名）   | 最大值                                                       |
-| MIN（字段名）   | 最小值                                                       |
-| SUM（字段名）   | 求和                                                         |
-| AVG（字段名）   | 平均值                                                       |
+<table style="width:35rem">
+    <thead>
+        <tr style="text-align:left">
+            <th>聚合函数</th>
+            <th>功能</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>COUNT(字段名)</td>
+            <td>统计数量（一般不选择有 NULL 值的列）<br/>可以使用 COUNT(*) 来统计</td>
+        </tr>
+        <tr>
+            <td>MAX(字段名)</td>
+            <td>最大值</td>
+        </tr>
+        <tr>
+            <td>MIN(字段名)</td>
+            <td>最小值</td>
+        </tr>
+        <tr>
+            <td>SUM(字段名)</td>
+            <td>求和</td>
+        </tr>
+        <tr>
+            <td>AVG(字段名)</td>
+            <td>平均值</td>
+        </tr>
+    </tbody>
+</table>
 
-以上函数（）中的字段名就是：主键
+以上函数 () 中的字段名就是：主键
 
 **注意**：NULL 值不参与所有聚合函数的运算
 
@@ -1301,8 +1332,6 @@ SELECT 字段列表 FROM 表名 [WHERE 分组前条件限定] GROUP BY 分组字
 
 很多网站都有用到分页查询，如百度、谷歌、淘宝等  
 分页查询是将数据一页一页的展示出来，用户可以点击 “查看下一页” 来翻页查看数据
-
-<img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/数据库/分页查询_翻页网站示例.png" width="400rem" style="border-radius:.4rem" float="left" alt="分页查询_翻页网站示例"/><div style="clear:both"></div>
 
 ##### 语法
 
@@ -4058,6 +4087,8 @@ flowchart LR
   A1("Customer") --> connection-pool
   A2("Customer") --> connection-pool
   connection-pool --> F(["DataBase"])
+  classDef subgraphstyle fill:transparent
+  class connection-pool subgraphstyle
 ```
 
 在系统启动前初始化一个集合（容器），在集合中提取建立数据库连接。有访问请求时，是从集合中取出一个连接来提供服务，请求结束后，连接会归还到集合
@@ -4301,7 +4332,7 @@ public class DruidTest {
 
 ### DBCP
 
-DBCP 也是一个开源的连接池，在企业开发中比较常见，是 tomcat 内置的连接池
+DBCP 也是一个开源的连接池，在企业开发中比较常见，是 Tomcat 内置的连接池
 
 #### 使用步骤
 
@@ -4325,7 +4356,7 @@ DBCP 也是一个开源的连接池，在企业开发中比较常见，是 tomca
 
    常用配置：
 
-   <table style="width:35rem">
+   <table style="width:30rem">
        <thead>
            <tr style="text-align:left">
                <th width=45%>配置项</th>
@@ -4763,14 +4794,14 @@ ResultSetHandler 接口的几个常见实现类能实现数据库的增删改查
 
 | 实现类                                     | 说明                                                         |
 | ------------------------------------------ | ------------------------------------------------------------ |
-| [ArrayHandler](#ArrayHandler%20示例)         | 将结果集中的第一条记录封装到一个 Object[] 数组中，数组中的每一个元素就是这条记录中的每一个字段的值 |
-| [ArrayListHandler](#ArrayListHandler%20示例) | 将结果集中的每一条记录都封装到一个 Object[] 数组中，再将这些数组再封装到 List 集合中 |
+| [ArrayHandler](#ArrayHandler%20示例)         | 将结果集中的第一条记录封装到一个 Object\[\] 数组中，数组中的每一个元素就是这条记录中的每一个字段的值 |
+| [ArrayListHandler](#ArrayListHandler%20示例) | 将结果集中的每一条记录都封装到一个 Object\[\] 数组中，再将这些数组再封装到 List 集合中 |
 | BeanHandler                                | 将结果集中第一条记录封装到一个指定的 javaBean 中             |
 | [BeanListHandler](#BeanListHandler%20示例)   | 将结果集中每一条记录封装到指定的 javaBean 中，再将这些 javaBean 在封装到 List 集合中 |
 | ColumnListHandler                          | 将结果集中指定的列的字段值，封装到一个 List 集合中           |
-| KeyedHandler                               | 将结果集中每一条记录封装到 Map<String,Object\>，再将这个 map 集合做为另一个 Map 的 value，另一个 Map 集合的 key 是指定的字段的值 |
-| MapHandler                                 | 将结果集中第一条记录封装到了 Map<String,Object\> 集合中，key 就是字段名，value 就是字段值 |
-| MapListHandler                             | 将结果集中每一条记录封装到了 Map<String,Object\> 集合中，key 就是字段名，value 就是字段值，再将这些 Map 封装到 List 集合中 |
+| KeyedHandler                               | 将结果集中每一条记录封装到 Map\<String,Object\>，再将这个 map 集合做为另一个 Map 的 value，另一个 Map 集合的 key 是指定的字段的值 |
+| MapHandler                                 | 将结果集中第一条记录封装到了 Map\<String,Object\> 集合中，key 就是字段名，value 就是字段值 |
+| MapListHandler                             | 将结果集中每一条记录封装到了 Map\<String,Object\> 集合中，key 就是字段名，value 就是字段值，再将这些 Map 封装到 List 集合中 |
 | ScalarHandler                              | 它是用于封装单个数据，例如：SELECT COUNT(\*) FROM 表操作     |
 
 **使用示例**
@@ -4968,6 +4999,50 @@ ResultSetMetaData metaData = pstmt.getMetaData();
 ### 案例效果
 
 商城用户和商品的增删改查
+
+```mermaid
+erDiagram
+  USER {
+    string uid PK
+    string username
+    string password
+    string telephone
+    date birthday
+    string gender
+  }
+  ORDER {
+    string oid PK
+    datetime ordertime
+    double total
+    string name
+    string telephone
+    string address
+    int state
+    string uid FK "User ID"
+  }
+  CATEGORY {
+    string cid PK
+    string cname
+  }
+  PRODUCT {
+    string pid PK
+    string pname
+    double price
+    string pdesc
+    int pflag
+    string cid FK "Category ID"
+  }
+  ORDER-PRODUCT {
+    string item_id PK
+    string pid FK "Product ID"
+    string oid FK "Order ID"
+  }
+  USER ||--|{ ORDER : "1-N"
+  ORDER-PRODUCT }|--|| ORDER : "1-N"
+  ORDER-PRODUCT }|--|| PRODUCT : "1-N"
+  CATEGORY ||--|{ PRODUCT : "N-1"
+  
+```
 
 <img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/数据库/JDBC案例_商城案例_表关系设计.png" width="800rem" style="border-radius:.4rem" float="left" alt="JDBC案例_商城案例_表关系设计"/><div style="clear:both"></div>
 
@@ -5987,7 +6062,7 @@ src
         └── UserMapper.xml
 ```
 
-#### 1.SQL 映射文件
+#### 4.1.SQL 映射文件
 
 文件示例命名：UserMapper.xml  
 放入 src\main\resources 目录
@@ -6057,7 +6132,7 @@ src
 
   parameterType 属性（可以省略）
 
-#### 2.导入映射
+#### 4.2.导入映射
 
 在 mybatis-config.xml 中导入 SQL 映射文件：
 
@@ -6072,7 +6147,7 @@ src
 </mappers>
 ```
 
-#### 3.测试代码
+#### 4.3.测试代码
 
 1. 通过 SqlSessionFactory 获取 SqlSession 对象
 2. 用 selectList 方法执行指定 id 的 SQL 语句
@@ -6159,7 +6234,7 @@ src
         └── mybatis-config.xml
 ```
 
-#### 1.SQL 映射文件
+#### 4.1.SQL 映射文件
 
 1. 定义与 SQL 映射文件 **同名** 的 Mapper 接口，并将 Mapper 接口和 SQL 映射文件放在 **同一目录** 下
 
@@ -6181,10 +6256,10 @@ src
 
    注意：resources 下只能创建 directory，因此创建时，不能用 `.` 来做分隔符，应该用 `/`
 
-   > SQL 映射文件也可以与 Mapper 接口放在同一物理目录下  
+   > SQL 映射文件也可以<u>与 Mapper 接口放在同一物理目录下</u>（不推荐）  
    > 不过，需要在 pom 中添加资源插件
    > 
-   > 资源插件，将文件从输入资源目录复制到输出目录
+   > 资源插件，负责将文件从输入资源目录复制到输出目录
    >
    > ```xml
    > <plugin>
@@ -6234,7 +6309,7 @@ src
 
    parameterType 在只有单个参数的情况下可以不写，因为 Mybatis 能自动识别，但 resultType 一定要写
 
-#### 2.Mapper 接口
+#### 4.2.Mapper 接口
 
 在 Mapper 接口中定义接口方法，方法名和 SQL 映射文件中 SQL 语句的 id 相同
 
@@ -6269,7 +6344,7 @@ List<NoticeModel> getList(
 
 对于 `${}`，当 parameterType 是基本数据类型或 String ，且参数只有一个时，参数名必须是 value，如：`${value}`
 
-#### 3.导入映射
+#### 4.3.导入映射
 
 在 mybatis-config.xml 中导入 SQL 映射文件：
 
@@ -6292,7 +6367,7 @@ Mybatis 核心配置文件中，加载 SQL 映射配置文件的配置修改为�
 </mappers>
 ```
 
-#### 4.测试代码
+#### 4.4.测试代码
 
 1. 通过 SqlSessionFactory 获取 SqlSession 对象
 2. 用 getMapper 方法获取到对应的代理对象 mapper
@@ -6992,12 +7067,12 @@ SQL 语句示例：`UPDATE user SET username = ?, birthday = ?, sex = ?, address
 
 \<foreach\> 主要用来做数据的循环遍历
 
-- collection - 待遍历的集合元素
-- item - 集合中元素迭代时的别名（必选）
-- index - 在 list 和数组中，index 是元素的序号，在 map 中，index 是元素的 key（可选）
-- open - 语句的开始部分（可选）
-- close - 结束部分（可选）
-- seperator - 元素间的分隔符（可选）
+- *collection* - 待遍历的集合元素
+- *item* - 集合中元素迭代时的别名（必选）
+- *index* - 在 list 和数组中，index 是元素的序号，在 map 中，index 是元素的 key（可选）
+- *open* - 语句的开始部分（可选）
+- *close* - 结束部分（可选）
+- *seperator* - 元素间的分隔符（可选）
 
 ```xml
 <select id="findByList" parameterType="list" resultType="user" >
@@ -7018,10 +7093,10 @@ SQL 语句示例：`SELECT * FROM user WHERE id IN(?,?,?)`
 
 自定义格式拼凑 SQL 语句
 
-- prefix：在 trim 包裹的 SQL 前添加指定内容
-- suffix：在 trim 包裹的 SQL 末添加指定内容
-- prefixOverrides：去除 trim 包裹的 SQL 的指定首部内容
-- suffixOverrides：去除 trim 包裹的 SQL 的指定尾部内容
+- *prefix* - 在 trim 包裹的 SQL 前添加指定内容
+- *suffix* - 在 trim 包裹的 SQL 末添加指定内容
+- *prefixOverrides* - 去除 trim 包裹的 SQL 的指定首部内容
+- *suffixOverrides* - 去除 trim 包裹的 SQL 的指定尾部内容
 
 ```xml
 <update id="updateUser" parameterType="user">
@@ -7084,9 +7159,9 @@ void batchAdd(@Param("brandList") List<Brand> brandList);
 
 映射文件：
 
-- useGeneratedKeys - 告诉 MyBatis 这个主键是否使用数据库的内置规则生成
-- keyProperty - 设置自增主键返回字段（实体类中，主键对应的字段的名称）
-- keyColumn - 设置数据表中的主键名（若数据库支持主键自增，此属性可不写）
+- *useGeneratedKeys* - 告诉 MyBatis 这个主键是否使用数据库的内置规则生成
+- *keyProperty* - 设置自增主键返回字段（实体类中，主键对应的字段的名称）
+- *keyColumn* - 设置数据表中的主键名（若数据库支持主键自增，此属性可不写）
 
 ```xml
 <insert id="batchAdd" parameterType="Brand" useGeneratedKeys="true" keyProperty="brandId" keyColumn="id">
@@ -7125,12 +7200,12 @@ void add(Brand brand);
 
 映射文件：
 
-- keyColumn - 指定主键列名
-- keyProperty - 指定主键封装到实体类的对应属性中
-- resultType - 指定主键类型
-- order - 执行时机
-  - BEFORE - 在 SQL 语句执行之前调用
-  - AFTER - 在 SQL 语句执行之后调用
+- *keyColumn* - 指定主键列名
+- *keyProperty* - 指定主键封装到实体类的对应属性中
+- *resultType* - 指定主键类型
+- *order* - 执行时机
+  - *BEFORE* - 在 SQL 语句执行之前调用
+  - *AFTER* - 在 SQL 语句执行之后调用
 
 ```xml
 <insert id="add">
@@ -7391,11 +7466,11 @@ List<User> selectAllWithOrders();
 
 \<collection\> 定义被关联的一个集合
 
-- property - 本类中的属性名
-- javaType - 本类中该属性的类型，如：ArrayList
-- ofType - 本类关联的实体类的 class 类名
-- column - 关联的表的主键 ID（用于嵌套查询 SQL 语句传入参数，多个用逗号分开）
-- select - 另一个 select 映射 SQL 的 ID（引用另一个 SQL）
+- *property* - 本类中的属性名
+- *javaType* - 本类中该属性的类型，如：ArrayList
+- *ofType* - 本类关联的实体类的 class 类名
+- *column* - 关联的表的主键 ID（用于嵌套查询 SQL 语句传入参数，多个用逗号分开）
+- *select* - 另一个 select 映射 SQL 的 ID（引用另一个 SQL）
 
 ```xml
 <resultMap id="userOrderMap" type="com.domenic.pojo.User">
@@ -7963,7 +8038,7 @@ fetchType 可选值有 lazy（延迟加载）和 eager（立即加载），如�
 
 2. 在 Mybatis 核心配置文件中配置 PageHelper 插件
 
-   - interceptor - 定义拦截器，值为指定方法的全路径
+   - *interceptor* - 定义拦截器，值为指定方法的全路径
 
    ```xml
     <plugins>
@@ -8097,9 +8172,9 @@ Mybatis 提供的注解：
 
 fetchType 属性值：
 
-- FetchType.LAZY - 懒加载
-- FetchType.EAGER - 立即加载
-- FetchType.DEFAULT - 使用全局配置
+- *FetchType.LAZY* - 懒加载
+- *FetchType.EAGER* - 立即加载
+- *FetchType.DEFAULT* - 使用全局配置
 
 **一对一**：
 

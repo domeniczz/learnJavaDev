@@ -32,13 +32,11 @@
 
 ```mermaid
 flowchart LR
-  B["Chrome 浏览器"] --"HTTP 请求"--> S("服务器<br/><br/>静态：HTML 文件<br/><br/>动态：Servlet、JSP")
-  S --"HTTP 响应"--> B
-  C["Firefox 浏览器"] --"HTTP 请求"--> S
-  S --"HTTP 响应"--> C
+  B["Chrome Browser<br/>(Client)"] <--"HTTP request<br/>HTTP response"--> S("Server<br/><br/>Static：HTML<br/><br/>Dynamic：Servlet、JSP") <--"HTTP request<br/>HTTP response"--> C["Firefox Browser<br/>(Client)"]
 ```
 
-静态资源：指 Web 中始终不变的数据<br/>动态资源：指 Web 中由程序产生的数据，会动态变化
+静态资源：指 Web 中始终不变的数据  
+动态资源：指 Web 中由程序产生的数据，会动态变化
 
 JavaWeb 的三大组件：[Servlet](#Servlet)、[Filter](#Filter)、[Listener](#Listener)
 
@@ -58,22 +56,70 @@ JavaWeb 的三大组件：[Servlet](#Servlet)、[Filter](#Filter)、[Listener](#
 
 [OSI 七层模型 & TCP/IP 五层模型 简述 - 知乎](https://zhuanlan.zhihu.com/p/143654140)
 
-| 层级 | 层         | 英文全称           | 常用协议                                                   |
-| ---- | ---------- | ------------------ | ---------------------------------------------------------- |
-| 7    | 应用层     | Application Layer  | HTTP、FTP、SMTP、POP3、DNS<br/>Telnet、NNTP、IMAP4、FINGER |
-| 6    | 表示层     | Presentation Layer | LPP、NBSSP                                                 |
-| 5    | 会话层     | Seesion Layer      | SSL、TLS、DAP、LDAP                                        |
-| 4    | 传输层     | Transport Layer    | TCP、UDP                                                   |
-| 3    | 网络层     | Network Layer      | IP、ICMP、RIP、IGMP、OSPF                                  |
-| 2    | 数据链路层 | Data Link Layer    | 以太网、网卡、交换机、PPTP、L2TP、ARP、ATMP                |
-| 1    | 物理层     | Physical Layer     | 物理线路、光纤、中继器、集线器、双绞线                     |
+<table style="width:50rem">
+    <thead>
+        <tr style="text-align:left">
+            <th>层级</th>
+            <th>层</th>
+            <th>英文全称</th>
+            <th>常用协议</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>7</td>
+            <td>应用层</td>
+            <td>Application Layer</td>
+            <td>HTTP、FTP、SMTP、POP3、DNS<br/>Telnet、NNTP、IMAP4、FINGER</td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>表示层</td>
+            <td>Presentation Layer</td>
+            <td>LPP、NBSSP</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>会话层</td>
+            <td>Seesion Layer</td>
+            <td>SSL、TLS、DAP、LDAP</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>传输层</td>
+            <td>Transport Layer</td>
+            <td>TCP、UDP</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>网络层</td>
+            <td>Network Layer</td>
+            <td>IP、ICMP、RIP、IGMP、OSPF</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>数据链路层</td>
+            <td>Data Link Layer</td>
+            <td>以太网、网卡、交换机、PPTP、L2TP、ARP、ATMP</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>物理层</td>
+            <td>Physical Layer</td>
+            <td>物理线路、光纤、中继器、集线器、双绞线</td>
+        </tr>
+    </tbody>
+</table>
 
 ### HTTP 请求格式
 
 - 客户端发送一个 HTTP 请求到服务器，请求消息主要包括：请求行、请求头、空白行、请求体
 
-  - **请求行**：说明请求类型、请求的路径、所使用的 HTTP 版本<br/>格式：请求类型  请求的路径  协议的版本<br/>现在协议常用的版本为 1.1
-  - **请求头**：说明服务器要使用的一些附加信息<br/>格式（key:value）：主机、请求长度、请求的浏览器的相关信息
+  - **请求行**：说明请求类型、请求的路径、所使用的 HTTP 版本  
+    格式：请求类型  请求的路径  协议的版本  
+    现在协议常用的版本为 1.1
+  - **请求头**：说明服务器要使用的一些附加信息  
+    格式（key:value）：主机、请求长度、请求的浏览器的相关信息
   - **空白行**：把请求头和请求体分开，看起更直观，即使请求体数据为空也要有空行
   - **请求体**：也叫请求数据，可添加任意其他数据
 
@@ -89,23 +135,53 @@ JavaWeb 的三大组件：[Servlet](#Servlet)、[Filter](#Filter)、[Listener](#
   name=domenic&pwd=123456
   ```
 
-  - 请求行：<br/>POST /domeniczzblog/index.html HTTP/1.1  请求了一个 html 页面（静态资源）
-  - 请求头：<br/>Host: localhost:8088  主机（服务器的 IP 地址和端口号）<br/>Content-Length: 21  请求长度<br/>Cache-Control: max-age=0  缓存控制（有效期）<br/>User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64)  用户代理
-  - 请求体：<br/>name=domenic&pwd=123456  请求数据
+  - 请求行：
+  
+    `POST /domeniczzblog/index.html HTTP/1.1` - 请求了一个 html 页面（静态资源）
+  
+  - 请求头：
+  
+    `Host: localhost:8088` - 主机（服务器的 IP 地址和端口号）  
+    `Content-Length: 21` - 请求长度  
+    `Cache-Control: max-age=0` - 缓存控制（有效期）  
+    `User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64)` - 用户代理
+  
+  - 请求体：
+  
+    `name=domenic\&pwd=123456` - 请求数据
 
 POST 请求的三种数据提交格式
 
-| 格式                                             | 说明                                               |
-| ------------------------------------------------ | -------------------------------------------------- |
-| Content-Type : application/x-www-form-urlencoded | 请求体中的数据，以普通表单形式（键值对）发送到后端 |
-| Content-Type : application/json                  | 请求体中的数据，以 JSON 字符串的形式发送到后端     |
-| Content-Type : multipart/form-data               | 多部件上传，既可以上传键值对，也可以上传文件       |
+<table style="width:60rem">
+    <thead>
+        <tr style="text-align:left">
+            <th>格式</th>
+            <th>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Content-Type: application/x-www-form-urlencoded</td>
+            <td>请求体中的数据，以普通表单形式（键值对）发送到后端</td>
+        </tr>
+        <tr>
+            <td>Content-Type: application/json</td>
+            <td>请求体中的数据，以 JSON 字符串的形式发送到后端</td>
+        </tr>
+        <tr>
+            <td>Content-Type: multipart/form-data</td>
+            <td>多部件上传，既可以上传键值对，也可以上传文件</td>
+        </tr>
+    </tbody>
+</table>
 
 ### HTTP 响应格式
 
 - 服务器接收并处理客户端请求后，返回一个 HTTP 响应消息，主要包括：响应行、响应头、空白行、响应体
 
-  - **响应行**：说明 HTTP 协议版本号、状态码、状态消息<br/>格式：协议版本 状态码 状态信息<br/>200 - 成功，404 - 路径错误，500 - 服务器错误
+  - **响应行**：说明 HTTP 协议版本号、状态码、状态消息  
+    格式：协议版本 状态码 状态信息  
+    200 - 成功，404 - 路径错误，500 - 服务器错误
   - **响应头**：说明客户端要使用的一些附加信息，格式（key:value）
   - **空白行**：把响应头和响应体分开，看起更直观，即使响应体数据为空也要有空行
   - **响应体**：服务器返回给客户端的文本信息
@@ -123,9 +199,17 @@ POST 请求的三种数据提交格式
   </html>
   ```
 
-  - 响应行：<br/>HTTP/1.1 200 OK
-  - 响应体：<br/>Content-Type: text/html  内容类型<br/>Content-Length: 588 内容长度<br/>Date: Thu, 11 Nov 2022 11:11:11 GMT 日期
-  - 响应体：一个 html 文件（静态资源）<br/>
+  - 响应行：
+  
+    `HTTP/1.1 200 OK`
+  
+  - 响应体：
+  
+    `Content-Type: text/html` - 内容类型  
+    `Content-Length: 588` - 内容长度  
+    `Date: Thu, 11 Nov 2022 11:11:11 GMT` - 日期
+  
+  - 响应体：一个 html 文件（静态资源）
 
 ---
 
@@ -136,44 +220,116 @@ POST 请求的三种数据提交格式
 - Tomcat 最初由 Sun 公司的软件架构师詹姆斯·邓肯·戴维森开发，后来由 Sun 公司贡献给 Apache 软件基金会
 - Tomcat 服务器是一个开源的轻量级 Web 应用服务器，在中小型系统和并发量小的场合下被普遍使用，是开发和调试 Servlet、JSP 程序的首选
 
-下载地址：https://tomcat.apache.org/<br/>若不想下载最新版，可以在 Quick Navigation 中点击 Achieves 选择所有历史版本<br/>可以直接下载压缩版，无需安装，解压之后放入一个目录（不要中文路径）<br/>本笔记使用 Tomcat-8.5.78 压缩版
+下载地址：https://tomcat.apache.org/  
+若不想下载最新版，可以在 Quick Navigation 中点击 Achieves 选择所有历史版本  
+可以直接下载压缩版，无需安装，解压之后放入一个目录（不要中文路径）  
+本笔记使用 Tomcat-8.5.78 压缩版
 
-| 目录     | 说明                                                         |
-| -------- | ------------------------------------------------------------ |
-| /bin     | 存放各种平台下用于启动和停止 Tomcat 的脚本文件               |
-| /conf    | 存放 Tomcat 服务器的各种配置文件                             |
-| /lib     | 存放 Tomcat 服务所需的各种 jar 包                            |
-| /logs    | 存放 Tomcat 在运行中产生的日志文件                           |
-| /temp    | 存放 Tomcat 在运行中产生的临时文件                           |
-| /wabapps | 存放应用程序，当 Tomcat 启动时会去加载该目录下的应用程序<br/>当发布 Web 应用时，默认情况下会将 Web 应用的文件存放于此目录中 |
-| /work    | 存放 tomcat 在运行时的编译后文件，例如 JSP 编译后的文件      |
+<table style="width:50rem">
+    <thead>
+        <tr style="text-align:left">
+            <th>目录</th>
+            <th>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>/bin</td>
+            <td>存放各种平台下用于启动和停止 Tomcat 的脚本文件</td>
+        </tr>
+        <tr>
+            <td>/conf</td>
+            <td>存放 Tomcat 服务器的各种配置文件</td>
+        </tr>
+        <tr>
+            <td>/lib</td>
+            <td>存放 Tomcat 服务所需的各种 jar 包</td>
+        </tr>
+        <tr>
+            <td>/logs</td>
+            <td>存放 Tomcat 在运行中产生的日志文件</td>
+        </tr>
+        <tr>
+            <td>/temp</td>
+            <td>存放 Tomcat 在运行中产生的临时文件</td>
+        </tr>
+        <tr>
+            <td>/wabapps</td>
+            <td>存放应用程序，当 Tomcat 启动时会去加载该目录下的应用程序<br/>当发布 Web 应用时，默认情况下会将 Web 应用的文件存放于此目录中</td>
+        </tr>
+        <tr>
+            <td>/work</td>
+            <td>存放 tomcat 在运行时的编译后文件，例如 JSP 编译后的文件</td>
+        </tr>
+    </tbody>
+</table>
+
+**Web 容器的作用**：
+
+Tomcat，Jetty，Undertow 等包含了 HTTP 服务器和 Servlet 容器的功能，称为 Web 容器
+
+客户端发送 HTTP 请求，服务端要根据 HTTP 请求调用不同的业务逻辑来响应，但业务代码不能与 HTTP 服务器耦合  
+此时就需要一层**抽象**，将 HTTP 解析和具体的业务隔离  
+HTTP 解析的抽象规定一个接口，所有的业务类都实现这个接口
+
+- **Server Applet**（全称 Java Servlet）是指用 Java 编写的服务端程序，指代实现 Servlet 接口的业务类
+- 将请求和 Servlet 间的对应关系，抽象出来，成了 **web.xml**，程序员在配置中告诉 Servlet 容器对应关系即可
+- 业务实现，其实就是 **war** 包，这就是业务和 Servlet 容器的解耦
+
+```mermaid
+flowchart LR
+  subgraph Tomcat
+    direction RL
+    Servlet-Applet --> C("Servlet Container") <--"request<br/>response"--> B("HTTP Server")
+    subgraph Servlet-Applet
+      direction LR
+      I1("service")
+      I2("service")
+      I3("service")
+    end
+  end
+  A("Client") <--"request<br/>response"--> Tomcat
+  classDef subgraphstyle fill:transparent
+  class Tomcat subgraphstyle
+  class Servlet-Applet subgraphstyle
+```
 
 ### 使用
 
 #### 启动和关闭
 
 - **启动**
-  使用 bin 目录下的批处理文件 startup.bat 来启动 Tomcat 服务器<br/>若提示：Server startup in ... ms，这表示启动成功<br/>启动之后，不要关闭命令行窗口<br/>进入浏览器，访问：http://localhost:8080/，若正确打开 Tomcat 页面，则启动成功
-
+  使用 bin 目录下的批处理文件 startup.bat 来启动 Tomcat 服务器  
+  若提示：Server startup in ... ms，这表示启动成功  
+  启动之后，不要关闭命令行窗口  
+  进入浏览器，访问：<a>http://localhost:8080/</a>，若正确打开 Tomcat 页面，则启动成功
+  
 - **关闭**
   使用 bin 目录下的批处理文件 shutdown.bat 来关闭 Tomcat 服务器
 
 - **注意**
   启动之前首先安装 JDK 并配置环境变量 JAVA_HOME，若希望 Tomcat 服务器可以在任意路径启动，则需要配置环境变量
 
-  - 在系统环境变量中添加：CATALINA_HOME<br/>值为 Tomcat 安装路径（如：D:\Program\apache-tomcat-8.5.78）
+  - 在系统环境变量中添加：CATALINA_HOME  
+    值为 Tomcat 安装路径（如：D:\Program\apache-tomcat-8.5.78）
   
   - 在 path 中添加 %CATALINA_HOME%\bin
   
-    若提示：Neither the JAVA_HOME nor the JRE_HOME environment variable is defined<br/>表示没有配置 JAVA_HOME 这个环境变量<br/>注意：环境变量名必须为 JAVA_HOME
+    若提示：Neither the JAVA_HOME nor the JRE_HOME environment variable is defined  
+    表示没有配置 JAVA_HOME 这个环境变量  
+    注意：环境变量名必须为 JAVA_HOME
   
-  - 可将其注册到 windows 服务中，就能配置开机自启、后台启动了（可选）<br/>安装服务：service install，卸载服务：service remove
+  - 可将其注册到 windows 服务中，就能配置开机自启、后台启动了（可选）  
+    安装服务：service install，卸载服务：service remove
   
-  - 执行命令行 catalina version，若打印出版本信息，则配置成功<br/>可以直接在命令行执行 startup.bat 来启动 tomcat
+  - 执行命令行 catalina version，若打印出版本信息，则配置成功  
+    可以直接在命令行执行 startup.bat 来启动 tomcat
   
-  **启动信息乱码**<br/>windows 命令行的编码方式默认和系统的一致，中国是 GBK，而 Tomcat 的日志编码是 UTF-8<br/>可以执行 chcp 命令查看命令行编码，GBK 的代码为 936，UTF-8 的代码为 65001
+  **启动信息乱码**<br/>windows 命令行的编码方式默认和系统的一致，中国是 GBK，而 Tomcat 的日志编码是 UTF-8  
+  可以执行 chcp 命令查看命令行编码，GBK 的代码为 936，UTF-8 的代码为 65001
   
-  处理方式：/conf/logging.properties 文件修改<br/>java.util.logging.ConsoleHandler.encoding = GBK
+  处理方式：/conf/logging.properties 文件修改  
+  java.util.logging.ConsoleHandler.encoding = GBK
 
 #### 问题
 
@@ -191,28 +347,34 @@ POST 请求的三种数据提交格式
 
    若端口被其他程序占用了，可以结束该进程，或去 /conf/server.xml 中更改 Tomcat 的默认端口
 
-2. Tomcat 的运行需要 JVM 的支持<br/>startup.bat 启动时，会检测有无配 JAVA_HOME 环境变量<br/>若没有，启动时命令行窗口只会闪一下，可以开启 DOS 窗口，把 startup.bat 拖进去，回车运行即可看到报错信息
+2. Tomcat 的运行需要 JVM 的支持  
+   startup.bat 启动时，会检测有无配 JAVA_HOME 环境变量  
+   若没有，启动时命令行窗口只会闪一下，可以开启 DOS 窗口，把 startup.bat 拖进去，回车运行即可看到报错信息
 
-   > 若不允许更改环境变量<br/>可以在 startup.bat 中设置环境变量，如：set JAVA_HOME=C:\Program Files\Java\jdk-11.0.13
+   > 若不允许更改环境变量  
+   > 可以在 startup.bat 中设置环境变量，如：set JAVA_HOME=C:\Program Files\Java\jdk-11.0.13
 
-3. Tomcat 启动时还需要环境变量 CATALINA_HOME<br/>这个环境变量指的是 Tomcat 服务器所在目录，启动 startup.bat 时，startup.bat 就自己设了 CATALINA_HOME 这个环境变量
-
+3. Tomcat 启动时还需要环境变量 CATALINA_HOME  
+   这个环境变量指的是 Tomcat 服务器所在目录，启动 startup.bat 时，startup.bat 就自己设了 CATALINA_HOME 这个环境变量
+   
    若系统环境变量没有配置 CATALINA_HOM，那么双击哪个 Tomcat 中的 startup.bat 就启动哪台服务器，反之，启动的是系统环境变量 CATALINA_HOM 中指向的 Tomcat 服务器
 
 #### 配置文件
 
 - **修改默认端口**
 
-  平常访问网站无需填写端口号，是因为这些网站采用了默认端口：HTTP 为 80，HTTPS 为 443<br/>我们也能通过：http://www.baidu.com:80 或 https://www.baidu.com:443 访问百度
-
-  可以选择修改 Tomcat 默认端口到 80<br/>/conf/server.xml 文件修改 port 属性值
-
+  平常访问网站无需填写端口号，是因为这些网站采用了默认端口：HTTP 为 80，HTTPS 为 443  
+  我们也能通过：<a>http://www.baidu.com:80</a> 或 <a>https://www.baidu.com:443</a> 访问百度
+  
+  可以选择修改 Tomcat 默认端口到 80  
+  /conf/server.xml 文件修改 port 属性值
+  
   ```xml
   <Connector port="8080" protocol="HTTP/1.1"
              connectionTimeout="20000"
              redirectPort="8443" />
   ```
-
+  
   - **port**
     端口号，默认配置为 8080
   - **protocol**
@@ -233,10 +395,10 @@ POST 请求的三种数据提交格式
 
   The available roles are:
 
-  - **manager-gui** - Access to the HTML interface
-  - **manager-status** - Access to the "Server Status" page only
-  - **manager-script** - Access to the tools-friendly plain text interface that is described in this document, and to the "Server Status" page
-  - **manager-jmx** - Access to JMX proxy interface and to the "Server Status" page
+  - ***manager-gui*** - Access to the HTML interface
+  - ***manager-status*** - Access to the "Server Status" page only
+  - ***manager-script*** - Access to the tools-friendly plain text interface that is described in this document, and to the "Server Status" page
+  - ***manager-jmx*** - Access to JMX proxy interface and to the "Server Status" page
 
 - **web.xml**
 
@@ -249,10 +411,11 @@ POST 请求的三种数据提交格式
     </session-config>
     ```
 
-    会话：用户访问 Tomcat 服务器的有效时间<br/>比如，当用户登录某网站后，30 分钟内，没有进行任何操作，此时，用户与该网站的会话会超时，若再进行页面操作，那么服务器将提示用户重新登录
-
+    会话：用户访问 Tomcat 服务器的有效时间  
+    比如，当用户登录某网站后，30 分钟内，没有进行任何操作，此时，用户与该网站的会话会超时，若再进行页面操作，那么服务器将提示用户重新登录
+  
   - 欢迎页配置（在文件最底部）：
-
+  
     ```xml
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
@@ -260,18 +423,19 @@ POST 请求的三种数据提交格式
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
     ```
-
-    欢迎页：是当用户访问 Tomcat 服务器资源时，没有对任何资源进行定位，此时，Tomcat 将使用配置的欢迎页进行展示<br/>比如：http://localhost/myapps，默认访问 myapps 下的 index.html 或 index.htm 或 index.jsp
+  
+    欢迎页：是当用户访问 Tomcat 服务器资源时，没有对任何资源进行定位，此时，Tomcat 将使用配置的欢迎页进行展示  
+    比如：<a>http://localhost/myapps</a>，默认访问 myapps 下的 index.html 或 index.htm 或 index.jsp
 
 #### 访问
 
 资源默认存放路径为 /webapps
 
-若直接访问 http://localhost，则默认进入 /ROOT，访问 index.jsp
+若直接访问 <a>http://localhost</a>，则默认进入 /ROOT，访问 index.jsp
 
 在 /webapps 下新建文件夹 myapps，并添加 index.html
 
-浏览器访问 http://localhost/myapps，即可显示 index.html 的内容（默认访问 index.html）
+浏览器访问 <a>http://localhost/myapps</a>，即可显示 index.html 的内容（默认访问 index.html）
 
 #### 虚拟路径
 
@@ -296,7 +460,7 @@ POST 请求的三种数据提交格式
 
 相当于把 D:/Repository/apps 映射到虚拟路径 /virtual
 
-浏览器访问：http://localhost/virtual 即可打开 index.html
+浏览器访问：<a>http://localhost/virtual</a> 即可打开 index.html
 
 ---
 
@@ -315,7 +479,10 @@ POST 请求的三种数据提交格式
 
 <img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/Web开发基础/IDEA创建JavaWeb项目_新建模块.png" width="720rem" style="border-radius:.4rem" float="left" alt="IDEA创建JavaWeb项目_新建模块"/><div style="clear:both"></div>
 
-配置 Application Server 为 Tomcat 服务器<br/>配置 Project Template 为 Web Application<br/>其他选项按需选择<br/>点击 next -> next -> finish
+配置 Application Server 为 Tomcat 服务器  
+配置 Project Template 为 Web Application  
+其他选项按需选择  
+点击 next -> next -> finish
 
 新项目的结构（Maven 项目结构）：
 
@@ -341,7 +508,8 @@ Run -> Edit Configurations
 
 <img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/Web开发基础/IDEA_配置Tomcat服务器_Server.png" width="850rem" style="border-radius:.4rem" float="left" alt="IDEA_配置Tomcat服务器_Server"/><div style="clear:both"></div>
 
-建议将配置名称改成和模块名相同，方便管理<br/>可以更改默认启动的浏览器和 URL
+建议将配置名称改成和模块名相同，方便管理  
+可以更改默认启动的浏览器和 URL
 
 <img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/Web开发基础/IDEA_配置Tomcat服务器_Deployment.png" width="850rem" style="border-radius:.4rem" float="left" alt="IDEA_配置Tomcat服务器_Deployment"/><div style="clear:both"></div>
 
@@ -358,9 +526,12 @@ IDEA 部署项目的两种方式：
 
 注意：在 Idea 中启动项目之前，要先关闭控制台中启动的 Tomcat 服务器，防止冲突
 
-按 Shift + F10 就可以启动<br/>Idea 会自动连接服务器，自动部署并且在默认浏览器中启动项目
+按 Shift + F10 就可以启动  
+IDEA 会自动连接服务器，自动部署并且在默认浏览器中启动项目
 
-**注意**：<br/><u>若更改代码后，运行发现不起作用，可重新部署（Redeploy）或者重启服务器（Restart server）</u><br/><u>若还是无效，可检查 target 中的编译结果有无更改，可执行 Maven 的 clean 命令后再编译部署</u>
+> **注意**：  
+> 若更改代码后，运行发现不起作用，可重新部署（Redeploy）或者重启服务器（Restart server）  
+> 若还是无效，可检查 target 中的编译结果有无更改，可执行 Maven 的 clean 命令后再编译部署
 
 按 Ctrl + F2 就可以关闭项目
 
@@ -384,7 +555,7 @@ IDEA 安装目录下的 bin 文件夹下，修改 idea64.exe.vmoptions
 
 Tomcat 安装目录下的 conf 文件夹下，修改 web.xml 和 server.xml
 
-web.xml，在 \<servlet> 标签下，添加如下配置：
+web.xml，在 \<servlet\> 标签下，添加如下配置：
 
 ```xml
 <init-param>
@@ -393,7 +564,7 @@ web.xml，在 \<servlet> 标签下，添加如下配置：
 </init-param>
 ```
 
-server.xml，修改 \<Connector> 标签的属性：
+server.xml，修改 \<Connector\> 标签的属性：
 
 ```xml
 <Connector port="8080" protocol="HTTP/1.1"
@@ -403,7 +574,7 @@ server.xml，修改 \<Connector> 标签的属性：
 
 #### 3. 修改 HTML
 
-在 \<meta> 标签中加入 charset=UTF-8：
+在 \<meta\> 标签中加入 charset=UTF-8：
 
 ```html
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -446,8 +617,8 @@ pom.xml
 
 **概述**：
 
-- Servlet（Server Applet）是 Java Servlet 的简称，称为小服务程序或服务连接器，是 Java 语言编写的<u>服务器端程序</u>
-- 是作为来自 Web 浏览器或其他 HTTP 客户端的<u>请求</u> 和 HTTP 服务器上的<u>数据库或应用程序</u>之间的 <u>中间层</u>
+- Servlet（Server Applet）是 Java Servlet 的简称，称为小服务程序或服务连接器，是 Java 语言编写的**服务器端程序**
+- 是作为来自 Web 浏览器或其他 HTTP 客户端的 **请求** 和 HTTP 服务器上的 **数据库或应用程序** 的 **中间层**
 - Servlet 用来完成 B/S 架构下客户端请求的响应处理，也就是交互式地浏览和生成数据，生成动态 Web 内容
 
 #### 编写步骤
@@ -639,14 +810,15 @@ ServletContext -> context-param（无顺序）-> listener（无顺序）-> filte
   </servlet>
   <servlet-mapping>
       <servlet-name>SpringMVC</servlet-name>
+      <!-- 默认映射路径 -->
       <url-pattern>/</url-pattern>
   </servlet-mapping>
   ```
 
-  **url-pattern** - 匹配访问路径
+  ***url-pattern*** - 匹配访问路径
 
-  - **/\*** 会匹配所有路径<br/>会覆盖所有其他 servlet，包括 servletcontainer 提供的所有 servlet，如默认 servlet 和 JSP servlet<br/>因此 /\* 通常值使用在 Filter 上
-  - **/** 只覆盖 servletcontainer 的内置默认 servlet<br/>这通常只在<u>静态资源</u>（如 HTML,CSS,JS,image,etc）和<u>目录列表</u>（如 /login）上调用<br/>\*.jsp 不会被命中，因为 servletcontainer 内置的 JSP servlet 会被调用，它映射了具体的 URL 模式 \*.jsp
+  - `/*` 会匹配所有路径<br/>会覆盖所有其他 servlet，包括 servletcontainer 提供的所有 servlet，如默认 servlet 和 JSP servlet<br/>因此 `/*` 通常值使用在 Filter 上
+  - `/` 只覆盖 servletcontainer 的内置默认 servlet<br/>这通常只在<u>静态资源</u>（如 HTML,CSS,JS,image,etc）和<u>目录列表</u>（如 /login）上调用<br/>\*.jsp 不会被命中，因为 servletcontainer 内置的 JSP servlet 会被调用，它映射了具体的 URL 模式 \*.jsp
 
 - **\<session-config>**
 
@@ -1967,21 +2139,39 @@ public class SessionServlet extends HttpServlet {
 
 ---
 
-### Servlet 原理
+### 原理
 
 **生命周期**
 
 实例化 -> 初始化 -> 服务 -> 销毁 -> 不可用
 
 - Servlet 容器创建一个 Servlet 实例，调用构造方法
-- Servlet 实例化后，容器会调用 init() 方法
-- Servlet 容器调用 <u>service()方法</u> 来处理客户端请求
-- Servlet 销毁前，会调用 destroy() 方法
+- Servlet 实例化后，容器会调用 `init()` 方法
+- Servlet 容器调用 `service()` 方法 来处理客户端请求
+- Servlet 销毁前，会调用 `destroy()` 方法
 - 最后，Servlet 由 JVM 的垃圾回收器进行垃圾回收
 
 **Tomcat 与 Servlet 如何工作**
 
-<img src="https://domenic-gallery.oss-cn-hangzhou.aliyuncs.com/Web开发基础/Servlet_Tomcat与Servlet如何工作.png" width="750rem" style="border-radius:.4rem" float="left" alt="Servlet_Tomcat与Servlet如何工作"/><div style="clear:both"></div>
+```mermaid
+sequenceDiagram
+  participant wc as Web Client
+  participant sc as Servlet<br/>Container
+  participant req as HttpServlet<br/>Request
+  participant resp as HttpServlet<br/>Response
+  participant hs as HttpServlet
+  link sc: wikipedia @https://en.wikipedia.org/wiki/Web_container
+  link hs: wikipedia @https://en.wikipedia.org/wiki/Jakarta_Servlet
+  autonumber
+  wc ->> sc : http request
+  sc ->> sc : intercept http request
+  sc ->> req : new instance
+  sc ->> resp : new instance
+  sc ->> hs : invoke service method
+  hs ->> req : get request info
+  hs ->> resp : set response info
+  sc ->> wc : http response
+```
 
 1. Web Client 向 Servlet 容器（Tomcat）发出 HTTP 请求
 2. Servlet 容器接收 Web Client 的请求
@@ -1994,16 +2184,40 @@ public class SessionServlet extends HttpServlet {
 
 **Servlet 工作原理**
 
-- Servlet 接收和响应客户请求的过程：<br/>首先，发送请求，<u>Servlet 调用 service()方法对请求进行响应</u>，通过源码可见，service()方法中对请求的方式进行了匹配，选择调用 doGet，doPost 等这些方法，再进入对应的方法中调用逻辑层的方法，实现对客户的响应<br/>在 Servlet 接口和 GenericServlet 中没有 doGet()、doPost()等这些方法，HttpServlet 中定义了这些方法，但都是返回 error 信息，所以，我们每次定义一个 Servlet 时，都必须实现 doGet 或 doPost 等这些方法
-- 每一个自定义的 Servlet 都必须实现 Servlet 接口，接口中定义了五个方法，其中三个方法涉及到 Servlet 的生命周期<br/>分别为：init()、service()、destroy()<br/>GenericServlet 是一个<u>通用的、不特定于任何协议的 Servlet</u>，它实现了 Servlet 接口<br/>HttpServlet 继承于 GenericServlet，因此 HttpServlet 也实现了 Servlet 接口<br/>因此，定义 Servlet 时只需继承 HttpServlet 即可
-- Servlet 接口和 GenericServlet 是不特定于任何协议的，而 <u>HttpServlet 特定于 HTTP 协议</u><br/>所以 HttpServlet 实现了 service()方法，并将 ServletRequest、ServletResponse 类型强转为 HttpRequest 和 HttpResponse
+- Servlet 接收和响应客户请求的过程：
+
+  首先，发送请求，Servlet 调用 `service()` 方法对请求进行响应  
+  `service()` 方法**对请求的方式进行匹配**，选择调用 doGet，doPost 等这些方法，再进入对应的方法中调用逻辑层的方法，实现对客户的响应
+
+  在 Servlet 接口和 GenericServlet 中没有 doGet()、doPost() 等这些方法，HttpServlet 中定义了这些方法，但都是返回 error 信息，所以，每次定义一个 Servlet 时，都必须实现 `doGet()` 或 `doPost()` 等这些方法
+
+- 每一个自定义的 Servlet 都必须实现 Servlet 接口，接口中定义了五个方法
+
+  其中三个方法涉及到 Servlet 的生命周期  
+  分别为：`init()`、`service()`、`destroy()`
+
+  GenericServlet 是一个通用的、不特定于任何协议的 Servlet，它实现了 Servlet 接口  
+  HttpServlet 继承于 GenericServlet，因此 HttpServlet 也实现了 Servlet 接口
+
+  因此，定义 Servlet 时只需继承 HttpServlet 即可
+
+- Servlet 接口和 GenericServlet 是不特定于任何协议的，而 HttpServlet 特定于 HTTP 协议  
+  所以 HttpServlet 实现了 `service()` 方法，并将 ServletRequest、ServletResponse 类型强转为 HttpRequest 和 HttpResponse
 
 **创建 Servlet 对象的时机**
 
-- **Servlet 容器启动时**：<br/>读取 web.xml 配置文件中的信息，构造指定的 Servlet 对象，创建 ServletConfig 对象<br/>将 ServletConfig 对象作为参数，调用 Servlet 对象的 init 方法
-- **在 Servlet 容器启动后**：<br/>客户首次向 Servlet 发出请求，Servlet 容器会判断内存中是否存在指定的 Servlet 对象，若没有则创建它，然后根据客户的请求创建 HttpRequest、HttpResponse 对象，从而调用 Servlet 对象的 service 方法
+- **Servlet 容器启动时**：
 
-Servlet 容器在启动时自动创建 Servlet 的行为，是由 web.xml 文件中为 Servlet 设置的属性决定的<br/><u>同一类型的 Servlet 对象在 Servlet 容器中以单例的形式存在</u>
+  读取 web.xml 配置文件中的信息，构造指定的 Servlet 对象，创建 ServletConfig 对象  
+  将 ServletConfig 对象作为参数，调用 Servlet 对象的 init 方法
+
+- **在 Servlet 容器启动后**：
+
+  客户首次向 Servlet 发出请求，Servlet 容器会判断内存中是否存在指定的 Servlet 对象  
+  若没有则创建它，然后根据客户的请求创建 HttpRequest、HttpResponse 对象，从而调用 Servlet 对象的 service 方法
+
+Servlet 容器在启动时自动创建 Servlet 的行为，是由 web.xml 文件中为 Servlet 设置的属性决定的  
+<u>同一类型的 Servlet 对象在 Servlet 容器中以单例的形式存在</u>
 
 ```xml
 <servlet>
@@ -2044,7 +2258,7 @@ JSP 是 Java Server Pages 的简称，跟 Servlet 一样可以动态生成 HTML 
 
 ```mermaid
 flowchart LR
-  A("客户端") <--请求/响应--> B("JSP 页面")
+  A("客户端") <--"请求<br/>响应"--> B("JSP 页面")
   B("JSP 页面") --> C["转译 & 编译"]
   C["转译 & 编译"] --> D("Servlet")
   D("Servlet") -- 执行 --> B("JSP 页面")
@@ -2181,13 +2395,13 @@ id name age
 
 page 指令用于导包和设置一些页面属性，常用属性：
 
-- import - 导入相应的包
-- contentType - 设置 Content-Type 响应报头，标明即将发送到浏览器的文档类型
-- pageEncoding - 设置页面的编码
-- language - 指定页面使用的语言
-- session - 控制页面是否参与 HTTP 会话
-- errorPage - 处理当前页面中抛出但未被捕获的异常
-- isErrorPage - 设置当前页是否可作为其他页面的错误处理页面
+- *import* - 导入相应的包
+- *contentType* - 设置 Content-Type 响应报头，标明即将发送到浏览器的文档类型
+- *pageEncoding* - 设置页面的编码
+- *language* - 指定页面使用的语言
+- *session* - 控制页面是否参与 HTTP 会话
+- *errorPage* - 处理当前页面中抛出但未被捕获的异常
+- *isErrorPage* - 设置当前页是否可作为其他页面的错误处理页面
 
 ##### taglib 指令
 
@@ -2196,7 +2410,7 @@ page 指令用于导包和设置一些页面属性，常用属性：
 - prefix 属性用于指定库前缀
 - uri 属性用于指定库的标识
 
-可以用来引入[JSTL 标签](#JSTL%20标签)
+可以用来引入 [JSTL 标签](#JSTL%20标签)
 
 ##### include 指令
 
@@ -2270,16 +2484,48 @@ out 对象继承自抽象类 javax.servlet.jsp.JspWriter 的实例，在实际�
 
 **常用方法**
 
-| 方法声明               | 功能                                       |
-| ---------------------- | ------------------------------------------ |
-| void println(String x) | 向客户端输出各种类型数据                   |
-| void newLine()         | 输出一个换行符                             |
-| void close()           | 关闭输出流                                 |
-| int getBufferSize()    | 返回缓冲区的大小                           |
-| int getRemaining()     | 返回缓冲区中未使用的字节数                 |
-| void flush()           | 输出缓冲区里的数据                         |
-| void clearBuffer()     | 清除缓冲区里的数据，同时把数据输出到客户端 |
-| void clear()           | 清除缓冲区里的数据，数据不会输出           |
+<table style="width:40rem">
+    <thead>
+        <tr style="text-align:left">
+            <th>方法声明</th>
+            <th>功能</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>void println(String x)</td>
+            <td>向客户端输出各种类型数据</td>
+        </tr>
+        <tr>
+            <td>void newLine()</td>
+            <td>输出一个换行符</td>
+        </tr>
+        <tr>
+            <td>void close()</td>
+            <td>关闭输出流</td>
+        </tr>
+        <tr>
+            <td>int getBufferSize()</td>
+            <td>返回缓冲区的大小</td>
+        </tr>
+        <tr>
+            <td>int getRemaining()</td>
+            <td>返回缓冲区中未使用的字节数</td>
+        </tr>
+        <tr>
+            <td>void flush()</td>
+            <td>输出缓冲区里的数据</td>
+        </tr>
+        <tr>
+            <td>void clearBuffer()</td>
+            <td>清除缓冲区里的数据，同时把数据输出到客户端</td>
+        </tr>
+        <tr>
+            <td>void clear()</td>
+            <td>清除缓冲区里的数据，数据不会输出</td>
+        </tr>
+    </tbody>
+</table>
 
 ```jsp
 <%
@@ -2307,19 +2553,60 @@ request 对象是 [HttpServletRequest](https://tomcat.apache.org/tomcat-8.5-doc/
 
 **常用方法**
 
-| 方法声明                                 | 功能                                           |
-| ---------------------------------------- | ---------------------------------------------- |
-| String getContextPath()                  | 返回部署应用程序的名字                         |
-| String getMethod()                       | 返回客户端向服务器端传送数据的方式             |
-| String getParameter(String name)         | 返回客户端向服务器端传送的参数值               |
-| String[] getParameterValues(String name) | 获得指定参数的所有值                           |
-| String getRequestURI()                   | 获得请求地址                                   |
-| String getRemoteAddr()                   | 返回发送请求的客户端或最后一个代理的 IP 地址   |
-| int getRemotePort()                      | 返回发送请求的客户端或最后一个代理的端口号     |
-| String getServerName()                   | 获取服务器的名字                               |
-| int getServerPort()                      | 获取服务器端的端口                             |
-| void setAttribute(String name,Object o)  | 在此请求中存储属性，<u>属性在请求之间重置</u>  |
-| Object getAttribute(String name)         | 将指定属性的值作为对象返回，若不存在则返回空值 |
+<table style="width:54rem">
+    <thead>
+        <tr style="text-align:left">
+            <th>方法声明</th>
+            <th>功能</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>String getContextPath()</td>
+            <td>返回部署应用程序的名字</td>
+        </tr>
+        <tr>
+            <td>String getMethod()</td>
+            <td>返回客户端向服务器端传送数据的方式</td>
+        </tr>
+        <tr>
+            <td>String getParameter(String name)</td>
+            <td>返回客户端向服务器端传送的参数值</td>
+        </tr>
+        <tr>
+            <td>String[] getParameterValues(String name)</td>
+            <td>获得指定参数的所有值</td>
+        </tr>
+        <tr>
+            <td>String getRequestURI()</td>
+            <td>获得请求地址</td>
+        </tr>
+        <tr>
+            <td>String getRemoteAddr()</td>
+            <td>返回发送请求的客户端或最后一个代理的 IP 地址</td>
+        </tr>
+        <tr>
+            <td>int getRemotePort()</td>
+            <td>返回发送请求的客户端或最后一个代理的端口号</td>
+        </tr>
+        <tr>
+            <td>String getServerName()</td>
+            <td>获取服务器的名字</td>
+        </tr>
+        <tr>
+            <td>int getServerPort()</td>
+            <td>获取服务器端的端口</td>
+        </tr>
+        <tr>
+            <td>void setAttribute(String name,Object o)</td>
+            <td>在此请求中存储属性，<u>属性在请求之间重置</u></td>
+        </tr>
+        <tr>
+            <td>Object getAttribute(String name)</td>
+            <td>将指定属性的值作为对象返回，若不存在则返回空值</td>
+        </tr>
+    </tbody>
+</table>
 
 ##### response 对象
 
@@ -2329,13 +2616,36 @@ response 对象是 [HttpServletResponse](https://tomcat.apache.org/tomcat-8.5-do
 
 **常用方法**
 
-| 方法声明                                  | 功能                                             |
-| ----------------------------------------- | ------------------------------------------------ |
-| void addCookie(Cookie cookie)             | 添加一个 Cookie 对象，用于在客户端保存特定的信息 |
-| void addHeader(String name, String value) | 添加 HTTP 头信息，该 Header 信息将发送到客户端   |
-| boolean containsHeader(String name)       | 判断指定名字的 HTTP 文件头是否存在               |
-| void sendRedirect(String location)        | 重定向 JSP 文件                                  |
-| void setContentType(String type)          | 设置类型与编码方式                               |
+<table style="width:54rem">
+    <thead>
+        <tr style="text-align:left">
+            <th>方法声明</th>
+            <th>功能</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>void addCookie(Cookie cookie)</td>
+            <td>添加一个 Cookie 对象，用于在客户端保存特定的信息</td>
+        </tr>
+        <tr>
+            <td>void addHeader(String name, String value)</td>
+            <td>添加 HTTP 头信息，该 Header 信息将发送到客户端</td>
+        </tr>
+        <tr>
+            <td>boolean containsHeader(String name)</td>
+            <td>判断指定名字的 HTTP 文件头是否存在</td>
+        </tr>
+        <tr>
+            <td>void sendRedirect(String location)</td>
+            <td>重定向 JSP 文件</td>
+        </tr>
+        <tr>
+            <td>void setContentType(String type)</td>
+            <td>设置类型与编码方式</td>
+        </tr>
+    </tbody>
+</table>
 
 每隔一秒刷新一次页面，并输出当前时间：
 
@@ -2359,10 +2669,24 @@ session 对象是 [HttpSession](https://tomcat.apache.org/tomcat-8.5-doc/servlet
 
 **常用方法**
 
-| 方法声明                                     | 功能                                                         |
-| -------------------------------------------- | ------------------------------------------------------------ |
-| void setAttribute(String name, Object value) | 使用指定的名称将对象绑定到此会话                             |
-| Object getAttribute(String name)             | 返回在此会话中用指定名称绑定的对象<br/>若没有对象绑定在该名称下，则返回空值 |
+<table style="width:54rem">
+    <thead>
+        <tr style="text-align:left">
+            <th>方法声明</th>
+            <th>功能</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>void setAttribute(String name, Object value)</td>
+            <td>使用指定的名称将对象绑定到此会话</td>
+        </tr>
+        <tr>
+            <td>Object getAttribute(String name)</td>
+            <td>返回在此会话中用指定名称绑定的对象<br/>若没有对象绑定在该名称下，则返回空值</td>
+        </tr>
+    </tbody>
+</table>
 
 在 session.jsp 中设置属性值，在 sessionTarget.jsp 中获取该属性：
 
@@ -2384,10 +2708,24 @@ application 对象是 [ServletContext](https://tomcat.apache.org/tomcat-8.5-doc/
 
 **常用方法**
 
-| 方法声明                                      | 功能                                                         |
-| --------------------------------------------- | ------------------------------------------------------------ |
-| void setAttribute(String name, Object object) | 将对象绑定到此 servlet 上下文中的给定属性名                  |
-| Object getAttribute(String name)              | 返回给定名称的 servlet 容器属性，若没有该名称的属性则返回 null |
+<table style="width:54rem">
+    <thead>
+        <tr style="text-align:left">
+            <th width=54%>方法声明</th>
+            <th>功能</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>void setAttribute(String name, Object object)</td>
+            <td>将对象绑定到此 servlet 上下文中的给定属性名</td>
+        </tr>
+        <tr>
+            <td>Object getAttribute(String name)</td>
+            <td>返回给定名称的 servlet 容器属性，若没有该名称的属性则返回 null</td>
+        </tr>
+    </tbody>
+</table>
 
 ```jsp
 <!-- application 中的数据和会话无关，所有用户都可访问 -->
@@ -2406,25 +2744,63 @@ pageContext 对象是 [PageContext](https://docs.oracle.com/javaee/7/api/javax/s
 
 **常用方法**
 
-| 方法声明                                                  | 功能                                                |
-| --------------------------------------------------------- | --------------------------------------------------- |
-| void setAttribute(String name, Object value, \[int scope]) | 使用适当的作用域设置指定的名称和值                  |
-| Object getAttribute(String name, \[int scope])             | 返回指定作用域中名称关联的对象，若找不到则返回 null |
-| removeAttribute(String name, \[int scope])                 | 在给定范围内删除与指定名称关联的对象引用            |
-| ServletRequest getRequest()                               | 获取请求对象                                        |
-| ServletResponse getResponse()                             | 获取响应对象                                        |
-| HttpSession getSession()                                  | 获取会话对象                                        |
-| ServletConfig getServletConfig()                          | 获取配置对象                                        |
-| JspWriter getOut()                                        | 获取输出对象                                        |
-| Object getPage()                                          | 获取页面对象                                        |
-| Exception getException()                                  | 获取异常对象                                        |
+<table style="width:60rem">
+    <thead>
+        <tr style="text-align:left">
+            <th>方法声明</th>
+            <th>功能</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>void setAttribute(String name, Object value, [int scope])</td>
+            <td>使用适当的作用域设置指定的名称和值</td>
+        </tr>
+        <tr>
+            <td>Object getAttribute(String name, [int scope])</td>
+            <td>返回指定作用域中名称关联的对象<br/>若找不到则返回 null</td>
+        </tr>
+        <tr>
+            <td>removeAttribute(String name, [int scope])</td>
+            <td>在给定范围内删除与指定名称关联的对象引用</td>
+        </tr>
+        <tr>
+            <td>ServletRequest getRequest()</td>
+            <td>获取请求对象</td>
+        </tr>
+        <tr>
+            <td>ServletResponse getResponse()</td>
+            <td>获取响应对象</td>
+        </tr>
+        <tr>
+            <td>HttpSession getSession()</td>
+            <td>获取会话对象</td>
+        </tr>
+        <tr>
+            <td>ServletConfig getServletConfig()</td>
+            <td>获取配置对象</td>
+        </tr>
+        <tr>
+            <td>JspWriter getOut()</td>
+            <td>获取输出对象</td>
+        </tr>
+        <tr>
+            <td>Object getPage()</td>
+            <td>获取页面对象</td>
+        </tr>
+        <tr>
+            <td>Exception getException()</td>
+            <td>获取异常对象</td>
+        </tr>
+    </tbody>
+</table>
 
 **作用域 Scope 的取值**：
 
-- PAGE_SCOPE - 在 page 对象范围中搜索（默认）
-- REQUEST_SCOPE - 在 request 对象范围中搜索
-- SESSION_SCOPE - 在 session 对象范围中搜索
-- APPLICATION_SCOPE - 在 application 对象范围中搜索
+- *PAGE_SCOPE* - 在 page 对象范围中搜索（默认）
+- *REQUEST_SCOPE* - 在 request 对象范围中搜索
+- *SESSION_SCOPE* - 在 session 对象范围中搜索
+- *APPLICATION_SCOPE* - 在 application 对象范围中搜索
 
 ```jsp
 <%
@@ -2630,7 +3006,8 @@ exception 对象是 [Throwable](https://docs.oracle.com/en/java/javase/11/docs/a
 
 **使用示例**：
 
-- JSP 获取 Request 中的数据：<br/>name 是输入框的值（单个），hobby 是复选框的值（多个）
+- JSP 获取 Request 中的数据：  
+  name 是输入框的值（单个），hobby 是复选框的值（多个）
 
   ```jsp
   <%= "姓名：" + request.getParameter("name") %><br/>
@@ -2638,8 +3015,9 @@ exception 对象是 [Throwable](https://docs.oracle.com/en/java/javase/11/docs/a
   <%= "爱好：" + Arrays.toString(request.getParameterValues("hobby")) %><br/>
   ```
 
-- EL 表达式获取：<br/>使用了 EL 表达式的内置对象 param、paramValues
-
+- EL 表达式获取：  
+  使用了 EL 表达式的内置对象 param、paramValues
+  
   ```jsp
   姓名：${param.name}<br/>
   <!-- 获取 hobby 的第一个元素 -->
@@ -2656,13 +3034,15 @@ exception 对象是 [Throwable](https://docs.oracle.com/en/java/javase/11/docs/a
 
 **访问方式**：
 
-方式一： \$ { 对象名 . 属性名 }，如：\${user.name}
+方式一： \${ 对象名 . 属性名 }，如：\${user.name}
 
-方式二： \$ { 对象名 ["属性名"] }，如：\\${user["name"]}
+方式二： \${ 对象名 ["属性名"] }，如：\${user["name"]}
 
 **使用示例**：
 
-- JSP 方式访问、创建、设置 Bean 对象的属性：<br/>1. \<% %\> 中写 Java 代码<br/>2. 用 JSP 的 JavaBean 组件
+- JSP 方式访问、创建、设置 Bean 对象的属性：  
+  1\. \<% %\> 中写 Java 代码  
+  2\. 用 JSP 的 JavaBean 组件
 
   ```jsp
   <!-- 创建 student 对象 -->
@@ -2686,9 +3066,9 @@ exception 对象是 [Throwable](https://docs.oracle.com/en/java/javase/11/docs/a
 
 **方式区别**：
 
-当获取的属性名中包含一些特殊字符时（如：. 或 , 等非字母或数字的符号）就要用 \[ ] 的方式，因为会和 对象名 . 属性名 的 . 冲突
+当获取的属性名中包含一些特殊字符时（如：. 或 , 等非字母或数字的符号）就要用 \[ \] 的方式，因为会和 对象名 . 属性名 的 . 冲突
 
-用 \[ ] 的方式可以动态取值，具体方式如下：
+用 \[ \] 的方式可以动态取值，具体方式如下：
 
 ```jsp
 <%
@@ -2702,9 +3082,9 @@ ${user[prop]}
 
 **访问方式**：
 
-方式一： \$ { 对象名 . 属性名 }，如：\${studentList.name}
+方式一： \${ 对象名 . 属性名 }，如：\${studentList.name}
 
-方式二： \$ { 对象名 ["属性名"] }，如：\${studentList["name"]}
+方式二： \${ 对象名 ["属性名"] }，如：\${studentList["name"]}
 
 ```jsp
 <%
@@ -2803,7 +3183,7 @@ stu 中的内容：${stu["stuNo"]},${stu["stuName"]}<!-- stu 中的内容是：1
 
 注意：Java 中两整数相除，只保留整数部分；这里的相除，保留了小数部分
 
-<table style="width:50rem">
+<table style="width:45rem">
     <thead>
         <tr style="text-align:left">
             <th width=20%>运算符</th>
@@ -2840,10 +3220,9 @@ stu 中的内容：${stu["stuNo"]},${stu["stuName"]}<!-- stu 中的内容是：1
     </tbody>
 </table>
 
-
 ##### 关系运算符
 
-<table style="width:50rem">
+<table style="width:45rem">
     <thead>
         <tr style="text-align:left">
             <th width=20%>运算符</th>
@@ -2885,10 +3264,9 @@ stu 中的内容：${stu["stuNo"]},${stu["stuName"]}<!-- stu 中的内容是：1
     </tbody>
 </table>
 
-
 ##### 逻辑运算符
 
-<table style="width:50rem">
+<table style="width:45rem">
     <thead>
         <tr style="text-align:left">
             <th width=20%>运算符</th>
@@ -2914,7 +3292,6 @@ stu 中的内容：${stu["stuNo"]},${stu["stuName"]}<!-- stu 中的内容是：1
         </tr>
     </tbody>
 </table>
-
 
 ##### 三目运算符
 
@@ -2997,8 +3374,8 @@ JSTL（JSP Standard Tag Library）被称为 JSP 标准标签库
 
 标签的属性：
 
-- value - 值（字符串/EL 表达式）
-- default - 默认值（若 value 没有值，则打印 default）
+- *value* - 值（字符串/EL 表达式）
+- *default* - 默认值（若 value 没有值，则打印 default）
 
 ##### 设置标签
 
@@ -3010,11 +3387,11 @@ JSTL（JSP Standard Tag Library）被称为 JSP 标准标签库
 
 标签的属性：
 
-- scope - 范围（默认为 page）
-- var - 变量
-- value - 值（字符串/EL 表达式）
-- property - 对象的属性
-- target - 目标对象
+- *scope* - 范围（默认为 page）
+- *var* - 变量
+- *value* - 值（字符串/EL 表达式）
+- *property* - 对象的属性
+- *target* - 目标对象
 
 示例：
 
@@ -3089,11 +3466,11 @@ JSTL（JSP Standard Tag Library）被称为 JSP 标准标签库
 
 标签的属性：
 
-- var - 循环变量
-- items - 待循环的集合
-- step - 步长
-- begin - 起始下标（包含，索引从 0 开始）
-- end - 结束下标（包含）
+- *var* - 循环变量
+- *items* - 待循环的集合
+- *step* - 步长
+- *begin* - 起始下标（包含，索引从 0 开始）
+- *end* - 结束下标（包含）
 
 示例：
 
@@ -3228,24 +3605,26 @@ MVC 是模型（Model）和视图（View）以及控制器（Controller）的简
 是一种将数据、界面显示、业务逻辑进行分离的组织方式  
 这样在改进界面及用户交互时，无需重新编写业务逻辑，提高了代码的可维护性
 
-- M：存放用于封装业务数据的 JavaBean（Bean）、业务逻辑的 JavaBean（Service）、访问数据库的 DAO 对象
-- V：负责数据收集和数据展现，通常由 JSP 完成
-- C：负责流程控制和页面跳转，通常由 Servlet 完成
+- *M* - 存放用于封装业务数据的 JavaBean（Bean）、业务逻辑的 JavaBean（Service）、访问数据库的 DAO 对象
+- *V* - 负责数据收集和数据展现，通常由 JSP 完成
+- *C* - 负责流程控制和页面跳转，通常由 Servlet 完成
 
 模型图示：
 
 ```mermaid
 flowchart LR
+  A("Client(Browser)") --1--> B["Servlet"]
   subgraph server
     B
     E
     C
   end
-  A("浏览器") --1--> B["Servlet"]
   B --4--> E["JSP"]
-  E --5--> A("浏览器")
+  E --5--> A
   B <--2--> C(("JavaBean"))
-  C <--3--> D[("数据库")]
+  C <--3--> D[("DataBase")]
+  classDef subgraphstyle fill:transparent
+  class server subgraphstyle
 ```
 
 表现层 + 业务层 + 持久层：
@@ -3256,9 +3635,9 @@ flowchart LR
 
 框架非常的多，每一个框架都是为了解决某一部分或某些问题而存在的
 
-- 持久层框架：专注于解决数据持久化的框架，常用的有 mybatis、hibernate、spring jdbc 等
-- 表现层框架：专注于解决与用户交互的框架，常用的有 struts2、spring mvc 等
-- 全栈框架：能在各层都给出解决方案的框架，较著名的就是 spring
+- *持久层框架* - 专注于解决数据持久化的框架，常用的有 mybatis、hibernate、spring jdbc 等
+- *表现层框架* - 专注于解决与用户交互的框架，常用的有 struts2、spring mvc 等
+- *全栈框架* - 能在各层都给出解决方案的框架，较著名的就是 spring
 
 企业中最常用的组合：Spring + Spring MVC + Mybatis（SSM）
 
@@ -3544,7 +3923,8 @@ public class UserDaoFactory {
 
 ##### 7. Service 层
 
-负责与 DAO 层交互，并且将结果返回<br/>Servlet 依靠 Service 层间接与 DAO 交互，实现了解耦合
+负责与 DAO 层交互，并且将结果返回  
+Servlet 依靠 Service 层间接与 DAO 交互，实现了解耦合
 
 接口：UserService.java
 
@@ -3592,8 +3972,10 @@ flowchart LR
   subgraph 过滤器
     B
   end
-  A("浏览器") <--请求/响应--> B("身份认证<br/>资源审核<br/>资源加密访问")
-  B <--请求/响应--> C("Web 资源")
+  A("浏览器") <--"请求<br/>响应"--> B("身份认证<br/>资源审核<br/>资源加密访问")
+  B <--"请求<br/>响应"--> C("Web 资源")
+  classDef subgraphstyle fill:transparent
+  class 过滤器 subgraphstyle
 ```
 
 **优点**：
@@ -3609,19 +3991,21 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  A("浏览器") <--> B("过滤器 1")
+  A("浏览器") <--"请求<br/>响应"--> B("过滤器 1")
   subgraph 过滤器链
-    B <--> C("过滤器 2")
-    C <--> D("过滤器 3")
+    B <--"请求<br/>响应"--> C("过滤器 2")
+    C <--"请求<br/>响应"--> D("过滤器 3")
   end
-  D <--> E("Web 资源")
+  D <--"请求<br/>响应"--> E("Web 资源")
+  classDef subgraphstyle fill:transparent
+  class 过滤器链 subgraphstyle
 ```
 
 **过滤器涉及的类**：
 
-- javax.servlet.Filter：包含 Filter 的生命周期方法，在 Servlet 容器初始化或销毁时被调用
-- javax.servlet.FilterConfig：包含关于 Filter 的配置信息，其中最重要就是它的初始化参数
-- javax.servlet.FilterChain：Servlet 容器提供的，实现多个过滤器间调用的类
+- *javax.servlet.Filter* - 包含 Filter 的生命周期方法，在 Servlet 容器初始化或销毁时被调用
+- *javax.servlet.FilterConfig* - 包含关于 Filter 的配置信息，其中最重要就是它的初始化参数
+- *javax.servlet.FilterChain* - Servlet 容器提供的，实现多个过滤器间调用的类
 
 Filter 的 doFilter() 方法是实现具体的拦截器逻辑的地方，它可以修改请求的内容和属性，或者在响应中添加一个 HTTP 标头
 
@@ -3664,7 +4048,7 @@ Filter 的 doFilter() 方法是实现具体的拦截器逻辑的地方，它可�
   </filter>
   <filter-mapping>
       <filter-name>LoginFilter</filter-name>
-      <!-- /*表示，请求任何页面时，都使用 Filter -->
+      <!-- /* 表示，请求任何页面时，都使用 Filter -->
       <url-pattern>/*</url-pattern>
   </filter-mapping>
   ```
@@ -9168,8 +9552,8 @@ $.get(URL, data, function(data, status, xhr), dataType)
 | :------------------------ | :----------------------------------------------------------- |
 | URL                       | 必选，规定您需要请求的 URL                                   |
 | data                      | 可选，规定连同请求发送到服务器的数据                         |
-| function(data,status,xhr) | 可选，规定当请求成功时运行的函数<br/>方法参数（可选）：<br/>1. data - 包含来自请求的结果数据<br/>2. status - 包含请求的状态（"success"、"notmodified"、"error"、"timeout"、"parsererror"）<br/>3. xhr - 包含 XMLHttpRequest 对象 |
-| dataType                  | 可选，规定预期的服务器响应的数据类型，默认情况下，jQuery 会智能判断<br/>可能的类型：<br/>1. "xml" - 一个 XML 文档<br/>2. "html" - HTML 作为纯文本<br/>3. "text" - 纯文本字符串<br/>4. "script" - 以 JavaScript 运行响应，并以纯文本返回<br/>5. "json" - 以 JSON 运行响应，并以 JavaScript 对象返回<br/>6. "jsonp" - 使用 JSONP 加载一个 JSON 块，将添加一个 "?callback=?" 到 URL 来规定回调 |
+| function(data,status,xhr) | 可选，规定当请求成功时运行的函数<br/>方法参数（可选）：<br/>1. <i>data</i> - 包含来自请求的结果数据<br/>2. <i>status</i> - 包含请求的状态（"success"、"notmodified"、"error"、"timeout"、"parsererror"）<br/>3. <i>xhr</i> - 包含 XMLHttpRequest 对象 |
+| dataType                  | 可选，规定预期的服务器响应的数据类型，默认情况下，jQuery 会智能判断<br/>可能的类型：<br/>1. <i>"xml"</i> - 一个 XML 文档<br/>2. <i>"html"</i> - HTML 作为纯文本<br/>3. <i>"text"</i> - 纯文本字符串<br/>4. <i>"script"</i> - 以 JavaScript 运行响应，并以纯文本返回<br/>5. <i>"json"</i> - 以 JSON 运行响应，并以 JavaScript 对象返回<br/>6. <i>"jsonp"</i> - 使用 JSONP 加载一个 JSON 块，将添加一个 "?callback=?" 到 URL 来规定回调 |
 
 示例：
 
@@ -9581,14 +9965,15 @@ Access to XMLHttpRequest at 'http://localhost:8080/api/course' from origin 'http
 
 #### 解决
 
-跨域资源共享（[CORS](https://developer.mozilla.org/zh-CN/docs/Glossary/CORS) Cross-Origin Resource Sharing）是一种基于 HTTP 头的机制，该机制通过允许服务器标示除了它自己以外的其它 [origin](https://developer.mozilla.org/zh-CN/docs/Glossary/Origin)（域、协议、端口），使浏览器允许这些 origin 访问加载该服务器的资源<br/>跨源资源共享还通过一种机制来检查服务器是否会允许要发送的真实请求，该机制通过浏览器发起一个到服务器托管的跨源资源的 "预检" 请求。在预检中，浏览器发送的头中标示有 HTTP 方法和真实请求中会用到的头
+跨域资源共享（[CORS](https://developer.mozilla.org/zh-CN/docs/Glossary/CORS) Cross-Origin Resource Sharing）是一种基于 HTTP 头的机制，该机制通过允许服务器标示除了它自己以外的其它 [origin](https://developer.mozilla.org/zh-CN/docs/Glossary/Origin)（域、协议、端口），使浏览器允许这些 origin 访问加载该服务器的资源  
+跨源资源共享还通过一种机制来检查服务器是否会允许要发送的真实请求，该机制通过浏览器发起一个到服务器托管的跨源资源的 "预检" 请求。在预检中，浏览器发送的头中标示有 HTTP 方法和真实请求中会用到的头
 
 跨域的允许主要由服务器端控制，服务器端可以通过在响应头 header 中设置 Access-Control-Allow-Origin 及相关一系列参数，提供跨域访问的允许策略
 
 设置响应头中的参数来允许跨域域请求:
 
-- Access-Control-Allow-Credentials
-- Access-Control-Allow-Origin 标识允许跨域的请求有哪些
+- `Access-Control-Allow-Credentials`
+- `Access-Control-Allow-Origin` 标识允许跨域的请求有哪些
 
 [10 种跨域解决方案 - segmentfault](https://segmentfault.com/a/1190000022398875)
 
@@ -9661,14 +10046,14 @@ Vue-CLI 脚手架
 
 **入门程序**：
 
-1. **{{}} - 插值表达式**
+1. **`{{}}` - 插值表达式**
    1. 通常用来获取 vue 实例中定义的数据（data）<br/>属性节点中不能使用插值表达式
 
-2. **el - 挂载点**
+2. **`el` - 挂载点**
    1. el 用来定义 vue 实例挂载的元素节点，表示 vue 接管该区域，vue 会管理 el 选项命中的元素，及其内部元素
    2. el 选择挂载点时<br/>可以使用其他选择器，但建议 id 选择器<br/>可以关联其他的 dom 元素（不能用 \<html> 和 \<body>）
 
-3. **data - 数据对象**
+3. **`data` - 数据对象**
    1. vue 中用到的数据，在 data 中定义
    2. data 中可以写复杂类型
    3. 渲染复杂类型数据时，遵守 JavaScript 语法
@@ -9746,7 +10131,7 @@ Vue-CLI 脚手架
 
 ### Vue 常用指令
 
-**概述**：指令是带有 v- 前缀的特殊属性，通过指令来操作 dom 元素
+**概述**：指令是带有 `v-` 前缀的特殊属性，通过指令来操作 dom 元素
 
 [Vue 指令 - vuejs.org](https://cn.vuejs.org/v2/api/#指令)
 
@@ -10028,13 +10413,19 @@ var VM = new Vue({
 
 [数组更新 - vuejs.org](https://cn.vuejs.org/v2/guide/list.html#数组更新检测)
 
-- push - 向数组末尾添加元素
-- shift - 移除数组中第一个元素
-- splice - 替换/删除/添加数组内一个或几个值  
-  splice(index,len,\[item])  
-  1\. index - 数组开始下标  
-  2\. len - 替换/删除的长度  
-  3\. item - 替换的值，删除操作 item 为空
+- *push* - 向数组末尾添加元素
+
+- *shift* - 移除数组中第一个元素
+
+- *splice* - 替换/删除/添加数组内一个或几个值
+  
+  `splice(index, len, [item])`
+  
+  1. *index* - 数组开始下标
+  
+  2. *len* - 替换/删除的长度
+  
+  3. *item* - 替换的值，删除操作 item 为空
 
 ```html
 <div id="app">
@@ -10878,8 +11269,8 @@ my-project
 
 其他文件：
 
-- .env.development - 开发环境下的配置文件
-- .env.production - 生产环境下的配置文件
+- *.env.development* - 开发环境下的配置文件
+- *.env.production* - 生产环境下的配置文件
 
 ##### package.json
 
